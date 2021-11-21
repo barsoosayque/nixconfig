@@ -11,6 +11,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" "noacpi" ];
   boot.extraModulePackages = [ ];
+  hardware.cpu.amd.updateMicrocode = true;
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/8a383df7-91fc-4d7c-8f1d-830ef9d64b4a";

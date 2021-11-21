@@ -102,7 +102,10 @@
     };
 
     x11 = {
-      xsession.enable = true;
+      xsession = {
+        videoDrivers = "nvidia";
+        enable = true;
+      };
       gtk.enable = true;
       bspwm = {
         enable = true;
