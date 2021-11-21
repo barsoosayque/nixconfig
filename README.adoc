@@ -1,0 +1,9 @@
+= nixconfig
+
+== TODO
+* [ ] Dunst notifications (or something else)  and plug notifications to events
+* [ ] Transmission and its events
+* [ ] Alacritty module
+* [ ] System update event & prograss bar (if possible) notification
+* [ ] Audio change notification
+* [ ] Pick window & audio change it + notification
