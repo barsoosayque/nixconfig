@@ -23,15 +23,9 @@ with lib;
         description = "Additional config to pass to users.users.\${name}";
       };
 
-      timeZone = mkOption {
-        type = types.str;
-        default = "Asia/Krasnoyarsk";
-        description = "Where are you now ?";
-      };
-
-      homeDir = mkOption {
-        type = types.str;
-        description = "Alias for current home directory (absolute)";
+      dirs = mkOption {
+        type = types.attrs;
+        description = "Set of XDG-like absoulte paths";
         readOnly = true;
       };
     };
@@ -46,7 +40,7 @@ with lib;
   config = let
     username = config.currentUser.name;
     home = "/home/${username}";
-  in {
+  in rec {
     # systemd-boot EFI boot loader by default
     boot.loader = {
       systemd-boot.enable = true;
@@ -73,16 +67,12 @@ with lib;
     # This is really annoying, sorry
     security.sudo.wheelNeedsPassword = false;
 
-    time.timeZone = config.currentUser.timeZone;
-    
     fonts.fontconfig.enable = true;
 
     networking = {
       inherit hostName;
       useDHCP = false;
     };
-
-    currentUser.homeDir = home;
 
     users = {
       mutableUsers = false;
@@ -99,22 +89,28 @@ with lib;
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users."${username}" = {
-        xdg.userDirs = {
-          enable = true;
-          createDirectories = false;
+      users."${username}" = mkAliasDefinitions options.homeManager;
+    };
+    
+    currentUser.dirs = {
+      inherit home;
 
-          desktop = "${home}/.local/desktop";
-          publicShare = "${home}/.local/share";
-          templates = "${home}/.local/templates";
+      desktop = "${home}/.local/desktop";
+      publicShare = "${home}/.local/share";
+      templates = "${home}/.local/templates";
 
-          documents = "${home}/docs";
-          download = "${home}/downloads";
-          music = "${home}/music";
-          pictures = "${home}/pictures";
-          videos = "${home}/videos";
-        };
-      } // config.homeManager;
+      documents = "${home}/docs";
+      download = "${home}/downloads";
+      music = "${home}/music";
+      pictures = "${home}/pictures";
+      videos = "${home}/videos";
+    };
+
+    homeManager.xdg.userDirs = {
+      inherit (currentUser.dirs) desktop publicShare templates documents download music pictures videos;
+
+      enable = true;
+      createDirectories = false;
     };
   };
 }

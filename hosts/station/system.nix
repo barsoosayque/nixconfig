@@ -50,9 +50,6 @@
 
     shells = [ pkgs.zsh ];
   };
-  
-  # TODO: merge with redshift
-  time.timeZone = "Asia/Krasnoyarsk";
 
   fonts.fonts = [
     pkgs.iosevka-bin
@@ -66,21 +63,27 @@
     interfaces.enp8s0.useDHCP = true;
   };
 
+  # user settings  
   currentUser = {
     name = "barsoo";
   };
 
-  events.onTest = [ "sleep 1s"];
+  # general definitions
+  system = {
+    locale.locationName = "Abakan";
 
-  # homebrewk modules
-  modules = {
     # TODO: alacritty + dmenu own modules
     keyboard.bindings = {
       "super + Return" = "${pkgs.alacritty}/bin/alacritty";
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run";
-      "super + T" = "${config.events.onTestCmd}";
+      "super + T" = "${config.system.events.onTestScript}";
     };
 
+    events.onTest = [ "sleep 1s" ];
+  };
+
+  # homebrewk modules
+  modules = {
     environment = {
       code.enable = true;
       gaming.enable = true;
@@ -92,10 +95,7 @@
     };
 
     services = {
-      redshift = {
-        enable = true;
-        location = "Abakan";
-      };
+      redshift.enable = true;
       sxhkd.enable = true;
       bluetooth.enable = true;
       transmission.enable = true;

@@ -5,7 +5,7 @@ let
   inherit (pkgs) writeScript;
 
   cfg = config.modules.services.transmission;
-  torrentDir = "${config.currentUser.homeDir}/torrent";
+  torrentDir = "${config.currentUser.dirs.download}/torrent";
 in
 {
   options.modules.services.transmission = {
@@ -27,7 +27,7 @@ in
             download-dir = "${torrentDir}/complete";
 
             script-torrent-done-enabled = true;
-            script-torrent-done-filename = config.events.onReloadScript;
+            script-torrent-done-filename = config.system.events.onReloadScript;
           };
       };
   };

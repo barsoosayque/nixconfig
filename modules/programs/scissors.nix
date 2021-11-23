@@ -17,7 +17,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    modules.keyboard.bindings = {
+    system.keyboard.bindings = {
       "{_,shift +} Print" = "${bin} -d ${cfg.screenshotsDir} {-s,_}";
     };
   };

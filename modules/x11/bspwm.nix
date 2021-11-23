@@ -47,9 +47,9 @@ in
       ];
     };
 
-    events.onReload = [ "${bspcBin} wm -r" ];
+    system.events.onReload = [ "${bspcBin} wm -r" ];
 
-    modules.keyboard.bindings = {
+    system.keyboard.bindings = {
       "super + {shift,shift + ctrl} + q" = "${bspcBin} node -{c,k}";
       "super + {_,shift + }{0-9}" = "${bspcBin} {desktop -f, node -d} '{0-9}'";
       "super + shift + {@space,f}" = ''

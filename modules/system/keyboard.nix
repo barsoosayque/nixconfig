@@ -2,22 +2,24 @@
 
 with lib;
 let
-  cfg = config.modules.keyboard;
+  cfg = config.system.keyboard;
   
   changeLayoutKeys = {
     CapsLocks = "grp:caps_toggle";
   };
 in
 {
-  options.modules.keyboard = {
+  options.system.keyboard = {
     bindings = mkOption {
       type = types.attrs;
       default = {};
       description = "sxhkd-like keybinding definitions";
-      example = literalExpression {
+      example = literalExpression ''
+      {
         "super + Return" = "alacritty";
         "super + d" = "launcher";
-      };
+      }
+      '';
     };
 
     layouts =  mkOption {
