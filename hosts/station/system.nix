@@ -76,10 +76,7 @@
     keyboard.bindings = {
       "super + Return" = "${pkgs.alacritty}/bin/alacritty";
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run";
-      "super + T" = "${config.system.events.onTestScript}";
     };
-
-    events.onTest = [ "sleep 1s" ];
   };
 
   # homebrewk modules
@@ -95,6 +92,10 @@
     };
 
     services = {
+      dunst = {
+        enable = true;
+        notifySystemEvents = true;
+      };
       redshift.enable = true;
       sxhkd.enable = true;
       bluetooth.enable = true;

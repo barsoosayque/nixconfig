@@ -1,7 +1,7 @@
 = nixconfig
 
 == TODO
-* [ ] Dunst notifications (or something else)  and plug notifications to events
+* [x] Dunst notifications (or something else)  and plug notifications to events
 * [ ] Transmission and its events
 * [ ] Alacritty module
 * [ ] System update event & prograss bar (if possible) notification
