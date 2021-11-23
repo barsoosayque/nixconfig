@@ -5,7 +5,7 @@ let
   inherit (pkgs) writeScript;
 
   cfg = config.modules.services.transmission;
-  torrentDir = "${config.currentUser.dirs.download}/torrent";
+  torrentDir = "${config.userDirs.download}/torrent";
 in
 {
   options.modules.services.transmission = {
@@ -13,7 +13,7 @@ in
   };
 
   config = mkIf cfg.enable {
-      currentUser.groups = [ "transmission" ];
+      currentUser.extraGroups = [ "transmission" ];
 
       services.transmission = {
           enable = true;

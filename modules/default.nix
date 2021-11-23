@@ -4,30 +4,16 @@ with lib;
 {
   options = {
     # Additional user configs to generate user-related stuff
-    currentUser = {
-      name = mkOption {
-        type = types.str;
-        default = "user";
-        description = "User name to use throughout the system";
-      };
+    currentUser = mkOption {
+      type = types.attrs;
+      default = {};
+      description = "Configs for current user (nixos)";
+    };
 
-      groups = mkOption {
-        type = types.listOf types.str;
-        default = [];
-        description = "Additional user groups";
-      };
-
-      extraConfig = mkOption {
-        type = types.attrs;
-        default = {};
-        description = "Additional config to pass to users.users.\${name}";
-      };
-
-      dirs = mkOption {
-        type = types.attrs;
-        description = "Set of XDG-like absoulte paths";
-        readOnly = true;
-      };
+    userDirs = mkOption {
+      type = types.attrs;
+      description = "Set of XDG-like absoulte paths";
+      readOnly = true;
     };
 
     homeManager = mkOption {
@@ -76,14 +62,7 @@ with lib;
 
     users = {
       mutableUsers = false;
-
-      users."${username}" = rec {
-        inherit home;
-        description = "The one and only";
-        extraGroups = [ "wheel" ] ++ config.currentUser.groups;
-        isNormalUser = true;
-        passwordFile = "${home}/.config/nixpass";
-      } // config.currentUser.extraConfig;
+      users."${username}" = mkAliasDefinitions options.currentUser;
     };
 
     home-manager = {
@@ -92,7 +71,16 @@ with lib;
       users."${username}" = mkAliasDefinitions options.homeManager;
     };
     
-    currentUser.dirs = {
+    currentUser = {
+      inherit home;
+      uid = 1000;
+      description = "The one and only";
+      extraGroups = [ "wheel" ];
+      isNormalUser = true;
+      passwordFile = "${home}/.config/nixpass";
+    };
+
+    userDirs = {
       inherit home;
 
       desktop = "${home}/.local/desktop";
@@ -107,7 +95,7 @@ with lib;
     };
 
     homeManager.xdg.userDirs = {
-      inherit (currentUser.dirs) desktop publicShare templates documents download music pictures videos;
+      inherit (userDirs) desktop publicShare templates documents download music pictures videos;
 
       enable = true;
       createDirectories = false;
