@@ -3,6 +3,8 @@
 with lib;
 let
   cfg = config.modules.environment.code;
+
+  codePkg = pkgs.vscodium;
 in
 {
   options.modules.environment.code = {
@@ -13,13 +15,14 @@ in
     environment.systemPackages = [
       pkgs.clang-tools
       pkgs.helix
+      codePkg
     ];
     
     homeManager = {
       programs = {
         vscode = {
           enable = true;
-          package = pkgs.vscodium;
+          package = codePkg;
           extensions = with pkgs.vscode-extensions; [
             # TODO
           ];

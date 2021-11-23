@@ -99,6 +99,7 @@
       sxhkd.enable = true;
       bluetooth.enable = true;
       transmission.enable = true;
+      sound.enable = true;
     };
 
     x11 = {
@@ -117,6 +118,7 @@
     };
   };
 
+  # TODO: what is this
   programs.dconf.enable = true;
 }
 

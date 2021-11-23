@@ -4,7 +4,7 @@ with lib;
 let 
   cfg = config.modules.x11.bspwm;
   xrdbBin = "${pkgs.xorg.xrdb}/bin/xrdb";
-  xsetrootBin = "${pkgs.xord.xsetroot}/bin/xsetroot";
+  xsetrootBin = "${pkgs.xorg.xsetroot}/bin/xsetroot";
   wmnameBin = "${pkgs.wmname}/bin/wmname";
   bspcBin = "${pkgs.bspwm}/bin/bspc";
 in
@@ -25,7 +25,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    homeManager.services.bspwm = {
+    homeManager.xsession.windowManager.bspwm = {
       enable = true;
 
       monitors = mapAttrs (_: l: map toString l) cfg.monitors;
@@ -41,10 +41,10 @@ in
         ignore_ewmh_focus = true;
       };
 
-      extraConfig = ''
-        ${xsetrootBin} -cursor_name left_ptr
-        ${wmnameBin} LG3D
-      '';
+      startupPrograms = [
+        "${xsetrootBin} -cursor_name left_ptr"
+        "${wmnameBin} LG3D"
+      ];
     };
 
     events.onReload = [ "${bspcBin} wm -r" ];
