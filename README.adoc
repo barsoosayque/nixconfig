@@ -2,8 +2,8 @@
 
 == TODO
 * [x] Dunst notifications (or something else)  and plug notifications to events
-* [ ] Transmission and its events
-* [ ] Alacritty module
+* [x] Transmission and its events
+* [x] Alacritty module
 * [ ] System update event & prograss bar (if possible) notification
 * [ ] Audio change notification
 * [ ] Pick window & audio change it + notification

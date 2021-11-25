@@ -86,8 +86,9 @@ with lib;
     userDirs = {
       inherit home;
 
+      data = "${home}/.local/share";
       desktop = "${home}/.local/desktop";
-      publicShare = "${home}/.local/share";
+      publicShare = "${home}/.local/public";
       templates = "${home}/.local/templates";
 
       documents = "${home}/docs";

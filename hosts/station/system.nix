@@ -49,7 +49,6 @@
 
     # TODO: alacritty + dmenu own modules
     keyboard.bindings = {
-      "super + Return" = "${pkgs.alacritty}/bin/alacritty";
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run";
     };
   };
@@ -63,6 +62,7 @@
     };
 
     programs = {
+      alacritty.enable = true;
       mpv.enable = true;
       scissors.enable = true;
     };
