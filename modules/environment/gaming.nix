@@ -10,6 +10,12 @@ in
   };
 
   config = mkIf cfg.enable {
+    # xpadneo kernel module for xbox one controllers
+    # https://github.com/atar-axis/xpadneo
+    boot.extraModulePackages = with config.boot.kernelPackages; [
+      xpadneo  
+    ];
+
     environment.systemPackages = [
       pkgs.logmein-hamachi
       pkgs.lutris
