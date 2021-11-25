@@ -20,35 +20,10 @@
       pkgs.syncplay
       pkgs.krita
 
-      # system
-      pkgs.htop
-      pkgs.openssl
-      pkgs.file
-      pkgs.unzip
-      pkgs.unrar
-      pkgs.curl
-      pkgs.git
-
       # libs
       pkgs.mono
       pkgs.libgdiplus
-
-      # Text
-      pkgs.kakoune
-      pkgs.neovim
     ];
-
-    variables = {
-      EDITOR = "kak";
-      VISUAL = "kak";
-    };
-
-    shellAliases = {
-      vim = "nvim";
-      vi = "nvim";
-    };
-
-    shells = [ pkgs.zsh ];
   };
 
   fonts.fonts = [
@@ -84,6 +59,7 @@
     environment = {
       code.enable = true;
       gaming.enable = true;
+      cli.enable = true;
     };
 
     programs = {
