@@ -18,7 +18,7 @@ in
       {
         "super + Return" = "alacritty";
         "super + d" = "launcher";
-      }
+      };
       '';
     };
 

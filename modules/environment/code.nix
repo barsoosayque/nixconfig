@@ -15,6 +15,7 @@ in
     environment.systemPackages = [
       pkgs.clang-tools
       pkgs.helix
+      pkgs.git
       codePkg
     ];
     

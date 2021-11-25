@@ -50,8 +50,11 @@ with lib;
     # Gamers.
     nixpkgs.config.allowUnfree = true;
 
-    # This is really annoying, sorry
-    security.sudo.wheelNeedsPassword = false;
+    security.sudo ={
+      enable = true;
+      # This is really annoying, sorry
+      wheelNeedsPassword = false;
+    };
 
     fonts.fontconfig.enable = true;
 
@@ -94,11 +97,15 @@ with lib;
       videos = "${home}/videos";
     };
 
-    homeManager.xdg.userDirs = {
-      inherit (userDirs) desktop publicShare templates documents download music pictures videos;
-
+    homeManager.xdg = {
       enable = true;
-      createDirectories = false;
+
+      userDirs = {
+        inherit (userDirs) desktop publicShare templates documents download music pictures videos;
+
+        enable = true;
+        createDirectories = false;
+      };
     };
   };
 }
