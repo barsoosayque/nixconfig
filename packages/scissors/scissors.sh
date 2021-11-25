@@ -18,9 +18,10 @@ Options:
     -o, --output <name>     Set filename of the output file without an extension
     -d, --dir <path>        Set output directory
     -s, --selection         Use selection tool to crop the shot
+    -x, --script            Path to script to call after successful screenshot.
+                            \$SCREENSHOT_PATH will be available in the script.
     -h, --help              Display this help
-    -v, --version           Display version of the script"
-VERSION="v1.1"
+"
 SELECTION=false
 
 # Parse params
@@ -37,12 +38,13 @@ while [[ $# -gt 0 ]]; do
             shift
             shift
         ;;
+        -x|--script)
+            SCRIPT="$2"
+            shift
+            shift
+        ;;
         -h|--help)
             echo "$USAGE"
-            exit 1
-        ;;
-        -v|--version)
-            echo "$VERSION"
             exit 1
         ;;
         -s|--selection)
@@ -70,6 +72,11 @@ PICTURE="${SAVEPOINT}/${OUTPUT}.png"
 maim $OPTIONS > "$PICTURE"
 if [ -f "$PICTURE" -a -s "$PICTURE" ]; then
     xclip -selection clipboard -t image/png < "$PICTURE"
+
+    if [ -n "$SCRIPT" ]; then
+        export SCREENSHOT_PATH=$PICTURE
+        exec "$SCRIPT"
+    fi
 else 
     rm "$PICTURE"
 fi

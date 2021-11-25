@@ -70,30 +70,27 @@ let
               ${runCallbacks "update"}
             '';
 
-          executable = cmd:
-            writeScript "events-${eventDef.name}-executable-${hashString "sha1" cmd}"
+          sh = cmd:
             ''
-              #!${pkgs.dash}/bin/dash
-              export CMD_STDOUT=$(mktemp)
-              export CMD_STDERR=$(mktemp)
+              export CMD_STDOUT="$TMP/stdout"
+              export CMD_STDERR="$TMP/stderr"
               ${asyncRun} cmd -o $CMD_STDOUT -e $CMD_STDERR -- ${coroutine cmd}
             '';
-        in concatMapStringsSep "\n" executable cmds;
+        in concatMapStringsSep "\n" sh cmds;
 
     in
     writeScript "events-${eventDef.name}-run" ''
       #!${pkgs.dash}/bin/dash
 
-      export ASYNC_SOCKET=$(mktemp)
+      export TMP=$(mktemp -d)
+      export ASYNC_SOCKET="$TMP/socket"
       export EVENT_DESCRIPTION="${eventDef.description}"
 
       ${runCallbacks "beforeCommands"}
-
       ${asyncRun} server --start
       ${runUserCmds config.system.events."${eventDef.name}"}
       ${asyncRun} wait
       ${asyncRun} server --stop
-
       ${runCallbacks "afterCommands"}
     '';
 
@@ -105,6 +102,7 @@ let
   commands = [
     { name = "onReload"; description = "User System reload"; }
     { name = "onTorrentDone"; description = "Transmission torrent downloaded"; }
+    { name = "onScreenshot"; description = "Screenshot made"; }
   ];
 in
 {
@@ -114,9 +112,10 @@ in
         type = types.functionTo (types.functionTo types.attrs);
         readOnly = true;
         description = ''
-        Helper function to make all events callback in modules.
-        Usage:
-        system.events = config.system.events.helpers.mkAllEventsCallback "afterCommands" script;
+          Helper function to make all events callback in modules.
+          Usage:
+          inherit (config.helpers) mkAllEventsCallback;
+          system.events = mkAllEventsCallback "afterCommands" script;
         '';
       }; 
     };

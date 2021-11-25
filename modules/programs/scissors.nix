@@ -11,14 +11,14 @@ in
     
     screenshotsDir = mkOption {
       type = types.str;
-      default = "$XDG_PICTURES_DIR/screenshots";
+      default = "${config.userDirs.pictures}/screenshots";
       description = "Directory to put screenshots to";
     };
   };
 
   config = mkIf cfg.enable {
     system.keyboard.bindings = {
-      "{_,shift +} Print" = "${bin} -d ${cfg.screenshotsDir} {-s,_}";
+      "{_,shift +} Print" = "${bin} -d ${cfg.screenshotsDir} {-s,_} -x ${config.system.events.onScreenshotScript}";
     };
   };
 }
