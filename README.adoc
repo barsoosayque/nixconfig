@@ -1,9 +1,14 @@
 = nixconfig
 
+big wip
+
 == TODO
 * [x] Dunst notifications (or something else)  and plug notifications to events
 * [x] Transmission and its events
 * [x] Alacritty module
+* [ ] Remove all 'with'
+* [ ] Declarative pretty config: colors and background image(s)
+* [ ] Zsh with simple prompt
 * [ ] System update event & prograss bar (if possible) notification
 * [ ] Audio change notification
 * [ ] Pick window & audio change it + notification

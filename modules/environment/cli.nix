@@ -33,28 +33,30 @@ in
       shellAliases = {
         vim = "nvim";
         vi = "nvim";
+        mv = "mv -v";
+        cp = "cp -v";
       };
-
-      shells = [ pkgs.zsh ];
     };
 
-    programs.zsh = {
-      enable = true;
-      syntaxHighlighting.enable = true;
-      autosuggestions = {
-        enable = true;
-        highlightStyle = "fg=14";
-      };
-      enableBashCompletion = true;
-      histSize = 5000;
-      histFile = "${config.userDirs.data}/zsh/history";
-      setOptions = [
-        "ENABLE_CORRECTION"
-      ];
-    };
-    
+    users.defaultUserShell = pkgs.zsh;
+
     homeManager = {
       programs = {
+        zsh = {
+          enable = true;
+          enableCompletion = true;
+          enableSyntaxHighlighting = true;
+          # TODO: absolute path
+          dotDir = ".config/zsh";
+          history = {
+            ignoreDups = true;
+            path = "${config.userDirs.data}/zsh/history";
+          };
+          localVariables = {
+            ENABLE_CORRECTION = true;
+          };
+        };
+    
         exa = {
           enable = true;
           enableAliases = true;

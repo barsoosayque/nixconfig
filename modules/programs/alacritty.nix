@@ -74,7 +74,7 @@ in
               family = "${cfg.font.name}";
               style = "Bold";
             };
-            size = 12.0;
+            size = 11.0;
             glyph_offset = {
               x = 0;
               y = 0;

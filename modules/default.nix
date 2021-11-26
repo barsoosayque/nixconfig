@@ -87,6 +87,8 @@ with lib;
       inherit home;
 
       data = "${home}/.local/share";
+      config = "${home}/.config";
+
       desktop = "${home}/.local/desktop";
       publicShare = "${home}/.local/public";
       templates = "${home}/.local/templates";

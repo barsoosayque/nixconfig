@@ -43,6 +43,13 @@
     name = "barsoo";
   };
 
+  # TODO: picom module
+  homeManager.services.picom = {
+    enable = true;
+    blur = true;
+    shadow = true;
+  };
+
   # general definitions
   system = {
     locale.locationName = "Abakan";
