@@ -37,6 +37,12 @@ let
       icon = pkgsLocal.remixicon.mkIcon { id = "notification-line"; };
     };
 
+    torrent = mkSendScript { 
+      title = "$EVENT_DESCRIPTION";
+      msg = "$TR_TORRENT_NAME";
+      icon = pkgsLocal.remixicon.mkIcon { id = "folder-download-line"; };
+    };
+
     screenshoot = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Saved to clipboard and $SCREENSHOT_PATH";
@@ -78,11 +84,18 @@ in
 
       settings = {
         global = {
-          offset = "12x12";
-          transparency = 25;
-          padding = 10;
-          horizontal_padding = 10;
+          offset = "20x20";
+          padding = 20;
+          horizontal_padding = 20;
+          width = 400;
+          height = 200;
+
           frame_width = 1;
+          frame_color = "#FFF";
+          background = "#444";
+          foreground = "#FFF";
+          corner_radius = 10;
+          transparency = 15;
           font = "${cfg.font.name} ${toString cfg.font.size}";
         };
       };
@@ -90,7 +103,7 @@ in
 
     system.events = mkIf cfg.notifySystemEvents {
       onReloadCallbacks.afterCommands = [ scripts.default ];
-      onTorrentDoneCallbacks.afterCommands = [ scripts.default ];
+      onTorrentDoneCallbacks.afterCommands = [ scripts.torrent ];
       onScreenshotCallbacks.afterCommands = [ scripts.screenshoot ];
     };
 

@@ -2,10 +2,22 @@
 
 with lib;
 let
-  inherit (pkgs) writeScript;
+  inherit (builtins) toJSON;
 
   cfg = config.modules.services.transmission;
   torrentDir = "${config.userDirs.download}/torrent";
+
+  settings = {
+    watch-dir-enabled = true;
+    incomplete-dir-enabled = true;
+
+    watch-dir = "${torrentDir}/torrents";
+    incomplete-dir = "${torrentDir}/incomplete";
+    download-dir = "${torrentDir}/complete";
+
+    script-torrent-done-enabled = true;
+    script-torrent-done-filename = config.system.events.onTorrentDoneScript;
+  };
 in
 {
   options.modules.services.transmission = {
@@ -13,36 +25,25 @@ in
   };
 
   config = mkIf cfg.enable {
-    # security.sudo.extraRules = [
-    #   { 
-    #     users = [ config.currentUser.name ]; 
-    #     runAs = "transmission"; 
-    #     commands = [ { command = "ALL"; options = [ "NOPASSWD" "SETENV" ]; } ];
-    #   }
-    # ];
+    system.activationScripts.transmission-daemon = ''
+      install -d -o '${config.currentUser.name}' '${settings.download-dir}'
+      install -d -o '${config.currentUser.name}' '${settings.watch-dir}'
+      install -d -o '${config.currentUser.name}' '${settings.incomplete-dir}'
+      '';
 
-    currentUser.extraGroups = [ "transmission" ];
+    homeManager.xdg.configFile."transmission-daemon/settings.json".text = toJSON settings;
 
-    services.transmission = {
-      enable = true;
-      
-      # This is wrong, but I couldn't figure out how to send notifications
-      # from "transmission" user to current user, because sudo -u USER
-      # doesn't work from transmission service for some reason
-      # user = config.currentUser.name;
+    environment.systemPackages = [ pkgs.transmission ];
 
-      settings = {
-        extraFlags = [ "--log-debug" "--logfile /var/lib/transmission/log" ];
+    systemd.services.transmission = {
+      description = "Transmission BitTorrent Service";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
 
-        watch-dir-enabled = true;
-        incomplete-dir-enabled = true;
-
-        watch-dir = "${torrentDir}/torrents";
-        incomplete-dir = "${torrentDir}/incomplete";
-        download-dir = "${torrentDir}/complete";
-
-        script-torrent-done-enabled = true;
-        script-torrent-done-filename = config.system.events.onTorrentDoneScript;
+      serviceConfig = {
+        ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.userDirs.config}/transmission-daemon'";
+        ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
+        User="${config.currentUser.name}";
       };
     };
   };
