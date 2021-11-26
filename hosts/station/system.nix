@@ -43,13 +43,6 @@
     name = "barsoo";
   };
 
-  # TODO: picom module
-  homeManager.services.picom = {
-    enable = true;
-    blur = true;
-    shadow = true;
-  };
-
   # general definitions
   system = {
     locale.locationName = "Abakan";
@@ -88,6 +81,7 @@
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
+      picom.enable = true;
     };
 
     x11 = {

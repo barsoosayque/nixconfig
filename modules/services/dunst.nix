@@ -79,7 +79,7 @@ in
       settings = {
         global = {
           offset = "12x12";
-          transparency = 50;
+          transparency = 25;
           padding = 10;
           horizontal_padding = 10;
           frame_width = 1;
