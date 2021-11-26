@@ -1,5 +1,6 @@
 { pkgs, ... }:
 
+# TODO: writeShellApplication
 with pkgs; stdenv.mkDerivation {
   pname = "scissors";
   version = "1.1";

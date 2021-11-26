@@ -9,7 +9,7 @@ let
 
   notifySend = "${pkgs.libnotify}/bin/notify-send";
 
-  mkSendScript = title: msg: writeScript "dunst-event-script" ''
+  mkSendScript = { title, msg, icon ? null, ... }: writeScript "dunst-event-script" ''
     #!${pkgs.dash}/bin/dash
 
     # see https://github.com/phuhl/notify-send.py#notify-sendpy-as-root-user
@@ -26,28 +26,72 @@ let
         XAUTHORITY=${config.userDirs.home}/.Xauthority \
         DISPLAY=:0 \
         DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.currentUser.uid}/bus \
-        ${notifySend} "$TITLE" "$MSG"
+        ${notifySend} "$TITLE" "$MSG" \
+        ${strings.optionalString (icon != null) "--icon=${icon}" }
   '';
 
-  defaultNotifyScript = mkSendScript "$EVENT_DESCRIPTION" "Completed";
+  scripts = {
+    default = mkSendScript { 
+      title = "$EVENT_DESCRIPTION";
+      msg = "Completed";
+      icon = pkgsLocal.remixicon.mkIcon { id = "notification-line"; };
+    };
 
-  screenshotMadeScrtipt = mkSendScript "$EVENT_DESCRIPTION" "Saved to clipboard and $SCREENSHOT_PATH";
+    screenshoot = mkSendScript {
+      title = "$EVENT_DESCRIPTION";
+      msg = "Saved to clipboard and $SCREENSHOT_PATH";
+      icon = pkgsLocal.remixicon.mkIcon { id = "screenshot-line"; };
+    };
+  };
 in
 {
   options.modules.services.dunst = {
     enable = mkEnableOption "dunst";
     notifySystemEvents = mkEnableOption "notify system events using dunst";
+
+    font = {
+      package = mkOption {
+        type = types.package;
+        default = pkgs.ubuntu_font_family;
+        description = "Font nix package";
+      };
+
+      name = mkOption {
+        type = types.str;
+        default = "Ubuntu";
+        description = "Font name according to the package";
+      };
+
+      size = mkOption {
+        type = types.int;
+        default = 11;
+        description = "Text size";
+      };
+    };
   };
 
   config = mkIf cfg.enable {
+    fonts.fonts = [ cfg.font.package ];
+
     homeManager.services.dunst = {
       enable = true;
+
+      settings = {
+        global = {
+          offset = "12x12";
+          transparency = 50;
+          padding = 10;
+          horizontal_padding = 10;
+          frame_width = 1;
+          font = "${cfg.font.name} ${toString cfg.font.size}";
+        };
+      };
     };
 
     system.events = mkIf cfg.notifySystemEvents {
-      onReloadCallbacks.afterCommands = [ defaultNotifyScript ];
-      onTorrentDoneCallbacks.afterCommands = [ defaultNotifyScript ];
-      onScreenshotCallbacks.afterCommands = [ screenshotMadeScrtipt ];
+      onReloadCallbacks.afterCommands = [ scripts.default ];
+      onTorrentDoneCallbacks.afterCommands = [ scripts.default ];
+      onScreenshotCallbacks.afterCommands = [ scripts.screenshoot ];
     };
 
     # whitelist notify-send so other users can run onEventScript and trigger notifications
