@@ -51,6 +51,10 @@
     keyboard.bindings = {
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run";
     };
+
+    pretty = {
+      backgroundEnable = true;
+    };
   };
 
   # homebrewk modules

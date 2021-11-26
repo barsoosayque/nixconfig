@@ -100,6 +100,7 @@ let
 in
 let
   commands = [
+    { name = "onStartup"; description = "User system startup"; }
     { name = "onReload"; description = "User System reload"; }
     { name = "onTorrentDone"; description = "Transmission torrent downloaded"; }
     { name = "onScreenshot"; description = "Screenshot made"; }
