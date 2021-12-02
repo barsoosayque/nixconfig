@@ -47,11 +47,6 @@
   system = {
     locale.locationName = "Abakan";
 
-    # TODO: alacritty + dmenu own modules
-    keyboard.bindings = {
-      "super + d" = "${pkgs.dmenu}/bin/dmenu_run";
-    };
-
     pretty = {
       backgroundEnable = true;
     };
@@ -69,6 +64,7 @@
       alacritty.enable = true;
       mpv.enable = true;
       scissors.enable = true;
+      dmenu.enable = true;
     };
 
     services = {
@@ -81,7 +77,7 @@
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
-      picom.enable = true;
+      #picom.enable = true;
     };
 
     x11 = {

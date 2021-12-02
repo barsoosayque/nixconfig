@@ -1,0 +1,74 @@
+{ config, pkgs, pkgsLocal, lib, ... }:
+
+with lib;
+let 
+  inherit (pkgs) fetchurl;
+
+  cfg = config.modules.programs.dmenu;
+
+  patches = [
+    # fuzzymatch
+    (fetchurl {
+      url = "https://tools.suckless.org/dmenu/patches/fuzzymatch/dmenu-fuzzymatch-4.9.diff";
+      sha256 = "d9a1e759cd518348fc37c2c83fbd097232098562ebfd1edf85b51413ff524b79";
+    })
+    # fuzzymatch highlight
+    (fetchurl {
+      url = "https://tools.suckless.org/dmenu/patches/fuzzyhighlight/dmenu-fuzzyhighlight-4.9.diff";
+      sha256 = "82cbcc1a6a721fb670f6561b98a58e8a2301bffde2e94c87e77868b09927aa57";
+    })
+    # numbers
+    (fetchurl {
+      url = "https://tools.suckless.org/dmenu/patches/numbers/dmenu-numbers-4.9.diff";
+      sha256 = "f79de21544b83fa1e86f0aed5e849b1922ebae8d822e492fbc9066c0f07ddb69";
+    })
+  ];
+
+  params = concatStringsSep " " [
+    "-l 10"
+    "-fn '${cfg.font.name}'"
+    # background colors
+    "-nb '${config.system.pretty.theme.colors.primary.background}'"
+    "-sb '${config.system.pretty.theme.colors.cursor.accent}'"
+    "-nhb '${config.system.pretty.theme.colors.primary.background}'"
+    "-shb '${config.system.pretty.theme.colors.cursor.accent}'"
+    # foreground colors
+    "-nf '${config.system.pretty.theme.colors.cursor.cursor}'"
+    "-sf '${config.system.pretty.theme.colors.cursor.text}'"
+    "-nhf '${config.system.pretty.theme.colors.cursor.accent}'"
+    "-shf '${config.system.pretty.theme.colors.cursor.text}'"
+  ];
+in
+{
+  options.modules.programs.dmenu = {
+    enable = mkEnableOption "dmenu";
+
+    font = {
+      package = mkOption {
+        type = types.package;
+        default = pkgs.ubuntu_font_family;
+        description = "Font nix package";
+      };
+
+      name = mkOption {
+        type = types.str;
+        default = "Ubuntu:Bold";
+        description = "Font name according to the package";
+      };
+    };
+  };
+
+  config = mkIf cfg.enable {
+    fonts.fonts = [ cfg.font.package ];
+
+    nixpkgs.overlays = [
+      (self: super: { 
+        dmenu = super.dmenu.override { inherit patches; };
+      })
+    ];
+
+    system.keyboard.bindings = {
+      "super + d" = "${pkgs.dmenu}/bin/dmenu_run ${params} -p \"Run: \"";
+    };
+  };
+}
