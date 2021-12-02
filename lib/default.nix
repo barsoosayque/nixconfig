@@ -2,6 +2,28 @@
 
 with pkgs.lib;
 let
+  mapDir = mapper: path:
+    mapAttrs
+    (n: v: let p = path + "/${n}"; in mapper p)
+    (attrsets.optionalAttrs (builtins.pathExists path) (builtins.readDir path));
+    
+  mapAllFiles = mapper: path:
+    lists.flatten
+    (
+      mapAttrsToList
+      (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p else mapper p)
+      (attrsets.optionalAttrs (builtins.pathExists path) (builtins.readDir path))
+    );
+    
+  collectHosts = path: attrs:
+    mapDir (p: mkHost p attrs) path;
+
+  collectModules = path: attrs:
+    filter (v: isFunction v) (mapAllFiles import path);
+
+  collectPackages = path: attrs:
+    mapDir (p: import p attrs) path;
+
   mkHost = path: attrs@{ modulesPath, pkgsLocal, home-manager, ... }:
     let
       name = baseNameOf path;
@@ -17,39 +39,10 @@ let
         home-manager.nixosModule
         (path + "/system.nix")
         (path + "/hardware.nix")
-      ] ++ (mapAllFiles import modulesPath);
+      ] ++ (collectModules modulesPath {});
       
     };
-
-  # Maps content of the directory.
-  #
-  # input:
-  #   mapper: Path -> Any
-  #     Mapper function to convert a path to something
-  #   path: Path
-  #     Path to the directory
-  # output: AttrSet
-  #   Set of { relative path = mapped value }
-  mapDir = mapper: path:
-    mapAttrs
-    (n: v: let p = path + "/${n}"; in mapper p)
-    (attrsets.optionalAttrs (builtins.pathExists path) (builtins.readDir path));
-    
-  mapAllFiles = mapper: path:
-    lists.flatten
-    (
-      mapAttrsToList
-      (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p else mapper p)
-      (attrsets.optionalAttrs (builtins.pathExists path) (builtins.readDir path))
-    );
 in
 {
-  collectHosts = path: attrs:
-    mapDir (p: mkHost p attrs) path;
-
-  collectModules = path: attrs:
-    mapAllFiles import path;
-
-  collectPackages = path: attrs:
-    mapDir (p: import p attrs) path;
+  inherit collectHosts collectModules collectPackages;
 }

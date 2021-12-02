@@ -75,13 +75,15 @@ in
               family = "${cfg.font.name}";
               style = "Bold";
             };
-            size = 11.0;
+            size = 10.0;
             glyph_offset = {
               x = 0;
               y = 0;
             };
           };
           draw_bold_text_with_bright_colors = true;
+
+          colors = config.system.pretty.theme.colors;
         };
       };
     };
