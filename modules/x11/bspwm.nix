@@ -53,12 +53,10 @@ in
     system.keyboard.bindings = {
       "super + {shift,shift + ctrl} + q" = "${bspcBin} node -{c,k}";
       "super + {_,shift + }{0-9}" = "${bspcBin} {desktop -f, node -d} '{0-9}'";
-      "super + shift + {@space,f}" = ''
-        if [ -z "$(${bspcBin} query -N -n focused.tiled)" ]; then \
-          ${bspcBin} node focused -t tiled; \
-        else \
-          ${bspcBin} node focused -t {floating,fullscreen}; \
-        fi
+      "super + shift + {space,f}" = ''
+        ${bspcBin} node focused -t $( 
+          [ -z $(${bspcBin} query -N -n focused.tiled) ] && echo "tiled" || echo "{floating,fullscreen}" 
+        )
       '';
     };
   };
