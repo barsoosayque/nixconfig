@@ -35,6 +35,7 @@ let
         {
           _module.args.pkgsLocal = pkgsLocal;
           _module.args.hostName = name;
+          _module.args.hmLib = home-manager.lib;
         }
         home-manager.nixosModule
         (path + "/system.nix")

@@ -1,4 +1,4 @@
-{ config, options, pkgs, pkgsLocal, lib, ... }:
+{ config, options, pkgs, pkgsLocal, lib, hmLib, ... }:
 
 with lib;
 let
@@ -17,6 +17,12 @@ let
 
     script-torrent-done-enabled = true;
     script-torrent-done-filename = config.system.events.onTorrentDoneScript;
+
+    rpc-enabled = true;
+    rpc-bind-address = "127.0.0.1";
+    rpc-port = 9091;
+    rpc-whitelist-enabled = false;
+    rpc-host-whitelist-enabled = false;
   };
 in
 {
@@ -25,13 +31,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    system.activationScripts.transmission-daemon = ''
-      install -d -o '${config.currentUser.name}' '${settings.download-dir}'
-      install -d -o '${config.currentUser.name}' '${settings.watch-dir}'
-      install -d -o '${config.currentUser.name}' '${settings.incomplete-dir}'
+    homeManager ={
+      home.activation.mkTorrentDirs = hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        install -d -o '${config.currentUser.name}' '${settings.download-dir}'
+        install -d -o '${config.currentUser.name}' '${settings.watch-dir}'
+        install -d -o '${config.currentUser.name}' '${settings.incomplete-dir}'
       '';
 
-    homeManager.xdg.configFile."transmission-daemon/settings.json".text = toJSON settings;
+      xdg.configFile."transmission-daemon/settings.json".text = toJSON settings;
+    };
 
     environment.systemPackages = [ pkgs.transmission ];
 
@@ -41,9 +49,9 @@ in
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
+        User = config.currentUser.name;
         ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.userDirs.config}/transmission-daemon'";
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-        User="${config.currentUser.name}";
       };
     };
   };
