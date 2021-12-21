@@ -9,7 +9,7 @@ in
 
     screenshotsDir = mkOption {
       type = types.str;
-      default = "$XDG_PICTURES_DIR/screenshots";
+      default = "${config.userDirs.pictures}/screenshots";
       description = "Where to put screenshots";
     };
 
