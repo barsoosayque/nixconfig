@@ -93,6 +93,16 @@
           "DP-5" = [ 5 6 7 8 ];
         };
       };
+      monitor.layout = [
+        {
+          identifier = "HDMI-0";
+          resolution = { width = 1920; height = 1080; };
+        }
+        {
+          identifier = "DP-5";
+          resolution = { width = 1920; height = 1080; };
+        }
+      ];
     };
   };
 
