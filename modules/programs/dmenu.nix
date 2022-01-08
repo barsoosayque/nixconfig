@@ -22,6 +22,11 @@ let
       url = "https://tools.suckless.org/dmenu/patches/numbers/dmenu-numbers-4.9.diff";
       sha256 = "f79de21544b83fa1e86f0aed5e849b1922ebae8d822e492fbc9066c0f07ddb69";
     })
+    # mouse support
+    (fetchurl{
+      url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.0.diff";
+      sha256 = "690daaf24d4379f9ed4dbc1d7f7864a86fada420afc6ef792d9e2d09bd6fe8b6";
+    })
   ];
 
   params = concatStringsSep " " [
@@ -42,6 +47,12 @@ in
 {
   options.modules.programs.dmenu = {
     enable = mkEnableOption "dmenu";
+
+    enableEmoji = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable dmenu emoji picker";
+    };
 
     font = {
       package = mkOption {
@@ -69,6 +80,8 @@ in
 
     system.keyboard.bindings = {
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run ${params} -p \"Run: \"";
-    };
+    }; #// attrsets.optionalAttrs cfg.enableEmoji {
+      # "super + e" = "${pkgsLocal.dmenu_emoji}/bin/dmenu_emoji ${params} -p \"Emoji: \"";
+    # };
   };
 }
