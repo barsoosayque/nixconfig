@@ -10,7 +10,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    homeManager.services.redshift = {
+    system.user.hm.services.redshift = {
       enable = true;
       provider = "manual";
       latitude = config.system.locale.location.latitude;

@@ -16,7 +16,7 @@ in
       "super + shift + r" = "${config.system.events.onReloadScript}";
     };
 
-    homeManager.services.sxhkd = {
+    system.user.hm.services.sxhkd = {
       enable = true;
       keybindings = config.system.keyboard.bindings;
     };

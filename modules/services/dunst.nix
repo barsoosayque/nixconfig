@@ -15,17 +15,17 @@ let
     # see https://github.com/phuhl/notify-send.py#notify-sendpy-as-root-user
     # and https://dunst-project.org/faq/
 
-    export XAUTHORITY=${config.userDirs.home}/.Xauthority
+    export XAUTHORITY=${config.system.user.home}/.Xauthority
     export DISPLAY=:0
-    export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.currentUser.uid}/bus
+    export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus
 
     TITLE="${title}"
     MSG="${msg}"
 
-    /run/wrappers/bin/sudo -u ${config.currentUser.name} \
-        XAUTHORITY=${config.userDirs.home}/.Xauthority \
+    /run/wrappers/bin/sudo -u ${config.system.user.name} \
+        XAUTHORITY=${config.system.user.home}/.Xauthority \
         DISPLAY=:0 \
-        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.currentUser.uid}/bus \
+        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus \
         ${notifySend} "$TITLE" "$MSG" \
         ${strings.optionalString (icon != null) "--icon=${icon}" }
   '';
@@ -79,7 +79,7 @@ in
   config = mkIf cfg.enable {
     fonts.fonts = [ cfg.font.package ];
 
-    homeManager.services.dunst = {
+    system.user.hm.services.dunst = {
       enable = true;
 
       settings = {
@@ -111,7 +111,7 @@ in
     security.sudo.extraRules = [
       { 
         users = [ "ALL" ]; 
-        runAs = config.currentUser.name; 
+        runAs = config.system.user.name; 
         commands = [ { command = notifySend; options = [ "NOPASSWD" "SETENV" ]; } ];
       }
     ];

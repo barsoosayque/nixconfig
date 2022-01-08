@@ -10,7 +10,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    homeManager.gtk = {
+    system.user.hm.gtk = {
       enable = true;
       iconTheme.package = pkgs.gnome3.adwaita-icon-theme;
       iconTheme.name = "Paper";

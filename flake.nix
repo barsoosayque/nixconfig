@@ -30,22 +30,22 @@
       pkgs = import nixpkgs { inherit system; };
 
       # Utils to automatically create outputs
-      flakeLib = import ./lib { inherit nixpkgs; inherit pkgs; };
+      localLib = import ./lib { inherit nixpkgs; inherit pkgs; };
 
     in {
       # Actuall systems configurations (per host)
-      nixosConfigurations = flakeLib.collectHosts ./hosts {
+      nixosConfigurations = localLib.flakeUtils.collectHosts ./hosts {
+          inherit home-manager localLib;
           modulesPath = ./modules;
           pkgsLocal = self.packages."${system}";
-          inherit home-manager;
       };
 
       # Modules for system configurations
-      nixosModules = flakeLib.collectModules ./modules {};
+      nixosModules = localLib.flakeUtils.collectModules ./modules {};
 
       # Include custom local packages
       # NOTE: Executed by `nix build .#<name>`
-      packages."${system}" = flakeLib.collectPackages ./packages { inherit pkgs; };
+      packages."${system}" = localLib.flakeUtils.collectPackages ./packages { inherit pkgs; };
 
       # Just a simple development shell with flaked nix
       # NOTE: Used by `nix develop`

@@ -5,7 +5,7 @@ let
   inherit (builtins) toJSON;
 
   cfg = config.modules.services.transmission;
-  torrentDir = "${config.userDirs.download}/torrent";
+  torrentDir = "${config.system.user.dirs.download.path}/torrent";
 
   settings = {
     watch-dir-enabled = true;
@@ -31,11 +31,11 @@ in
   };
 
   config = mkIf cfg.enable {
-    homeManager ={
+    system.user.hm ={
       home.activation.mkTorrentDirs = hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        install -d -o '${config.currentUser.name}' '${settings.download-dir}'
-        install -d -o '${config.currentUser.name}' '${settings.watch-dir}'
-        install -d -o '${config.currentUser.name}' '${settings.incomplete-dir}'
+        install -d -o '${config.system.user.name}' '${settings.download-dir}'
+        install -d -o '${config.system.user.name}' '${settings.watch-dir}'
+        install -d -o '${config.system.user.name}' '${settings.incomplete-dir}'
       '';
 
       xdg.configFile."transmission-daemon/settings.json".text = toJSON settings;
@@ -46,11 +46,11 @@ in
     systemd.services.transmission = {
       description = "Transmission BitTorrent Service";
       after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = [ "multi-system.user.target" ];
 
       serviceConfig = {
-        User = config.currentUser.name;
-        ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.userDirs.config}/transmission-daemon'";
+        User = config.system.user.name;
+        ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.path}/transmission-daemon'";
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       };
     };

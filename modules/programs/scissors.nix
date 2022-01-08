@@ -11,7 +11,7 @@ in
     
     screenshotsDir = mkOption {
       type = types.str;
-      default = "${config.userDirs.pictures}/screenshots";
+      default = "${config.system.user.dirs.pictures.path}/screenshots";
       description = "Directory to put screenshots to";
     };
   };

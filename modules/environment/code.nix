@@ -19,7 +19,7 @@ in
       codePkg
     ];
     
-    homeManager = {
+    system.user.hm = {
       programs = {
         vscode = {
           enable = true;

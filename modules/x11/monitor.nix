@@ -46,14 +46,14 @@ let
     {
       output = head.identifier;
       monitorConfig = ''
-        Option "PreferredMode" "${head.resolution.width}x${head.resolution.height}"
+        Option "PreferredMode" "${toString head.resolution.width}x${toString head.resolution.height}"
         ${optionalString (prevHead != null) (mkLeftOfOption prevHead)}
       '';
     };
 
   mkLayout = layout:
     [
-      (mkHead (head layout) null) // { primary = true; }
+      ((mkHead (head layout) null) // { primary = true; })
     ] ++ (zipListsWith mkHead (tail layout) layout);
 in
 {
@@ -66,6 +66,6 @@ in
   };
 
   config = {
-    services.xserver.xrandrHeads = mkLayout cfg.layout;
+    # services.xserver.xrandrHeads = mkLayout cfg.layout;
   };
 }

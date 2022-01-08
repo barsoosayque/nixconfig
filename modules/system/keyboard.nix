@@ -36,7 +36,7 @@ in
   };
 
   config = {
-    homeManager.home.keyboard = {
+    system.user.hm.home.keyboard = {
       layout = concatStringsSep "," cfg.layouts;
       options = [ changeLayoutKeys."${cfg.changeLayoutKey}" ];
     };

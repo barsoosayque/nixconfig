@@ -40,7 +40,7 @@ in
 
     users.defaultUserShell = pkgs.zsh;
 
-    homeManager = {
+    system.user.hm = {
       programs = {
         zsh = {
           enable = true;
@@ -50,7 +50,7 @@ in
           dotDir = ".config/zsh";
           history = {
             ignoreDups = true;
-            path = "${config.userDirs.data}/zsh/history";
+            path = "${config.system.user.dirs.data.path}/zsh/history";
           };
           localVariables = {
             ENABLE_CORRECTION = true;

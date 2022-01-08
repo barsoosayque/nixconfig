@@ -32,7 +32,7 @@ in
     fonts.fonts = [ cfg.font.package ];
     environment.systemPackages = [ pkg ];
 
-    homeManager = {
+    system.user.hm = {
       programs.alacritty = {
         enable = true;
 

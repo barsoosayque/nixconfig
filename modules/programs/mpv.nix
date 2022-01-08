@@ -9,7 +9,7 @@ in
 
     screenshotsDir = mkOption {
       type = types.str;
-      default = "${config.userDirs.pictures}/screenshots";
+      default = "${config.system.user.dirs.pictures.path}/screenshots";
       description = "Where to put screenshots";
     };
 
@@ -46,7 +46,7 @@ in
     environment.systemPackages = [ pkgs.mpv ];
     fonts.fonts = [ cfg.osdFont.package cfg.subFont.package ];
 
-    homeManager.programs.mpv = {
+    system.user.hm.programs.mpv = {
       enable = true;
       config = {
         no-border = true;

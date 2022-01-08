@@ -10,7 +10,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    homeManager.services.picom = {
+    system.user.hm.services.picom = {
       enable = true;
       blur = true;
       shadow = true;

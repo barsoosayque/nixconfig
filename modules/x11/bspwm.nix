@@ -2,6 +2,8 @@
 
 with lib;
 let 
+  inherit (pkgs) writeScript;
+
   cfg = config.modules.x11.bspwm;
   xrdbBin = "${pkgs.xorg.xrdb}/bin/xrdb";
   xsetrootBin = "${pkgs.xorg.xsetroot}/bin/xsetroot";
@@ -25,7 +27,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    homeManager.xsession.windowManager.bspwm = {
+    system.user.hm.xsession.windowManager.bspwm = {
       enable = true;
 
       monitors = mapAttrs (_: l: map toString l) cfg.monitors;
@@ -50,14 +52,22 @@ in
 
     system.events.onReload = [ "${bspcBin} wm -r" ];
 
-    system.keyboard.bindings = {
+    system.keyboard.bindings = let
+      bspcToggleMode = mode: toString (writeScript "bspwm-toggle-${mode}" 
+        ''
+          MODE="${mode}";
+
+          if [ -z $(${bspcBin} query -N -n focused.tiled) ]; then
+            MODE="tiled";
+          fi
+
+          ${bspcBin} node focused -t $MODE
+        '');
+    in {
       "super + {shift,shift + ctrl} + q" = "${bspcBin} node -{c,k}";
       "super + {_,shift + }{0-9}" = "${bspcBin} {desktop -f, node -d} '{0-9}'";
-      "super + shift + {space,f}" = ''
-        ${bspcBin} node focused -t $( 
-          [ -z $(${bspcBin} query -N -n focused.tiled) ] && echo "tiled" || echo "{floating,fullscreen}" 
-        )
-      '';
+      "super + shift + space" = bspcToggleMode "floating";
+      "super + shift + f" = bspcToggleMode "fullscreen";
     };
   };
 }

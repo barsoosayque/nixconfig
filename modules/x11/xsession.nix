@@ -29,7 +29,7 @@ in
       displayManager.startx.enable = true;
     };
     
-    homeManager.xsession = {
+    system.user.hm.xsession = {
       enable = true;
       scriptPath = ".xinitrc";
     };
