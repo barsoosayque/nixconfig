@@ -24,6 +24,7 @@
     };
 
     cursor = {
+      accent = bright.green;
       text = normal.black;
       cursor = normal.white;
     };
@@ -34,9 +35,13 @@
     };
 
     notification = {
-      accent = normal.magenta;
+      accent = bright.green;
       background = normal.black;
       foreground = normal.white;
+    };
+
+    utility = {
+
     };
   };
 }
