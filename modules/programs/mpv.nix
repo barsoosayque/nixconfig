@@ -43,13 +43,21 @@ in
   };
 
   config = mkIf cfg.enable {
+    nixpkgs.overlays = [
+      (self: super: {
+        mpv = super.mpv.override {
+          scripts = with pkgs.mpvScripts; [ autoload simple-mpv-webui ];
+        };
+      })
+    ];
+
     environment.systemPackages = [ pkgs.mpv ];
     fonts.fonts = [ cfg.osdFont.package cfg.subFont.package ];
 
     system.user.hm.programs.mpv = {
       enable = true;
       config = {
-        no-border = true;
+        border = false;
         msg-module = true;
         msg-color = true;
         term-osd-bar = true;
@@ -57,7 +65,7 @@ in
         keep-open = true;
         autofit-larger= "100%x95%";
         cursor-autohide-fs-only = true;
-        input-media-keysi = false;
+        input-media-keys = false;
         cursor-autohide = 1000;
         prefetch-playlist = true;
         force-seekable = true;
@@ -68,9 +76,10 @@ in
         hls-bitrate = "max";
 
         cache = true;
+
         osd-level = 1;
         osd-duration = 2500;
-        osd-status-msg = "\${time-pos} / \${duration}\${?percent-pos:　(\${percent-pos}%)}\${?frame-drop-count:\${!frame-drop-count==0:　Dropped: \${frame-drop-count}}}\n\${?chapter:Chapter: \${chapter}}";
+        # osd-status-msg = "\${time-pos} / \${duration}\${?percent-pos:　(\${percent-pos}%)}\${?frame-drop-count:\${!frame-drop-count==0:　Dropped: \${frame-drop-count}}}\n\${?chapter:Chapter: \${chapter}}";
 
         osd-font = cfg.osdFont.name;
         osd-font-size = 32;
@@ -84,7 +93,7 @@ in
 
         sub-auto = "fuzzy";
         sub-file-paths-append = [ "ass" "srt" "sub" "subs" "subtitles" "RUS Subs" ];
-        no-embeddedfonts = true;
+        embeddedfonts = false;
         sub-scale-with-window = true;
         sub-ass-override = "force";
         # sub-use-margins  = true;
