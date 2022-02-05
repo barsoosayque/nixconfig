@@ -29,13 +29,6 @@ in
         EDITOR = "kak";
         VISUAL = "kak";
       };
-
-      shellAliases = {
-        vim = "nvim";
-        vi = "nvim";
-        mv = "mv -v";
-        cp = "cp -v";
-      };
     };
 
     users.defaultUserShell = pkgs.zsh;
@@ -48,18 +41,27 @@ in
           enableSyntaxHighlighting = true;
           # TODO: absolute path
           dotDir = ".config/zsh";
+
           history = {
             ignoreDups = true;
             path = "${config.system.user.dirs.data.path}/zsh/history";
           };
+
           localVariables = {
             ENABLE_CORRECTION = true;
+          };
+
+          shellAliases = {
+            vim = "nvim";
+            vi = "nvim";
+            mv = "mv -v";
+            cp = "cp -v";
+            ls = "${pkgs.exa}/bin/exa --icons --group-directories-first --classify ";
           };
         };
     
         exa = {
           enable = true;
-          enableAliases = true;
         };
         bat = {
           enable = true;

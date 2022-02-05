@@ -1,9 +1,13 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
 with lib;
-let 
+let
   cfg = config.modules.programs.alacritty;
   pkg = pkgs.alacritty;
+
+  iosevkaCustom = pkgs.nerdfonts.override {
+    fonts = [ "Iosevka" ];
+  };
 in
 {
   options.modules.programs.alacritty = {
@@ -12,13 +16,13 @@ in
     font = {
       package = mkOption {
         type = types.package;
-        default = pkgs.go-font;
+        default = iosevkaCustom;
         description = "Font nix package";
       };
 
       name = mkOption {
         type = types.str;
-        default = "Go Mono";
+        default = "Iosevka";
         description = "Font name according to the package";
       };
     };
@@ -48,7 +52,7 @@ in
             animation = "Linear";
             duration = 0;
           };
-        
+
           # Geometry
           window = {
             dimensions = {
@@ -69,13 +73,13 @@ in
           font = {
             normal = {
               family = "${cfg.font.name}";
-              style = "Regular";
+              style = "Medium";
             };
             bold = {
               family = "${cfg.font.name}";
-              style = "Bold";
+              style = "Heavy";
             };
-            size = 10.0;
+            size = 12.0;
             glyph_offset = {
               x = 0;
               y = 0;
