@@ -14,17 +14,25 @@
   hardware.cpu.amd.updateMicrocode = true;
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/8a383df7-91fc-4d7c-8f1d-830ef9d64b4a";
+    { device = "/dev/disk/by-label/root";
       fsType = "ext4";
+      neededForBoot = true;
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-label/home";
+      fsType = "ext4";
+      neededForBoot = true;
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/39E3-E3C6";
+    { device = "/dev/disk/by-label/boot-ssd";
       fsType = "vfat";
+      neededForBoot = true;
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/0e6987d1-2b98-412f-9e6b-3d836697ffbc"; }
+    [ { device = "/dev/disk/by-label/swap"; }
     ];
 
 }

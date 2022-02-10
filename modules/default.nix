@@ -4,6 +4,9 @@ with lib;
 {
   config = {
     boot = {
+      tmpOnTmpfs = false;
+      cleanTmpDir = true;
+
       kernelPackages = pkgs.linuxPackages_latest;
       loader = {
         systemd-boot.enable = true;

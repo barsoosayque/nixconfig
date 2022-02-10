@@ -4,7 +4,7 @@ with lib;
 let
   inherit (strings) hasPrefix removePrefix;
   inherit (localLib.userDirsUtils) mkRegularDir mkSymlinkDir mkNullDir isRegularDir isSymlinkDir;
-  
+
   cfg = config.system.user;
 in
 {
@@ -22,13 +22,13 @@ in
 
     extraConfig = mkOption {
       type = types.attrs;
-      default = {};
+      default = { };
       description = "Extra configs for current user (nixos user configs)";
     };
 
     hm = mkOption {
       type = types.attrs;
-      default = {};
+      default = { };
       description = "Home-manager configs for current user";
     };
 
@@ -59,10 +59,10 @@ in
     };
   };
 
-  config = {
+  config = rec {
     users.users."${cfg.name}" = mkAliasDefinitions options.system.user.extraConfig;
     home-manager.users."${cfg.name}" = mkAliasDefinitions options.system.user.hm;
-    
+
     system.user = {
       uid = 1000;
       home = "/home/${cfg.name}";
@@ -73,16 +73,15 @@ in
         description = "The one and only";
         extraGroups = [ "wheel" ];
         isNormalUser = true;
-        passwordFile = "${cfg.dirs.config.path}/nixpass";
+        passwordFile = "${cfg.dirs.config.path}/nixos/nixpass";
       };
 
       utils = {
         mkHomeDir = path:
           mkRegularDir "${cfg.home}/${path}";
 
-        # FIXME: storage module
         mkStorageDir = path:
-          mkSymlinkDir "${cfg.home}/${path}" "${cfg.home}/.local/storage";
+          mkSymlinkDir "${cfg.home}/${path}" "${config.system.storage.root}/${path}";
       };
 
       dirs = {
@@ -105,23 +104,23 @@ in
 
       hm = {
         home.activation = {
-          mkUserDirs = 
+          createUserDirs =
             let
               dirs = filter isRegularDir (attrValues cfg.dirs);
             in
-              hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
-                $DRY_RUN_CMD mkdir -p ${concatStringsSep " " (map (d: d.path) dirs)}
-              '';
-          
+            hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              $DRY_RUN_CMD mkdir -p ${concatStringsSep " " (map (d: d.path) dirs)}
+            '';
+
           linkUserDirs =
             let
               dirs = filter isSymlinkDir (attrValues cfg.dirs);
-              
+
               linkCmd = dir:
                 "$DRY_RUN_CMD [ ! -L ${dir.path} ] && ln -s ${dir.source} ${dir.path}";
             in
-              hmLib.hm.dag.entryAfter [ "writeBoundary" "mkuser.dirs" ] 
-                (concatStringsSep "\n" (map linkCmd dirs));
+            hmLib.hm.dag.entryAfter [ "writeBoundary" "createUserDirs" ]
+              (concatStringsSep "\n" (map linkCmd dirs));
         };
 
         xdg = {
@@ -143,5 +142,18 @@ in
         };
       };
     };
+
+    # Collect storage dirs
+    system.storage.dirs =
+      let
+        storageRoot = config.system.storage.root;
+        allDirs = attrValues config.system.user.dirs;
+
+        dirFilter = d: (isSymlinkDir d) && (hasPrefix storageRoot d.source);
+        filtered = filter dirFilter allDirs;
+
+        storageDirs = map (d: removePrefix storageRoot d.source) filtered;
+      in
+      storageDirs;
   };
 }
