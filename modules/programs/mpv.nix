@@ -46,7 +46,7 @@ in
     nixpkgs.overlays = [
       (self: super: {
         mpv = super.mpv.override {
-          scripts = with pkgs.mpvScripts; [ autoload simple-mpv-webui ];
+          scripts = with pkgs.mpvScripts; [ simple-mpv-webui ];
         };
       })
     ];
