@@ -66,8 +66,8 @@ in
             dynamic_padding = true;
             dynamic_title = true;
             decorations = "full";
+            opacity = 0.9;
           };
-          background_opacity = 0.9;
 
           # Text
           font = {
