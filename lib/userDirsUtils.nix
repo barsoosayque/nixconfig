@@ -2,6 +2,9 @@
 
 with pkgs.lib;
 let
+  inherit (strings) hasPrefix;
+  inherit (trivial) throwIfNot;
+
   types = {
     symlink = "symlink";
     regular = "regular";
@@ -10,21 +13,24 @@ let
 in
 {
   mkSymlinkDir = path: source:
+    throwIfNot (hasPrefix "/" path) "mkSymlinkDir path must be absolute (It's ${path})"
     {
       _dirType = types.symlink;
-      inherit path source;
+      absolutePath = path;
+      inherit source;
     };
 
   mkRegularDir = path:
+    throwIfNot (hasPrefix "/" path) "mkRegularDir path must be absolute (It's ${path})"
     {
       _dirType = types.regular;
-      inherit path;
+      absolutePath = path;
     };
 
   mkNullDir =
     {
       _dirType = "null";
-      path = "/dev/null";
+      absolutePath = "/dev/null";
     };
 
   isSymlinkDir = dir:

@@ -73,15 +73,15 @@ in
         description = "The one and only";
         extraGroups = [ "wheel" ];
         isNormalUser = true;
-        passwordFile = "${cfg.dirs.config.path}/nixos/nixpass";
+        passwordFile = "${cfg.dirs.config.absolutePath}/nixos/nixpass";
       };
 
       utils = {
         mkHomeDir = path:
-          mkRegularDir "${cfg.home}/${path}";
+          (mkRegularDir "${cfg.home}/${path}") // { relativePath = "${path}"; };
 
         mkStorageDir = path:
-          mkSymlinkDir "${cfg.home}/${path}" "${config.system.storage.root}/${path}";
+          (mkSymlinkDir "${cfg.home}/${path}" "${config.system.storage.root}/${path}") // { relativePath = "${path}"; };
       };
 
       dirs = {
@@ -109,7 +109,7 @@ in
               dirs = filter isRegularDir (attrValues cfg.dirs);
             in
             hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              $DRY_RUN_CMD mkdir -p ${concatStringsSep " " (map (d: d.path) dirs)}
+              $DRY_RUN_CMD mkdir -p ${concatStringsSep " " (map (d: d.absolutePath) dirs)}
             '';
 
           linkUserDirs =
@@ -117,7 +117,7 @@ in
               dirs = filter isSymlinkDir (attrValues cfg.dirs);
 
               linkCmd = dir:
-                "$DRY_RUN_CMD [ ! -L ${dir.path} ] && ln -s ${dir.source} ${dir.path}";
+                "$DRY_RUN_CMD [ ! -L ${dir.absolutePath} ] && ln -s ${dir.source} ${dir.absolutePath}";
             in
             hmLib.hm.dag.entryAfter [ "writeBoundary" "createUserDirs" ]
               (concatStringsSep "\n" (map linkCmd dirs));
@@ -127,14 +127,14 @@ in
           enable = true;
 
           userDirs = {
-            desktop = cfg.dirs.desktop.path;
-            publicShare = cfg.dirs.publicShare.path;
-            templates = cfg.dirs.templates.path;
-            documents = cfg.dirs.documents.path;
-            download = cfg.dirs.download.path;
-            music = cfg.dirs.music.path;
-            pictures = cfg.dirs.pictures.path;
-            videos = cfg.dirs.videos.path;
+            desktop = cfg.dirs.desktop.absolutePath;
+            publicShare = cfg.dirs.publicShare.absolutePath;
+            templates = cfg.dirs.templates.absolutePath;
+            documents = cfg.dirs.documents.absolutePath;
+            download = cfg.dirs.download.absolutePath;
+            music = cfg.dirs.music.absolutePath;
+            pictures = cfg.dirs.pictures.absolutePath;
+            videos = cfg.dirs.videos.absolutePath;
 
             enable = true;
             createDirectories = false;

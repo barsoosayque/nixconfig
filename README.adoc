@@ -6,11 +6,12 @@ big wip
 * [x] Dunst notifications (or something else)  and plug notifications to events
 * [x] Transmission and its events
 * [x] Alacritty module
+* [ ] Unclutter home
 * [ ] Droidcam module
 * [ ] Make every program use user.dirs.config.path
 * [ ] Remove all 'with'
 * [ ] Declarative pretty config: colors and background image(s)
-* [ ] Zsh with simple prompt
+* [x] Zsh with simple prompt
 * [ ] System update event & prograss bar (if possible) notification
 * [ ] Audio change notification
 * [ ] Pick window & audio change it + notification

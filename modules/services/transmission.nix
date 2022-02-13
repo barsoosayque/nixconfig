@@ -5,7 +5,7 @@ let
   inherit (builtins) toJSON;
 
   cfg = config.modules.services.transmission;
-  torrentDir = "${config.system.user.dirs.download.path}/torrent";
+  torrentDir = "${config.system.user.dirs.download.absolutePath}/torrent";
 
   settings = {
     watch-dir-enabled = true;
@@ -50,7 +50,7 @@ in
 
       serviceConfig = {
         User = config.system.user.name;
-        ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.path}/transmission-daemon'";
+        ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       };
     };
