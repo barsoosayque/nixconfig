@@ -1,31 +1,33 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkOption types;
+  inherit (builtins) concatStringsSep;
+
   cfg = config.system.storage;
 in
 {
   options.system.storage = {
     user = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "storage";
       description = "Storage user name";
     };
 
     group = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "storage";
       description = "Storage user group";
     };
 
     root = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "/storage";
       description = "Absolute path to storage root";
     };
 
     dirs = mkOption {
-      type = types.listOf types.str;
+      type = with types; listOf str;
       default = [ ];
       description = "List of directories to create in storage root";
     };

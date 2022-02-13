@@ -1,57 +1,59 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkOption types;
+  inherit (lib.lists) foldl;
+  inherit (lib.strings) concatMapStringsSep;
   inherit (pkgs) writeScript;
-  inherit (builtins) hashString;
+  inherit (builtins) listToAttrs concatStringsSep hashString;
 
   mkEventOption = eventDef:
     {
       "${eventDef.name}" = mkOption {
-        type = types.listOf types.str;
-        default = [];
+        type = with types; listOf str;
+        default = [ ];
         description = "User defined commands to run on event: ${eventDef.description}";
       };
 
       "${eventDef.name}Callbacks" = {
         beforeCommands = mkOption {
-          type = types.listOf types.path;
-          default = [];
+          type = with types; listOf path;
+          default = [ ];
           description = ''
-          Script to run before any user command for this event.
-          Avaliable variables: EVENT_DESCRIPTION.
+            Script to run before any user command for this event.
+            Avaliable variables: EVENT_DESCRIPTION.
           '';
         };
 
         update = mkOption {
-          type = types.listOf types.path;
-          default = [];
+          type = with types; listOf path;
+          default = [ ];
           description = ''
-          Script to run when one of the user commands is finished (run for every command)".
-          Available variables: EVENT_DESCRIPTION, CMD_EXITCODE, CMD_STDOUT, CMD_STDERR.
+            Script to run when one of the user commands is finished (run for every command)".
+            Available variables: EVENT_DESCRIPTION, CMD_EXITCODE, CMD_STDOUT, CMD_STDERR.
           '';
         };
 
         afterCommands = mkOption {
-          type = types.listOf types.path;
-          default = [];
+          type = with types; listOf path;
+          default = [ ];
           description = ''
-          Script to run after all user commands are finished
-          Avaliable variables: EVENT_DESCRIPTION.
+            Script to run after all user commands are finished
+            Avaliable variables: EVENT_DESCRIPTION.
           '';
         };
       };
 
       "${eventDef.name}Script" = mkOption {
-        type = types.path;
+        type = with types; path;
         description = "Path to a script to fire a ${eventDef.name} event";
         readOnly = true;
       };
     };
 
   mkEvents = eventDefs:
-    lists.foldl (acc: val: acc // val) {}    
-    (map mkEventOption eventDefs);
+    foldl (acc: val: acc // val) { }
+      (map mkEventOption eventDefs);
 
   mkRunScript = eventDef:
     let
@@ -64,11 +66,11 @@ let
         let
           coroutine = cmd:
             writeScript "events-${eventDef.name}-coroutine-${hashString "sha1" cmd}"
-            ''
-              #!${pkgs.dash}/bin/dash
-              export CMD_EXITCODE=$(${cmd})
-              ${runCallbacks "update"}
-            '';
+              ''
+                #!${pkgs.dash}/bin/dash
+                export CMD_EXITCODE=$(${cmd})
+                ${runCallbacks "update"}
+              '';
 
           sh = cmd:
             ''
@@ -76,7 +78,8 @@ let
               export CMD_STDERR="$TMP/stderr"
               ${asyncRun} cmd -o $CMD_STDOUT -e $CMD_STDERR -- ${coroutine cmd}
             '';
-        in concatMapStringsSep "\n" sh cmds;
+        in
+        concatMapStringsSep "\n" sh cmds;
 
     in
     writeScript "events-${eventDef.name}-run" ''
@@ -96,7 +99,7 @@ let
 
   mkRunScripts = eventDefs:
     listToAttrs
-    (map (def: { name = "${def.name}Script"; value = mkRunScript def; }) eventDefs);
+      (map (def: { name = "${def.name}Script"; value = mkRunScript def; }) eventDefs);
 in
 let
   commands = [
@@ -110,7 +113,7 @@ in
   options = {
     helpers = {
       mkAllEventsCallback = mkOption {
-        type = types.functionTo (types.functionTo types.attrs);
+        type = with types; functionTo (functionTo attrs);
         readOnly = true;
         description = ''
           Helper function to make all events callback in modules.
@@ -118,7 +121,7 @@ in
           inherit (config.helpers) mkAllEventsCallback;
           system.events = mkAllEventsCallback "afterCommands" script;
         '';
-      }; 
+      };
     };
 
     system.events = mkEvents commands;

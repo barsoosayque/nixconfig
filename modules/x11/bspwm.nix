@@ -1,8 +1,9 @@
 { config, options, pkgs, pkgsLocal, lib, modulesLib, ... }:
 
-with lib;
-let 
+let
+  inherit (lib) mkIf mkOption mkEnableOption types;
   inherit (pkgs) writeScript;
+  inherit (builtins) mapAttrs;
 
   cfg = config.modules.x11.bspwm;
   xrdbBin = "${pkgs.xorg.xrdb}/bin/xrdb";
@@ -15,7 +16,7 @@ in
     enable = mkEnableOption "bspwm";
 
     monitors = mkOption {
-      type = types.attrs;
+      type = with types; attrs;
       description = ''
         List of monitor identifiers (use xrandr) with workspaces.
         {
@@ -51,22 +52,24 @@ in
 
     system.events.onReload = [ "${bspcBin} wm -r" ];
 
-    system.keyboard.bindings = let
-      bspcToggleMode = mode: toString (writeScript "bspwm-toggle-${mode}" 
-        ''
-          MODE="${mode}";
+    system.keyboard.bindings =
+      let
+        bspcToggleMode = mode: toString (writeScript "bspwm-toggle-${mode}"
+          ''
+            MODE="${mode}";
 
-          if [ -z $(${bspcBin} query -N -n focused.tiled) ]; then
-            MODE="tiled";
-          fi
+            if [ -z $(${bspcBin} query -N -n focused.tiled) ]; then
+              MODE="tiled";
+            fi
 
-          ${bspcBin} node focused -t $MODE
-        '');
-    in {
-      "super + {shift,shift + ctrl} + q" = "${bspcBin} node -{c,k}";
-      "super + {_,shift + }{0-9}" = "${bspcBin} {desktop -f, node -d} '{0-9}'";
-      "super + shift + space" = bspcToggleMode "floating";
-      "super + shift + f" = bspcToggleMode "fullscreen";
-    };
+            ${bspcBin} node focused -t $MODE
+          '');
+      in
+      {
+        "super + {shift,shift + ctrl} + q" = "${bspcBin} node -{c,k}";
+        "super + {_,shift + }{0-9}" = "${bspcBin} {desktop -f, node -d} '{0-9}'";
+        "super + shift + space" = bspcToggleMode "floating";
+        "super + shift + f" = bspcToggleMode "fullscreen";
+      };
   };
 }

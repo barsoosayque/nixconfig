@@ -1,7 +1,8 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+  
   cfg = config.modules.x11.xsession;
 in
 {
@@ -9,7 +10,7 @@ in
     enable = mkEnableOption "xsession";
 
     videoDrivers = mkOption {
-      type = types.str;
+      type = with types; str;
       description = "Video drivers to use. See services.xserver.videoDrivers";
     };
   };

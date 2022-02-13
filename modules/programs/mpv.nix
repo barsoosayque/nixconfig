@@ -1,27 +1,29 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
-let cfg = config.modules.programs.mpv;
+let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+
+  cfg = config.modules.programs.mpv;
 in
 {
   options.modules.programs.mpv = {
     enable = mkEnableOption "mpv";
 
     screenshotsDir = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "${config.system.user.dirs.pictures.absolutePath}/screenshots";
       description = "Where to put screenshots";
     };
 
     osdFont = {
       package = mkOption {
-        type = types.package;
+        type = with types; package;
         default = pkgs.iosevka-bin;
         description = "OSD Font nix package";
       };
 
       name = mkOption {
-        type = types.str;
+        type = with types; str;
         default = "Iosevka";
         description = "OSD Font name according to the package";
       };
@@ -29,13 +31,13 @@ in
 
     subFont = {
       package = mkOption {
-        type = types.package;
+        type = with types; package;
         default = pkgs.ubuntu_font_family;
         description = "Subtitles font nix package";
       };
 
       name = mkOption {
-        type = types.str;
+        type = with types; str;
         default = "Ubuntu Bold";
         description = "Subtitles font name according to the package";
       };
@@ -63,7 +65,7 @@ in
         term-osd-bar = true;
         use-filedir-conf = true;
         keep-open = true;
-        autofit-larger= "100%x95%";
+        autofit-larger = "100%x95%";
         cursor-autohide-fs-only = true;
         input-media-keys = false;
         cursor-autohide = 1000;
@@ -79,7 +81,6 @@ in
 
         osd-level = 1;
         osd-duration = 2500;
-        # osd-status-msg = "\${time-pos} / \${duration}\${?percent-pos:　(\${percent-pos}%)}\${?frame-drop-count:\${!frame-drop-count==0:　Dropped: \${frame-drop-count}}}\n\${?chapter:Chapter: \${chapter}}";
 
         osd-font = cfg.osdFont.name;
         osd-font-size = 32;
@@ -96,17 +97,12 @@ in
         embeddedfonts = false;
         sub-scale-with-window = true;
         sub-ass-override = "force";
-        # sub-use-margins  = true;
-        # sub-ass-force-margins  = true;
-        # sub-align-y  =  bottom;
 
         sub-font = cfg.subFont.name;
         sub-font-size = 40;
         sub-color = "#FFFFEE00";
         sub-border-color = "#FF000000";
         sub-border-size = 5;
-        # sub-shadow-offset = 2;
-        # sub-shadow-color = "#33000000";
 
         slang = [ "ru" "rus" "eng" "en" ];
         alang = [ "ja" "jp" "jpn" "en" "eng" "ru" ];

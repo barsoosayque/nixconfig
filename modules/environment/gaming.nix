@@ -1,7 +1,8 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkEnableOption;
+
   cfg = config.modules.environment.gaming;
 in
 {
@@ -13,15 +14,15 @@ in
     # xpadneo kernel module for xbox one controllers
     # https://github.com/atar-axis/xpadneo
     boot.extraModulePackages = with config.boot.kernelPackages; [
-      xpadneo  
+      xpadneo
     ];
 
     hardware.nvidia.package = config.boot.kernelPackages.nvidia_x11;
-    
+
     nixpkgs.overlays = [
       (self: super: {
         # https://github.com/NixOS/nixpkgs/pull/126435
-        steam = super.steam.override( {
+        steam = super.steam.override ({
           extraLibraries = pkgs: [ pkgs.pipewire ];
           extraProfile = ''
             unset VK_ICD_FILENAMES
@@ -29,7 +30,6 @@ in
         });
       })
     ];
-
 
     environment.systemPackages = [
       pkgs.logmein-hamachi
@@ -42,7 +42,7 @@ in
       driSupport32Bit = true;
       driSupport = true;
     };
-    
+
     programs.steam.enable = true;
   };
 }

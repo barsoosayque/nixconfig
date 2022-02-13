@@ -1,7 +1,8 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
-let 
+let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (builtins) concatStringsSep;
   inherit (pkgs) fetchurl;
 
   cfg = config.modules.programs.dmenu;
@@ -23,7 +24,7 @@ let
       sha256 = "f79de21544b83fa1e86f0aed5e849b1922ebae8d822e492fbc9066c0f07ddb69";
     })
     # mouse support
-    (fetchurl{
+    (fetchurl {
       url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.0.diff";
       sha256 = "690daaf24d4379f9ed4dbc1d7f7864a86fada420afc6ef792d9e2d09bd6fe8b6";
     })
@@ -49,20 +50,20 @@ in
     enable = mkEnableOption "dmenu";
 
     enableEmoji = mkOption {
-      type = types.bool;
+      type = with types; bool;
       default = true;
       description = "Enable dmenu emoji picker";
     };
 
     font = {
       package = mkOption {
-        type = types.package;
+        type = with types; package;
         default = pkgs.ubuntu_font_family;
         description = "Font nix package";
       };
 
       name = mkOption {
-        type = types.str;
+        type = with types; str;
         default = "Ubuntu:Bold";
         description = "Font name according to the package";
       };
@@ -73,15 +74,17 @@ in
     fonts.fonts = [ cfg.font.package ];
 
     nixpkgs.overlays = [
-      (self: super: { 
+      (self: super: {
         dmenu = super.dmenu.override { inherit patches; };
       })
     ];
 
     system.keyboard.bindings = {
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run ${params} -p \"Run: \"";
-    }; #// attrsets.optionalAttrs cfg.enableEmoji {
-      # "super + e" = "${pkgsLocal.dmenu_emoji}/bin/dmenu_emoji ${params} -p \"Emoji: \"";
+    };
+    # todo dmenu_emoji
+    #// attrsets.optionalAttrs cfg.enableEmoji {
+    # "super + e" = "${pkgsLocal.dmenu_emoji}/bin/dmenu_emoji ${params} -p \"Emoji: \"";
     # };
   };
 }

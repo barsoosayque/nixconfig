@@ -1,16 +1,17 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
-let 
+let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+
   cfg = config.modules.programs.scissors;
   bin = "${pkgsLocal.scissors}/bin/scissors";
 in
 {
   options.modules.programs.scissors = {
     enable = mkEnableOption "scissors";
-    
+
     screenshotsDir = mkOption {
-      type = types.str;
+      type = with types; str;
       default = "${config.system.user.dirs.pictures.absolutePath}/screenshots";
       description = "Directory to put screenshots to";
     };

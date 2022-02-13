@@ -1,7 +1,8 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkEnableOption;
+
   cfg = config.modules.environment.android;
 in
 {
@@ -13,10 +14,10 @@ in
     environment.systemPackages = [
       pkgs.android-studio
     ];
-    
+
     programs.adb.enable = true;
     nixpkgs.config = {
-      android_sdk.accept_license = true;   # Accept the Android SDK licence
+      android_sdk.accept_license = true; # Accept the Android SDK licence
     };
   };
 }

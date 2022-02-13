@@ -1,7 +1,8 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib.lists) optionals;
   inherit (pkgs.vscode-utils) extensionsFromVscodeMarketplace;
 
   cfg = config.modules.environment.code;
@@ -13,7 +14,7 @@ in
     enable = mkEnableOption "code environment";
 
     enableRust = mkOption {
-      type = types.bool;
+      type = with types; bool;
       default = true;
       description = "Enable Rust environment";
     };
@@ -26,7 +27,7 @@ in
       keep-outputs = true
       keep-derivations = true
     '';
-    
+
     environment.systemPackages = [
       pkgs.rnix-lsp
       pkgs.direnv
@@ -38,8 +39,8 @@ in
       pkgs.git
 
       codePkg
-    ] ++ lists.optionals cfg.enableRust [ pkgs.rls pkgs.rustfmt ];
-    
+    ] ++ optionals cfg.enableRust [ pkgs.rls pkgs.rustfmt ];
+
     system.user.hm = {
       programs = {
         direnv = {
@@ -76,7 +77,7 @@ in
               version = "1.0.0";
               sha256 = "fa72c7f93f6fe93402a8a670e873cdfd97af43ae45566d92028d95f5179c3376";
             }
-          ] ++ lists.optionals cfg.enableRust [ 
+          ] ++ optionals cfg.enableRust [
             vadimcn.vscode-lldb
             matklad.rust-analyzer
           ];

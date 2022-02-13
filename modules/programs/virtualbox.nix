@@ -1,7 +1,8 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
-let 
+let
+  inherit (lib) mkIf mkEnableOption;
+
   cfg = config.modules.programs.virtualbox;
 in
 {

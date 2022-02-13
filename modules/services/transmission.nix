@@ -1,7 +1,7 @@
 { config, options, pkgs, pkgsLocal, lib, hmLib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkEnableOption;
   inherit (builtins) toJSON;
 
   cfg = config.modules.services.transmission;
@@ -31,7 +31,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    system.user.hm ={
+    system.user.hm = {
       home.activation.mkTorrentDirs = hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
         install -d -o '${config.system.user.name}' '${settings.download-dir}'
         install -d -o '${config.system.user.name}' '${settings.watch-dir}'
@@ -50,7 +50,7 @@ in
 
       serviceConfig = {
         User = config.system.user.name;
-        ExecStart="${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
+        ExecStart = "${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       };
     };

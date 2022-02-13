@@ -1,7 +1,9 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkOption types;
+  inherit (builtins) attrNames;
+
   cfg = config.system.locale;
 
   locations = {
@@ -15,21 +17,23 @@ in
 {
   options.system.locale = {
     locationName = mkOption {
-      type = types.enum (attrNames locations);
+      type = with types; enum (attrNames locations);
       description = "Location name of host";
     };
 
     location = mkOption {
-      type = types.attrs;
+      type = with types; attrs;
       readOnly = true;
       description = "Read-only parameters of host location";
     };
   };
 
-  config = let
-    location = locations."${cfg.locationName}";
-  in {
-    system.locale.location = location;
-    time.timeZone = location.timeZone;
-  };
+  config =
+    let
+      location = locations."${cfg.locationName}";
+    in
+    {
+      system.locale.location = location;
+      time.timeZone = location.timeZone;
+    };
 }

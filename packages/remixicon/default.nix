@@ -1,10 +1,12 @@
 { pkgs, ... }:
 
 let
-  colorToPrecent = colors:
-    builtins.concatStringsSep "," (map (v: toString (v / 255.0 * 100.0)) colors);
+  inherit (builtins) concatStringsSep;
 
-  mkIconDerivation = input@{ id, color ? [255 255 255] }: pkgs.stdenv.mkDerivation rec {
+  colorToPrecent = colors:
+    concatStringsSep "," (map (v: toString (v / 255.0 * 100.0)) colors);
+
+  mkIconDerivation = input@{ id, color ? [ 255 255 255 ] }: pkgs.stdenv.mkDerivation rec {
     pname = "remixicon-icon-${id}";
     version = "2.5.0";
 

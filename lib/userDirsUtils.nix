@@ -1,9 +1,8 @@
 { nixpkgs, pkgs, ... }:
 
-with pkgs.lib;
 let
-  inherit (strings) hasPrefix;
-  inherit (trivial) throwIfNot;
+  inherit (pkgs.lib.strings) hasPrefix;
+  inherit (pkgs.lib.trivial) throwIfNot;
 
   types = {
     symlink = "symlink";

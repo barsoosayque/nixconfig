@@ -1,9 +1,11 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkOption types literalExpression;
+  inherit (builtins) concatStringsSep attrNames;
+
   cfg = config.system.keyboard;
-  
+
   changeLayoutKeys = {
     CapsLocks = "grp:caps_toggle";
   };
@@ -11,25 +13,25 @@ in
 {
   options.system.keyboard = {
     bindings = mkOption {
-      type = types.attrs;
-      default = {};
+      type = with types; attrs;
+      default = { };
       description = "sxhkd-like keybinding definitions";
       example = literalExpression ''
-      {
-        "super + Return" = "alacritty";
-        "super + d" = "launcher";
-      };
+        {
+          "super + Return" = "alacritty";
+          "super + d" = "launcher";
+        };
       '';
     };
 
-    layouts =  mkOption {
-      type = types.listOf types.str;
+    layouts = mkOption {
+      type = with types; listOf str;
       default = [ "us" "ru" ];
       description = "Keyboard layouts to use";
     };
-    
+
     changeLayoutKey = mkOption {
-      type = types.enum (attrNames changeLayoutKeys);
+      type = with types; enum (attrNames changeLayoutKeys);
       default = "CapsLocks";
       description = "Key to change keyboard layout";
     };

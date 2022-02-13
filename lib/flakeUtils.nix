@@ -2,21 +2,25 @@
 # Mostly just scrappers
 { nixpkgs, pkgs, ... }:
 
-with pkgs.lib;
 let
+  inherit (pkgs.lib) mapAttrsToList;
+  inherit (pkgs.lib.lists) flatten;
+  inherit (pkgs.lib.attrsets) optionalAttrs;
+  inherit (builtins) pathExists readDir filter mapAttrs isFunction;
+
   mapDir = mapper: path:
     mapAttrs
-    (n: v: let p = path + "/${n}"; in mapper p)
-    (attrsets.optionalAttrs (builtins.pathExists path) (builtins.readDir path));
-    
+      (n: v: let p = path + "/${n}"; in mapper p)
+      (optionalAttrs (pathExists path) (readDir path));
+
   mapAllFiles = mapper: path:
-    lists.flatten
-    (
-      mapAttrsToList
-      (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p else mapper p)
-      (attrsets.optionalAttrs (builtins.pathExists path) (builtins.readDir path))
-    );
-    
+    flatten
+      (
+        mapAttrsToList
+          (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p else mapper p)
+          (optionalAttrs (pathExists path) (readDir path))
+      );
+
   collectHosts = path: attrs:
     mapDir (p: mkHost p attrs) path;
 
@@ -43,8 +47,8 @@ let
         home-manager.nixosModule
         (path + "/system.nix")
         (path + "/hardware.nix")
-      ] ++ (collectModules modulesPath {});
-      
+      ] ++ (collectModules modulesPath { });
+
     };
 in
 {

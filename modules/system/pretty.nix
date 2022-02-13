@@ -1,9 +1,11 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkOption mkEnableOption types;
+  inherit (lib.lists) optional;
   inherit (pkgs) writeScriptBin;
-  
+  inherit (builtins) attrNames;
+
   cfg = config.system.pretty;
 
   setrootBin = "${pkgs.setroot}/bin/setroot";
@@ -17,26 +19,28 @@ in
     backgroundEnable = mkEnableOption "background management";
 
     themeName = mkOption {
-      type = types.enum (attrNames themes);
+      type = with types; enum (attrNames themes);
       default = "fantasy";
       readOnly = true;
     };
 
     theme = mkOption {
-      type = types.attrs;
+      type = with types; attrs;
       readOnly = true;
     };
   };
 
-  config = let
-    theme = themes."${cfg.themeName}";
-  in {
-    system.pretty.theme = theme;
+  config =
+    let
+      theme = themes."${cfg.themeName}";
+    in
+    {
+      system.pretty.theme = theme;
 
-    system.events.onStartup = lists.optional cfg.backgroundEnable
-      "${setrootBin} --restore";
-    
-    environment.systemPackages = lists.optional cfg.backgroundEnable
-      (writeScriptBin "background" "${setrootBin} --store $@");
-  };
+      system.events.onStartup = optional cfg.backgroundEnable
+        "${setrootBin} --restore";
+
+      environment.systemPackages = optional cfg.backgroundEnable
+        (writeScriptBin "background" "${setrootBin} --store $@");
+    };
 }

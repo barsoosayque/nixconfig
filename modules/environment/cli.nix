@@ -1,7 +1,8 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkEnableOption;
+
   cfg = config.modules.environment.cli;
 in
 {
@@ -47,7 +48,7 @@ in
 
           history = {
             ignoreDups = true;
-            path = "${config.system.user.dirs.data.absolutePath}/zsh/history";
+            path = "${config.system.user.dirs.data.relativePath}/zsh/history";
           };
 
           localVariables = {

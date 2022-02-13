@@ -1,7 +1,8 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+
   cfg = config.modules.programs.alacritty;
   pkg = pkgs.alacritty;
 
@@ -15,13 +16,13 @@ in
 
     font = {
       package = mkOption {
-        type = types.package;
+        type = with types; package;
         default = iosevkaCustom;
         description = "Font nix package";
       };
 
       name = mkOption {
-        type = types.str;
+        type = with types; str;
         default = "Iosevka";
         description = "Font name according to the package";
       };

@@ -1,6 +1,5 @@
 { config, options, pkgs, lib, hostName, ... }:
 
-with lib;
 {
   config = {
     boot = {

@@ -1,23 +1,23 @@
 { config, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
-  inherit (builtins) listToAttrs;
-  inherit (attrsets) nameValuePair;
-  inherit (strings) optionalString;
-  inherit (lists) zipListsWith;
+  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib.attrsets) nameValuePair;
+  inherit (lib.strings) optionalString;
+  inherit (lib.lists) zipListsWith;
+  inherit (builtins) listToAttrs concatStringsSep head tail;
 
   cfg = config.modules.x11.monitor;
 
   resolutionSubmodule = types.submodule ({ ... }: {
     options = {
       width = mkOption {
-        type = types.int;
+        type = with types; int;
         description = "Width of the monitor";
       };
 
       height = mkOption {
-        type = types.int;
+        type = with types; int;
         description = "Height of the monitor";
       };
     };
@@ -26,7 +26,7 @@ let
   layoutSubmodule = types.submodule ({ ... }: {
     options = {
       identifier = mkOption {
-        type = types.str;
+        type = with types; str;
         description = "Xrandr monitor identifier";
       };
 
@@ -54,7 +54,7 @@ in
 {
   options.modules.x11.monitor = {
     layout = mkOption {
-      type = types.listOf layoutSubmodule;
+      type = with types; listOf layoutSubmodule;
       default = [ ];
       description = "Monitor configuration list";
     };

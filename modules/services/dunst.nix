@@ -1,7 +1,8 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
-with lib;
 let
+  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib.strings) optionalString;
   inherit (pkgs) writeScript;
   inherit (config.helpers) mkAllEventsCallback;
 
@@ -27,17 +28,17 @@ let
         DISPLAY=:0 \
         DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus \
         ${notifySend} "$TITLE" "$MSG" \
-        ${strings.optionalString (icon != null) "--icon=${icon}" }
+        ${optionalString (icon != null) "--icon=${icon}" }
   '';
 
   scripts = {
-    default = mkSendScript { 
+    default = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Completed";
       icon = pkgsLocal.remixicon.mkIcon { id = "notification-line"; };
     };
 
-    torrent = mkSendScript { 
+    torrent = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "$TR_TORRENT_NAME";
       icon = pkgsLocal.remixicon.mkIcon { id = "folder-download-line"; };
@@ -57,19 +58,19 @@ in
 
     font = {
       package = mkOption {
-        type = types.package;
+        type = with types; package;
         default = pkgs.ubuntu_font_family;
         description = "Font nix package";
       };
 
       name = mkOption {
-        type = types.str;
+        type = with types; str;
         default = "Ubuntu";
         description = "Font name according to the package";
       };
 
       size = mkOption {
-        type = types.int;
+        type = with types; int;
         default = 11;
         description = "Text size";
       };
@@ -109,10 +110,10 @@ in
 
     # whitelist notify-send so other users can run onEventScript and trigger notifications
     security.sudo.extraRules = [
-      { 
-        users = [ "ALL" ]; 
-        runAs = config.system.user.name; 
-        commands = [ { command = notifySend; options = [ "NOPASSWD" "SETENV" ]; } ];
+      {
+        users = [ "ALL" ];
+        runAs = config.system.user.name;
+        commands = [{ command = notifySend; options = [ "NOPASSWD" "SETENV" ]; }];
       }
     ];
   };

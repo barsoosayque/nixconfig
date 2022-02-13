@@ -1,58 +1,59 @@
 { config, options, pkgs, pkgsLocal, lib, hostName, hmLib, localLib, ... }:
 
-with lib;
 let
-  inherit (strings) hasPrefix removePrefix;
+  inherit (lib) mkOption mkAliasDefinitions types;
+  inherit (lib.strings) hasPrefix removePrefix;
   inherit (localLib.userDirsUtils) mkRegularDir mkSymlinkDir mkNullDir isRegularDir isSymlinkDir;
+  inherit (builtins) filter attrValues concatStringsSep;
 
   cfg = config.system.user;
 in
 {
   options.system.user = {
     name = mkOption {
-      type = types.str;
+      type = with types; str;
       description = "Main user name";
     };
 
     uid = mkOption {
-      type = types.int;
+      type = with types; int;
       readOnly = true;
       description = "Main user uid";
     };
 
     extraConfig = mkOption {
-      type = types.attrs;
+      type = with types; attrs;
       default = { };
       description = "Extra configs for current user (nixos user configs)";
     };
 
     hm = mkOption {
-      type = types.attrs;
+      type = with types; attrs;
       default = { };
       description = "Home-manager configs for current user";
     };
 
     home = mkOption {
-      type = types.str;
+      type = with types; str;
       readOnly = true;
       description = "Absolute path to the user's home";
     };
 
     dirs = mkOption {
-      type = types.attrs;
+      type = with types; attrs;
       readOnly = true;
       description = "Set of user governed directories";
     };
 
     utils = {
       mkHomeDir = mkOption {
-        type = types.functionTo types.attrs;
+        type = with types; functionTo attrs;
         readOnly = true;
         description = "Utility function to create a regular home directory (for system.user.dirs)";
       };
 
       mkStorageDir = mkOption {
-        type = types.functionTo types.attrs;
+        type = with types; functionTo attrs;
         readOnly = true;
         description = "Utility function to create an external directory in storage and link it to home (for system.user.dirs)";
       };
