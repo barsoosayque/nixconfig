@@ -1,7 +1,7 @@
 { config, options, pkgs, pkgsLocal, lib, ... }:
 
 with lib;
-let 
+let
   cfg = config.modules.x11.xsession;
 in
 {
@@ -28,10 +28,11 @@ in
       videoDrivers = [ cfg.videoDrivers ];
       displayManager.startx.enable = true;
     };
-    
+
     system.user.hm.xsession = {
       enable = true;
       scriptPath = ".xinitrc";
+      initExtra = "${config.system.events.onStartupScript}";
     };
   };
 }

@@ -46,7 +46,6 @@ in
       startupPrograms = [
         "${xsetrootBin} -cursor_name left_ptr"
         "${wmnameBin} LG3D"
-        "${config.system.events.onStartupScript}"
       ];
     };
 

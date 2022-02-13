@@ -37,35 +37,32 @@ let
     };
   });
 
-  mkHead = head: prevHead:
-    let
-      mkLeftOfOption = head: ''
-        Option "LeftOf" "${head.identifier}"
-      '';
-    in
-    {
-      output = head.identifier;
-      monitorConfig = ''
-        Option "PreferredMode" "${toString head.resolution.width}x${toString head.resolution.height}"
-        ${optionalString (prevHead != null) (mkLeftOfOption prevHead)}
-      '';
-    };
+  mkOutput = head: prevHead:
+    ''
+      --output ${head.identifier} \
+      --mode ${toString head.resolution.width}x${toString head.resolution.height} \
+      ${optionalString (prevHead != null) "--right-of ${prevHead.identifier}"} \
+    '';
 
-  mkLayout = layout:
-    [
-      ((mkHead (head layout) null) // { primary = true; })
-    ] ++ (zipListsWith mkHead (tail layout) layout);
+  mkOutputs = layout:
+    concatStringsSep "" ([
+      (mkOutput (head layout) null)
+    ] ++ (zipListsWith mkOutput (tail layout) layout));
+
+  mkCmd = layout: "${pkgs.xorg.xrandr}/bin/xrandr ${mkOutputs layout} ;";
 in
 {
   options.modules.x11.monitor = {
-    layout =  mkOption {
+    layout = mkOption {
       type = types.listOf layoutSubmodule;
-      default = [];
+      default = [ ];
       description = "Monitor configuration list";
     };
   };
 
   config = {
-    # services.xserver.xrandrHeads = mkLayout cfg.layout;
+    system.events.onStartup = [
+      (mkCmd cfg.layout)
+    ];
   };
 }

@@ -81,6 +81,16 @@
     };
 
     x11 = {
+      monitor.layout = [
+        {
+          identifier = "HDMI-0";
+          resolution = { width = 1920; height = 1080; };
+        }
+        {
+          identifier = "DP-5";
+          resolution = { width = 1920; height = 1080; };
+        }
+      ];
       xsession = {
         videoDrivers = "nvidia";
         enable = true;
@@ -95,20 +105,6 @@
       };
     };
   };
-
-  # TODO: good xserver config
-  services.xserver.screenSection = ''
-    DefaultDepth    24
-    Option         "Stereo" "0"
-    Option         "nvidiaXineramaInfoOrder" "DFP-4"
-    Option         "metamodes" "HDMI-0: 1920x1080 +0+0, DP-5: 1920x1080 +1920+0"
-    Option         "SLI" "Off"
-    Option         "MultiGPU" "Off"
-    Option         "BaseMosaic" "off"
-    SubSection     "Display"
-        Depth       24
-    EndSubSection
-  '';
 
   # TODO: what is this
   programs.dconf.enable = true;
