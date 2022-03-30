@@ -46,7 +46,7 @@ in
     systemd.services.transmission = {
       description = "Transmission BitTorrent Service";
       after = [ "network.target" ];
-      wantedBy = [ "multi-system.user.target" ];
+      wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
         User = config.system.user.name;
