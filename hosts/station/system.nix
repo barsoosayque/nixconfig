@@ -1,7 +1,7 @@
 { config, pkgs, pkgsRepo, ... }:
 
 {
-  imports = [];
+  imports = [ ];
 
   environment = {
     systemPackages = [
@@ -77,6 +77,7 @@
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
+      mpd.enable = true;
       #picom.enable = true;
     };
 
