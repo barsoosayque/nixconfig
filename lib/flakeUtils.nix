@@ -1,6 +1,6 @@
 # Utility functions to use in the main flake.nix
 # Mostly just scrappers
-{ nixpkgs, pkgs, ... }:
+{ nixpkgs, pkgs, pkgsRepo, ... }:
 
 let
   inherit (pkgs.lib) mapAttrsToList;
@@ -30,7 +30,7 @@ let
   collectPackages = path: attrs:
     mapDir (p: import p attrs) path;
 
-  mkHost = path: attrs@{ modulesPath, pkgsLocal, home-manager, localLib, ... }:
+  mkHost = path: attrs@{ modulesPath, home-manager, localLib, ... }:
     let
       name = baseNameOf path;
     in
@@ -39,7 +39,7 @@ let
 
       modules = [
         {
-          _module.args.pkgsLocal = pkgsLocal;
+          _module.args.pkgsRepo = pkgsRepo;
           _module.args.hostName = name;
           _module.args.hmLib = home-manager.lib;
           _module.args.localLib = localLib;

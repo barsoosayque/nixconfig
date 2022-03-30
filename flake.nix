@@ -3,14 +3,25 @@
 
   # Define system dependencies
   inputs = {
-    nixpkgs = {
-      # url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-master = {
       url = "github:NixOS/nixpkgs/master";
+    };
+
+    nixpkgs-stable = {
+      url = "github:NixOS/nixpkgs/21.11";
+    };
+
+    nixpkgs-unstable = {
+      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    };
+
+    nixpkgs-staging = {
+      url = "github:NixOS/nixpkgs/staging";
     };
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-master";
     };
 
     # TODO: manage secrets
@@ -22,26 +33,36 @@
 
   # Define desired systems
   # NOTE: for every new input from above, put a new argument in inputs below
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs-master, nixpkgs-stable, nixpkgs-unstable, nixpkgs-staging, home-manager, ... }:
     let
       system = "x86_64-linux";
 
       # Define pkgs for ease of usage
-      pkgs = import nixpkgs { inherit system; };
+      pkgsRepo = rec {
+        stable = import nixpkgs-stable { inherit system; };
+        unstable = import nixpkgs-unstable { inherit system; };
+        master = import nixpkgs-master { inherit system; };
+        staging = import nixpkgs-staging { inherit system; };
+        local = self.packages."${system}";
+      };
+
+      nixpkgs = nixpkgs-master;
+      pkgs = pkgsRepo.master;
 
       # Utils to automatically create outputs
-      localLib = import ./lib { inherit nixpkgs; inherit pkgs; };
-
-    in {
+      localLib = import ./lib {
+        inherit pkgsRepo nixpkgs pkgs;
+      };
+    in
+    {
       # Actuall systems configurations (per host)
       nixosConfigurations = localLib.flakeUtils.collectHosts ./hosts {
-          inherit home-manager localLib;
-          modulesPath = ./modules;
-          pkgsLocal = self.packages."${system}";
+        inherit home-manager localLib;
+        modulesPath = ./modules;
       };
 
       # Modules for system configurations
-      nixosModules = localLib.flakeUtils.collectModules ./modules {};
+      nixosModules = localLib.flakeUtils.collectModules ./modules { };
 
       # Include custom local packages
       # NOTE: Executed by `nix build .#<name>`

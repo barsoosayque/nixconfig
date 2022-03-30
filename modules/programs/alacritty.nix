@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsLocal, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;

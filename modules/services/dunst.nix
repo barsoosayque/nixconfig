@@ -1,4 +1,4 @@
-{ config, options, pkgs, pkgsLocal, lib, ... }:
+{ config, options, pkgs, pkgsRepo, lib, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
@@ -35,19 +35,19 @@ let
     default = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Completed";
-      icon = pkgsLocal.remixicon.mkIcon { id = "notification-line"; };
+      icon = pkgsRepo.local.remixicon.mkIcon { id = "notification-line"; };
     };
 
     torrent = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "$TR_TORRENT_NAME";
-      icon = pkgsLocal.remixicon.mkIcon { id = "folder-download-line"; };
+      icon = pkgsRepo.local.remixicon.mkIcon { id = "folder-download-line"; };
     };
 
     screenshoot = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Saved to clipboard and $SCREENSHOT_PATH";
-      icon = pkgsLocal.remixicon.mkIcon { id = "screenshot-line"; };
+      icon = pkgsRepo.local.remixicon.mkIcon { id = "screenshot-line"; };
     };
   };
 in

@@ -1,4 +1,4 @@
-{ config, options, pkgs, pkgsLocal, lib, ... }:
+{ config, options, pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkEnableOption;
@@ -11,9 +11,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [
-      pkgs.android-studio
-    ];
+    environment = {
+      systemPackages = [ pkgs.android-studio ];
+    };
 
     programs.adb.enable = true;
     nixpkgs.config = {

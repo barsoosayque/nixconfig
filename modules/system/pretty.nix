@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsLocal, lib, ... }:
+{ config, pkgs, pkgsRepo, lib, ... }:
 
 let
   inherit (lib) mkOption mkEnableOption types;
@@ -8,7 +8,8 @@ let
 
   cfg = config.system.pretty;
 
-  setrootBin = "${pkgs.setroot}/bin/setroot";
+  # setroot is broken at the moment
+  setrootBin = "${pkgsRepo.stable.setroot}/bin/setroot";
 
   themes = {
     fantasy = import ./themes/fantasy.nix;

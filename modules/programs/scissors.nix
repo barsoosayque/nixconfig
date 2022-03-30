@@ -1,10 +1,10 @@
-{ config, pkgs, pkgsLocal, lib, ... }:
+{ config, pkgs, pkgsRepo, lib, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
 
   cfg = config.modules.programs.scissors;
-  bin = "${pkgsLocal.scissors}/bin/scissors";
+  bin = "${pkgsRepo.local.scissors}/bin/scissors";
 in
 {
   options.modules.programs.scissors = {

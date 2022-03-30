@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsLocal, ... }:
+{ config, pkgs, pkgsRepo, ... }:
 
 {
   imports = [];
@@ -13,7 +13,7 @@
 
       # games
       pkgs.minecraft
-      pkgsLocal.cdda
+      pkgsRepo.local.cdda
 
       # multimedia
       pkgs.feh

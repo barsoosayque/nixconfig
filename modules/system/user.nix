@@ -1,4 +1,4 @@
-{ config, options, pkgs, pkgsLocal, lib, hostName, hmLib, localLib, ... }:
+{ config, options, pkgs, lib, hostName, hmLib, localLib, ... }:
 
 let
   inherit (lib) mkOption mkAliasDefinitions types;

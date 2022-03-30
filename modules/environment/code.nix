@@ -1,4 +1,4 @@
-{ config, options, pkgs, pkgsLocal, lib, ... }:
+{ config, options, pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
@@ -58,6 +58,8 @@ in
 
             # requires rnix-lsp
             jnoortheen.nix-ide
+
+            llvm-vs-code-extensions.vscode-clangd
           ] ++ extensionsFromVscodeMarketplace [
             {
               name = "aura-theme";
