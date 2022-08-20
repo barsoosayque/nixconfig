@@ -8,8 +8,7 @@ let
 
   cfg = config.system.pretty;
 
-  # setroot is broken at the moment
-  setrootBin = "${pkgsRepo.stable.setroot}/bin/setroot";
+  setrootBin = "${pkgs.setroot}/bin/setroot";
 
   themes = {
     fantasy = import ./themes/fantasy.nix input;
@@ -41,7 +40,9 @@ in
       system.events.onStartup = optional cfg.backgroundEnable
         "${setrootBin} --restore";
 
+      # setroot generates a script to restore background images, but the script
+      # assumes that setroot in PATH, and that's not the case within nixos
       environment.systemPackages = optional cfg.backgroundEnable
-        (writeScriptBin "background" "${setrootBin} --store $@");
+        (writeScriptBin "background" "${setrootBin} $@ && echo ${setrootBin} $@ > ~/.config/setroot/.setroot-restore");
     };
 }
