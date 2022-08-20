@@ -46,8 +46,8 @@
         local = self.packages."${system}";
       };
 
-      nixpkgs = nixpkgs-master;
-      pkgs = pkgsRepo.master;
+      nixpkgs = nixpkgs-unstable;
+      pkgs = pkgsRepo.unstable;
 
       # Utils to automatically create outputs
       localLib = import ./lib {
