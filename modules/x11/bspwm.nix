@@ -6,7 +6,6 @@ let
   inherit (builtins) mapAttrs;
 
   cfg = config.modules.x11.bspwm;
-  xrdbBin = "${pkgs.xorg.xrdb}/bin/xrdb";
   xsetrootBin = "${pkgs.xorg.xsetroot}/bin/xsetroot";
   wmnameBin = "${pkgs.wmname}/bin/wmname";
   bspcBin = "${pkgs.bspwm}/bin/bspc";
@@ -30,6 +29,10 @@ in
   config = mkIf cfg.enable {
     system.user.hm.xsession.windowManager.bspwm = {
       enable = true;
+
+      package = pkgs.bspwm.overrideAttrs (_: {
+        patches = [ ./patches/bspwm-rounded.patch ];
+      });
 
       monitors = mapAttrs (_: l: map toString l) cfg.monitors;
 
