@@ -34,15 +34,15 @@ let
     "-l 10"
     "-fn '${cfg.font.name}'"
     # background colors
-    "-nb '${config.system.pretty.theme.colors.primary.background}'"
-    "-sb '${config.system.pretty.theme.colors.cursor.accent}'"
-    "-nhb '${config.system.pretty.theme.colors.primary.background}'"
-    "-shb '${config.system.pretty.theme.colors.cursor.accent}'"
+    "-nb '${config.system.pretty.theme.colors.primary.background.hexRGB}'"
+    "-sb '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
+    "-nhb '${config.system.pretty.theme.colors.primary.background.hexRGB}'"
+    "-shb '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
     # foreground colors
-    "-nf '${config.system.pretty.theme.colors.cursor.cursor}'"
-    "-sf '${config.system.pretty.theme.colors.cursor.text}'"
-    "-nhf '${config.system.pretty.theme.colors.cursor.accent}'"
-    "-shf '${config.system.pretty.theme.colors.cursor.text}'"
+    "-nf '${config.system.pretty.theme.colors.cursor.cursor.hexRGB}'"
+    "-sf '${config.system.pretty.theme.colors.cursor.text.hexRGB}'"
+    "-nhf '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
+    "-shf '${config.system.pretty.theme.colors.cursor.text.hexRGB}'"
   ];
 in
 {

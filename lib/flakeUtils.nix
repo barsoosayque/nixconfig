@@ -13,19 +13,19 @@ let
       (n: v: let p = path + "/${n}"; in mapper p)
       (optionalAttrs (pathExists path) (readDir path));
 
-  mapAllFiles = mapper: path:
+  mapAllFiles = mapper: path: depth:
     flatten
       (
         mapAttrsToList
-          (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p else mapper p)
-          (optionalAttrs (pathExists path) (readDir path))
+          (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p (depth - 1) else mapper p)
+          (optionalAttrs ((pathExists path) && depth >= 0) (readDir path))
       );
 
   collectHosts = path: attrs:
     mapDir (p: mkHost p attrs) path;
 
   collectModules = path: attrs:
-    filter (v: isFunction v) (mapAllFiles import path);
+    mapAllFiles import path 1;
 
   collectPackages = path: attrs:
     mapDir (p: import p attrs) path;

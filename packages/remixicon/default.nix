@@ -4,9 +4,9 @@ let
   inherit (builtins) concatStringsSep;
 
   colorToPrecent = colors:
-    concatStringsSep "," (map (v: toString (v / 255.0 * 100.0)) colors);
+    concatStringsSep "," (map (v: toString (v / 255.0 * 100.0)) [ colors.r colors.g colors.b ] );
 
-  mkIconDerivation = input@{ id, color ? [ 255 255 255 ] }: pkgs.stdenv.mkDerivation rec {
+  mkIconDerivation = input@{ id, color ? { r = 255; g = 255; b = 255; } }: pkgs.stdenv.mkDerivation rec {
     pname = "remixicon-icon-${id}";
     version = "2.5.0";
 

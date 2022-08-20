@@ -34,10 +34,8 @@ in
       monitors = mapAttrs (_: l: map toString l) cfg.monitors;
 
       settings = {
-        focused_border_color = "$(${xrdbBin} -query | grep color10 | awk '{print$2}')";
-        normal_border_color = "$(${xrdbBin} -query | grep color8 | awk '{print$2}')";
-        border_width = 1;
-        window_gap = 12;
+        focused_border_color = config.system.pretty.theme.colors.window.active_border.hexRGBA;
+        normal_border_color = config.system.pretty.theme.colors.window.border.hexRGBA;
         split_ratio = 0.5;
         borderless_monocle = true;
         gapless_monocle = true;

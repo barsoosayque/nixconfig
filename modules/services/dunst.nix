@@ -35,19 +35,19 @@ let
     default = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Completed";
-      icon = pkgsRepo.local.remixicon.mkIcon { id = "notification-line"; };
+      icon = pkgsRepo.local.remixicon.mkIcon { id = "notification-line"; color = config.system.pretty.theme.colors.notification.accent; };
     };
 
     torrent = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "$TR_TORRENT_NAME";
-      icon = pkgsRepo.local.remixicon.mkIcon { id = "folder-download-line"; };
+      icon = pkgsRepo.local.remixicon.mkIcon { id = "folder-download-line"; color = config.system.pretty.theme.colors.notification.accent; };
     };
 
     screenshoot = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Saved to clipboard and $SCREENSHOT_PATH";
-      icon = pkgsRepo.local.remixicon.mkIcon { id = "screenshot-line"; };
+      icon = pkgsRepo.local.remixicon.mkIcon { id = "screenshot-line"; color = config.system.pretty.theme.colors.notification.accent; };
     };
   };
 in
@@ -92,11 +92,9 @@ in
           height = 200;
 
           frame_width = 1;
-          frame_color = "#FFF";
-          background = "#444";
-          foreground = "#FFF";
-          corner_radius = 10;
-          transparency = 15;
+          frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+          background = config.system.pretty.theme.colors.notification.background.hexRGBA;
+          foreground = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
           font = "${cfg.font.name} ${toString cfg.font.size}";
         };
       };

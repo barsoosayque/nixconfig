@@ -2,6 +2,7 @@
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (builtins) mapAttrs;
 
   cfg = config.modules.programs.alacritty;
   pkg = pkgs.alacritty;
@@ -9,6 +10,9 @@ let
   iosevkaCustom = pkgs.nerdfonts.override {
     fonts = [ "Iosevka" ];
   };
+
+  mapColors = colors:
+    mapAttrs (n: v: v.hexRGB) colors;
 in
 {
   options.modules.programs.alacritty = {
@@ -88,7 +92,10 @@ in
           };
           draw_bold_text_with_bright_colors = true;
 
-          colors = config.system.pretty.theme.colors;
+          colors = {
+            normal = mapColors config.system.pretty.theme.colors.normal;
+            bright = mapColors config.system.pretty.theme.colors.bright;
+          };
         };
       };
     };

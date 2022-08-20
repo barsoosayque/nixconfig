@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsRepo, lib, ... }:
+input@{ config, pkgs, pkgsRepo, lib, localLib /* For some reason, unless localLib is matched here, it won't be captured in input ???*/, ... }:
 
 let
   inherit (lib) mkOption mkEnableOption types;
@@ -12,7 +12,7 @@ let
   setrootBin = "${pkgsRepo.stable.setroot}/bin/setroot";
 
   themes = {
-    fantasy = import ./themes/fantasy.nix;
+    fantasy = import ./themes/fantasy.nix input;
   };
 in
 {

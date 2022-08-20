@@ -1,4 +1,4 @@
-{ nixpkgs, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   inherit (pkgs.lib.strings) hasPrefix;

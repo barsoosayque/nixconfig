@@ -1,26 +1,31 @@
+{ localLib, ... }:
+
+let
+  inherit (localLib.colorUtils) mkColorHex;
+in
 {
   # General colorscheme: Base16 Material Palenight 256
   colors = rec {
     normal = {
-      black = "#292d3e";
-      red = "#f07178";
-      green = "#c3e88d";
-      yellow = "#ffcb6b";
-      blue = "#82aaff";
-      magenta = "#c792ea";
-      cyan = "#89ddff";
-      white = "#959dcb";
+      black = mkColorHex "#292d3e";
+      red = mkColorHex "#f07178";
+      green = mkColorHex "#c3e88d";
+      yellow = mkColorHex "#ffcb6b";
+      blue = mkColorHex "#82aaff";
+      magenta = mkColorHex "#c792ea";
+      cyan = mkColorHex "#89ddff";
+      white = mkColorHex "#959dcb";
     };
-    
+
     bright = {
-      black = "#676e95";
-      red = "#f07178";
-      green = "#c3e88d";
-      yellow = "#ffcb6b";
-      blue = "#82aaff";
-      magenta = "#c792ea";
-      cyan = "#89ddff";
-      white = "#ffffff";
+      black = mkColorHex "#676e95";
+      red = mkColorHex "#f07178";
+      green = mkColorHex "#c3e88d";
+      yellow = mkColorHex "#ffcb6b";
+      blue = mkColorHex "#82aaff";
+      magenta = mkColorHex "#c792ea";
+      cyan = mkColorHex "#89ddff";
+      white = mkColorHex "#ffffff";
     };
 
     cursor = {
@@ -40,8 +45,6 @@
       foreground = normal.white;
     };
 
-    utility = {
-
-    };
+    utility = { };
   };
-}
+} 
