@@ -49,7 +49,7 @@ let
       (mkOutput (head layout) null)
     ] ++ (zipListsWith mkOutput (tail layout) layout));
 
-  mkCmd = layout: "${pkgs.xorg.xrandr}/bin/xrandr ${mkOutputs layout} ;";
+  mkCmd = layout: dpi: "${pkgs.xorg.xrandr}/bin/xrandr --dpi ${toString dpi} ${mkOutputs layout};";
 in
 {
   options.modules.x11.monitor = {
@@ -58,11 +58,17 @@ in
       default = [ ];
       description = "Monitor configuration list";
     };
+
+    dpi = mkOption {
+      type = with types; int;
+      default = 94;
+      description = "Screen DPI";
+    };
   };
 
   config = {
     system.events.onStartup = [
-      (mkCmd cfg.layout)
+      (mkCmd cfg.layout cfg.dpi)
     ];
   };
 }
