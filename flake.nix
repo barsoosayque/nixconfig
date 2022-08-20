@@ -3,25 +3,29 @@
 
   # Define system dependencies
   inputs = {
-    nixpkgs-master = {
-      url = "github:NixOS/nixpkgs/master";
-    };
+    # nixpkgs-master = {
+    #   url = "github:NixOS/nixpkgs/master";
+    # };
 
     nixpkgs-stable = {
-      url = "github:NixOS/nixpkgs/21.11";
+      url = "github:NixOS/nixpkgs/22.05";
     };
 
     nixpkgs-unstable = {
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
 
-    nixpkgs-staging = {
-      url = "github:NixOS/nixpkgs/staging";
-    };
+    # nixpkgs-staging = {
+    #   url = "github:NixOS/nixpkgs/staging";
+    # };
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs-master";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    nixpkgs-steam-fixes = {
+      url = "github:jonringer/nixpkgs/steam-fixes";
     };
 
     # TODO: manage secrets
@@ -33,16 +37,27 @@
 
   # Define desired systems
   # NOTE: for every new input from above, put a new argument in inputs below
-  outputs = inputs@{ self, nixpkgs-master, nixpkgs-stable, nixpkgs-unstable, nixpkgs-staging, home-manager, ... }:
+  outputs =
+    inputs@{ self
+    # , nixpkgs-master
+    , nixpkgs-stable
+    , nixpkgs-unstable
+    # , nixpkgs-staging
+    , home-manager
+    , nixpkgs-steam-fixes
+    , ...
+    }:
     let
       system = "x86_64-linux";
+      config = { allowUnfree = true; };
 
       # Define pkgs for ease of usage
       pkgsRepo = rec {
+        # master = import nixpkgs-master { inherit system; };
         stable = import nixpkgs-stable { inherit system; };
         unstable = import nixpkgs-unstable { inherit system; };
-        master = import nixpkgs-master { inherit system; };
-        staging = import nixpkgs-staging { inherit system; };
+        # staging = import nixpkgs-staging { inherit system; };
+        steam-fixes = import nixpkgs-steam-fixes { inherit system config; };
         local = self.packages."${system}";
       };
 
