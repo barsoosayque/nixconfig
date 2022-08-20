@@ -2,6 +2,8 @@
 
 {
   config = {
+    system.stateVersion = "22.11";
+
     boot = {
       tmpOnTmpfs = false;
       cleanTmpDir = true;

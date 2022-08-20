@@ -104,24 +104,27 @@ in
       };
 
       hm = {
-        home.activation = {
-          createUserDirs =
-            let
-              dirs = filter isRegularDir (attrValues cfg.dirs);
-            in
-            hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              $DRY_RUN_CMD mkdir -p ${concatStringsSep " " (map (d: d.absolutePath) dirs)}
-            '';
+        home = {
+          stateVersion = config.system.stateVersion;
+          activation = {
+            createUserDirs =
+              let
+                dirs = filter isRegularDir (attrValues cfg.dirs);
+              in
+              hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
+                $DRY_RUN_CMD mkdir -p ${concatStringsSep " " (map (d: d.absolutePath) dirs)}
+              '';
 
-          linkUserDirs =
-            let
-              dirs = filter isSymlinkDir (attrValues cfg.dirs);
+            linkUserDirs =
+              let
+                dirs = filter isSymlinkDir (attrValues cfg.dirs);
 
-              linkCmd = dir:
-                "$DRY_RUN_CMD [ ! -L ${dir.absolutePath} ] && ln -s ${dir.source} ${dir.absolutePath}";
-            in
-            hmLib.hm.dag.entryAfter [ "writeBoundary" "createUserDirs" ]
-              (concatStringsSep "\n" (map linkCmd dirs));
+                linkCmd = dir:
+                  "$DRY_RUN_CMD [ ! -L ${dir.absolutePath} ] && ln -s ${dir.source} ${dir.absolutePath}";
+              in
+              hmLib.hm.dag.entryAfter [ "writeBoundary" "createUserDirs" ]
+                (concatStringsSep "\n" (map linkCmd dirs));
+          };
         };
 
         xdg = {
