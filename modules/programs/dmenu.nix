@@ -13,20 +13,20 @@ let
       url = "https://tools.suckless.org/dmenu/patches/fuzzymatch/dmenu-fuzzymatch-4.9.diff";
       sha256 = "d9a1e759cd518348fc37c2c83fbd097232098562ebfd1edf85b51413ff524b79";
     })
-    # fuzzymatch highlight
-    (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/fuzzyhighlight/dmenu-fuzzyhighlight-4.9.diff";
-      sha256 = "82cbcc1a6a721fb670f6561b98a58e8a2301bffde2e94c87e77868b09927aa57";
-    })
+    # fuzzymatch highlight (borked)
+    # (fetchurl {
+    #   url = "https://tools.suckless.org/dmenu/patches/fuzzyhighlight/dmenu-fuzzyhighlight-4.9.diff";
+    #   sha256 = "82cbcc1a6a721fb670f6561b98a58e8a2301bffde2e94c87e77868b09927aa57";
+    # })
     # numbers
     (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/numbers/dmenu-numbers-4.9.diff";
-      sha256 = "f79de21544b83fa1e86f0aed5e849b1922ebae8d822e492fbc9066c0f07ddb69";
+      url = "https://tools.suckless.org/dmenu/patches/numbers/dmenu-numbers-20220512-28fb3e2.diff";
+      sha256 = "sha256-dXAmbub13PUDjygoxsK0PNnCPc5yNWOIPtrNLvy8fSw=";
     })
     # mouse support
     (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.0.diff";
-      sha256 = "690daaf24d4379f9ed4dbc1d7f7864a86fada420afc6ef792d9e2d09bd6fe8b6";
+      url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.2.diff";
+      sha256 = "sha256-IGBvEj0m7nZbqLMH78KZ1LZZnQaqulblpQwfvcejWw0=";
     })
   ];
 
@@ -36,13 +36,13 @@ let
     # background colors
     "-nb '${config.system.pretty.theme.colors.primary.background.hexRGB}'"
     "-sb '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
-    "-nhb '${config.system.pretty.theme.colors.primary.background.hexRGB}'"
-    "-shb '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
+    # "-nhb '${config.system.pretty.theme.colors.primary.background.hexRGB}'"
+    # "-shb '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
     # foreground colors
     "-nf '${config.system.pretty.theme.colors.cursor.cursor.hexRGB}'"
     "-sf '${config.system.pretty.theme.colors.cursor.text.hexRGB}'"
-    "-nhf '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
-    "-shf '${config.system.pretty.theme.colors.cursor.text.hexRGB}'"
+    # "-nhf '${config.system.pretty.theme.colors.cursor.accent.hexRGB}'"
+    # "-shf '${config.system.pretty.theme.colors.cursor.text.hexRGB}'"
   ];
 in
 {
@@ -71,13 +71,15 @@ in
   };
 
   config = mkIf cfg.enable {
-    fonts.fonts = [ cfg.font.package ];
+    fonts.packages = [ cfg.font.package ];
 
     nixpkgs.overlays = [
       (self: super: {
         dmenu = super.dmenu.override { inherit patches; };
       })
     ];
+    
+    environment.systemPackages = [ pkgs.dmenu ];
 
     system.keyboard.bindings = {
       "super + d" = "${pkgs.dmenu}/bin/dmenu_run ${params} -p \"Run: \"";
