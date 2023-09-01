@@ -65,26 +65,28 @@ in
 
       name = mkOption {
         type = with types; str;
-        default = "Ubuntu";
+        default = "Iosevka Medium";
         description = "Font name according to the package";
       };
 
       size = mkOption {
         type = with types; int;
-        default = 11;
+        default = 12;
         description = "Text size";
       };
     };
   };
 
   config = mkIf cfg.enable {
-    fonts.fonts = [ cfg.font.package ];
+    fonts.packages = [ cfg.font.package ];
 
     system.user.hm.services.dunst = {
       enable = true;
 
       settings = {
         global = {
+          follow = "keyboard";
+
           offset = "20x20";
           padding = 20;
           horizontal_padding = 20;
@@ -92,9 +94,13 @@ in
           height = 200;
 
           frame_width = 1;
+          separator_width = 1;
+          corner_radius = 20;
+
           frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
           background = config.system.pretty.theme.colors.notification.background.hexRGBA;
           foreground = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+
           font = "${cfg.font.name} ${toString cfg.font.size}";
         };
       };
