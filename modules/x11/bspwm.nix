@@ -39,6 +39,9 @@ in
       settings = {
         focused_border_color = config.system.pretty.theme.colors.window.active_border.hexRGBA;
         normal_border_color = config.system.pretty.theme.colors.window.border.hexRGBA;
+        border_width = 0;
+        border_radius = 20;
+        window_gap = 20;
         split_ratio = 0.5;
         borderless_monocle = true;
         gapless_monocle = true;
