@@ -27,7 +27,7 @@ in
 
       name = mkOption {
         type = with types; str;
-        default = "Iosevka";
+        default = "Iosevka Nerd Font";
         description = "Font name according to the package";
       };
     };
@@ -38,7 +38,7 @@ in
       "super + Return" = "${pkg}/bin/alacritty";
     };
 
-    fonts.fonts = [ cfg.font.package ];
+    fonts.packages = [ cfg.font.package ];
     environment.systemPackages = [ pkg ];
 
     system.user.hm = {
@@ -65,13 +65,13 @@ in
               lines = 0;
             };
             padding = {
-              x = 10;
-              y = 10;
+              x = 40;
+              y = 40;
             };
             dynamic_padding = true;
             dynamic_title = true;
             decorations = "full";
-            opacity = 0.9;
+            opacity = 0.85;
           };
 
           # Text
@@ -84,7 +84,7 @@ in
               family = "${cfg.font.name}";
               style = "Heavy";
             };
-            size = 12.0;
+            size = 13.0;
             glyph_offset = {
               x = 0;
               y = 0;
