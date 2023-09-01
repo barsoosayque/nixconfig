@@ -1,13 +1,12 @@
-{ config, options, pkgs, lib, ... }:
+{ config, options, pkgs, lib, pkgsRepo, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
   inherit (lib.lists) optionals;
   inherit (pkgs.vscode-utils) extensionsFromVscodeMarketplace;
+  inherit (builtins) readFile;
 
   cfg = config.modules.environment.code;
-
-  codePkg = pkgs.vscodium;
 in
 {
   options.modules.environment.code = {
@@ -21,7 +20,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    fonts.fonts = [ pkgs.fira-code ];
+    fonts.packages = [ pkgs.fira-code ];
 
     nix.extraOptions = ''
       keep-outputs = true
@@ -31,6 +30,7 @@ in
     environment.systemPackages = [
       pkgs.rnix-lsp
       pkgs.direnv
+      pkgs.cloc
 
       pkgs.cmake
       pkgs.gnumake
@@ -38,61 +38,76 @@ in
       pkgs.clang-tools
       pkgs.git
 
-      codePkg
-    ] ++ optionals cfg.enableRust [ pkgs.rls pkgs.rustfmt ];
+      pkgsRepo.helix.default
+    ] ++ optionals cfg.enableRust [ pkgs.rust-analyzer pkgs.rustfmt ];
 
     system.user.hm = {
+      xdg.configFile."helix/config.toml".text = ''
+          theme = "kanagawa"
+
+          [editor]
+          line-number = "relative"
+          bufferline = "always"
+          color-modes = true
+          
+          [editor.statusline]
+          left = ["mode", "spacer", "spinner", "spacer", "version-control", "spacer", "workspace-diagnostics"]
+          center = ["file-modification-indicator", "file-name", "position" ]
+          right = ["file-encoding", "file-type", "total-line-numbers"]
+          mode.normal = "󰇀"
+          mode.insert = "󰆈"
+          mode.select = "󰒉"
+          
+          [editor.lsp]
+          enable = true
+          display-inlay-hints = true
+      '';
+
+      xdg.configFile."zellij/config.kdl".text = ''
+        themes {
+          default {
+            fg "${config.system.pretty.theme.colors.primary.foreground.hexRGB}"
+            bg "${config.system.pretty.theme.colors.primary.background.hexRGB}"
+            black "${config.system.pretty.theme.colors.normal.black.hexRGB}"
+            red "${config.system.pretty.theme.colors.normal.red.hexRGB}"
+            green "${config.system.pretty.theme.colors.normal.green.hexRGB}"
+            yellow "${config.system.pretty.theme.colors.normal.yellow.hexRGB}"
+            blue "${config.system.pretty.theme.colors.normal.blue.hexRGB}"
+            magenta "${config.system.pretty.theme.colors.normal.magenta.hexRGB}"
+            cyan "${config.system.pretty.theme.colors.normal.cyan.hexRGB}"
+            white "${config.system.pretty.theme.colors.normal.white.hexRGB}"
+            orange "${config.system.pretty.theme.colors.bright.yellow.hexRGB}"
+          }
+        }
+        ui.pane_frames {
+          rounded_corners true
+        }
+        default_layout "compact"
+      '' + readFile ./zellij-config.kdl;
+
       programs = {
-        direnv = {
+        zellij = {
           enable = true;
-          nix-direnv.enable = true;
+          enableZshIntegration = true;
+          enableBashIntegration = false;
+          enableFishIntegration = false;
         };
 
-        vscode = {
+        direnv = {
           enable = true;
-          package = codePkg;
-          extensions = with pkgs.vscode-extensions; [
-            pkief.material-icon-theme
-            tamasfe.even-better-toml
-            asciidoctor.asciidoctor-vscode
-
-            # requires rnix-lsp
-            jnoortheen.nix-ide
-
-            llvm-vs-code-extensions.vscode-clangd
-          ] ++ extensionsFromVscodeMarketplace [
-            {
-              name = "aura-theme";
-              publisher = "DaltonMenezes";
-              version = "2.1.0";
-              sha256 = "c0f9682ee3faa4a18e7f23455b0cc9e402e5ccd74aa9e0f6a4a0a7e9255d2f9f";
-            }
-            {
-              name = "dance";
-              publisher = "gregoire";
-              version = "0.5.8";
-              sha256 = "aa18916e40ca512277cd66e5b324b9bde2a52658087b61250f7e42c72826bda0";
-            }
-            {
-              name = "vscode-direnv";
-              publisher = "cab404";
-              version = "1.0.0";
-              sha256 = "fa72c7f93f6fe93402a8a670e873cdfd97af43ae45566d92028d95f5179c3376";
-            }
-          ] ++ optionals cfg.enableRust [
-            vadimcn.vscode-lldb
-            matklad.rust-analyzer
-          ];
+          enableBashIntegration = false;
+          enableFishIntegration = false;
+          nix-direnv.enable = true;
         };
 
         git = {
           enable = true;
+          lfs.enable = true;
 
           userName = "barsoosayque";
           userEmail = "shtoshich@gmail.com";
         };
       };
-
     };
   };
 }
