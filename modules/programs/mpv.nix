@@ -54,7 +54,7 @@ in
     ];
 
     environment.systemPackages = [ pkgs.mpv ];
-    fonts.fonts = [ cfg.osdFont.package cfg.subFont.package ];
+    fonts.packages = [ cfg.osdFont.package cfg.subFont.package ];
 
     system.user.hm.programs.mpv = {
       enable = true;
@@ -93,7 +93,7 @@ in
         osd-bar-w = 60;
 
         sub-auto = "fuzzy";
-        sub-file-paths-append = [ "ass" "srt" "sub" "subs" "subtitles" "RUS Subs" ];
+        sub-file-paths-append = [ "ass" "srt" "sub" "subs" "subtitles" "RUS Subs" "SUB" ];
         embeddedfonts = false;
         sub-scale-with-window = true;
         sub-ass-override = "force";
@@ -109,6 +109,9 @@ in
 
         audio-file-auto = "fuzzy";
         audio-pitch-correction = true;
+        # pipewire audio device is crackling sometimes - very strange
+        audio-device = "alsa";
+        audio-samplerate = 44100;
         volume-max = 200;
         volume = 100;
         term-osd-bar-chars = [ "—●•" ];
