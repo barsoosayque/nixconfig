@@ -3,7 +3,8 @@
 { nixpkgs, pkgs, pkgsRepo, ... }:
 
 let
-  inherit (pkgs.lib) mapAttrsToList;
+  inherit (pkgs.lib) mapAttrsToList makeOverridable;
+  inherit (pkgs.lib.strings) hasSuffix;
   inherit (pkgs.lib.lists) flatten;
   inherit (pkgs.lib.attrsets) optionalAttrs;
   inherit (builtins) pathExists readDir filter mapAttrs isFunction;
@@ -25,10 +26,10 @@ let
     mapDir (p: mkHost p attrs) path;
 
   collectModules = path: attrs:
-    mapAllFiles import path 1;
+    mapAllFiles (p: if hasSuffix ".nix" p then import p else {}) path 1;
 
   collectPackages = path: attrs:
-    mapDir (p: import p attrs) path;
+    mapDir (p: makeOverridable (import p) attrs) path;
 
   mkHost = path: attrs@{ modulesPath, home-manager, localLib, ... }:
     let
