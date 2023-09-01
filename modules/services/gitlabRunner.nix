@@ -4,6 +4,8 @@ let
   inherit (lib) mkIf mkEnableOption concatStringsSep;
 
   cfg = config.modules.services.gitlabRunner;
+
+  dockerHost = "127.0.0.1:2375";
 in
 {
   options.modules.services.gitlabRunner = {
@@ -14,7 +16,9 @@ in
     # enabling ip_forward on the host machine is important for the docker 
     # container to be able to perform networking tasks (such as cloning the gitlab repo)
     boot.kernel.sysctl."net.ipv4.ip_forward" = true;
-    virtualisation.docker.enable = true;
+    virtualisation.docker = {
+      enable = true; 
+    };
 
     services.gitlab-runner = {
       enable = true;
@@ -46,7 +50,8 @@ in
 
             . ${pkgs.nix}/etc/profile.d/nix.sh
 
-            ${pkgs.nix}/bin/nix-env -i ${concatStringsSep " " (with pkgs; [ nix cacert git openssh ])}
+            ${pkgs.nix}/bin/nix-env -i ${concatStringsSep " " (with pkgs; [ nix cacert git openssh curl ])}
+            mkdir -p /root/.config/nix && echo "experimental-features = nix-command flakes ca-references" > /root/.config/nix/nix.conf
 
             ${pkgs.nix}/bin/nix-channel --add https://nixos.org/channels/nixpkgs-unstable
             ${pkgs.nix}/bin/nix-channel --update nixpkgs
