@@ -5,8 +5,11 @@
     system.stateVersion = "22.11";
 
     boot = {
-      tmpOnTmpfs = false;
-      cleanTmpDir = true;
+      supportedFilesystems = [ "ntfs" ];
+      tmp = {
+        useTmpfs = false;
+        cleanOnBoot = true;
+      };
 
       kernelPackages = pkgs.linuxPackages_latest;
       loader = {
