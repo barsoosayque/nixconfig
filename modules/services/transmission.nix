@@ -54,5 +54,15 @@ in
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       };
     };
+    
+    # systemd.services.autoMoveTorrents = {
+    #   description = "Move *.torrent files from downloads to transmission";
+
+    #   serviceConfig = {
+    #     User = config.system.user.name;
+    #     ExecStart = "${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
+    #     ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
+    #   };
+    # }
   };
 }
