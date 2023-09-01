@@ -29,20 +29,28 @@ in
     };
 
     cursor = {
-      accent = bright.green;
+      accent = normal.green;
       text = normal.black;
-      cursor = normal.white;
+      cursor = bright.white;
     };
 
     primary = {
       background = normal.black;
-      foreground = normal.white;
+      foreground = bright.white;
     };
 
     notification = {
       accent = normal.green;
-      background = normal.black.modify { a = 150; };
-      foreground = normal.white;
+      background = primary.background.modify { a = 180; };
+      foreground = primary.foreground;
+    };
+
+    bar = {
+      background = primary.background.modify { a = 180; };
+      foreground = primary.foreground;
+      danger = normal.red;
+      accent = normal.green;
+      empty = normal.white;
     };
 
     window = {
