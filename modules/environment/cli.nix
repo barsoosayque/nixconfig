@@ -1,13 +1,15 @@
 { config, options, pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkIf mkEnableOption lists;
 
   cfg = config.modules.environment.cli;
 in
 {
   options.modules.environment.cli = {
     enable = mkEnableOption "cli environment";
+
+    enableFlexing = mkEnableOption "cli tools to make pretty screenshots";
   };
 
   config = mkIf cfg.enable {
@@ -15,20 +17,30 @@ in
       systemPackages = [
         # System
         pkgs.htop
+        pkgs.bottom
         pkgs.openssl
         pkgs.file
         pkgs.unzip
         pkgs.unrar
         pkgs.curl
+        pkgs.xclip
+
+        # Utility
+        pkgs.nnn
+        pkgs.imagemagick 
 
         # Text
-        pkgs.kakoune
         pkgs.neovim
+      ] ++ lists.optionals cfg.enableFlexing [
+        pkgs.neofetch
+        pkgs.pipes
+        pkgs.terminal-parrot
+        pkgs.cbonsai
       ];
 
       variables = {
-        EDITOR = "kak";
-        VISUAL = "kak";
+        EDITOR = "hx";
+        VISUAL = "hx";
       };
 
       # https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enableCompletion
@@ -37,12 +49,14 @@ in
 
     users.defaultUserShell = pkgs.zsh;
 
+    programs.zsh.enable = true;
+
     system.user.hm = {
       programs = {
         zsh = {
           enable = true;
           enableCompletion = true;
-          enableSyntaxHighlighting = true;
+          syntaxHighlighting.enable = true;
           enableAutosuggestions = true;
           dotDir = "${config.system.user.dirs.data.relativePath}/zsh";
 
