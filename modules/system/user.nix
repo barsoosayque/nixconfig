@@ -87,7 +87,6 @@ in
 
       dirs = {
         # sdd dirs
-        work = cfg.utils.mkHomeDir "work";
         games = cfg.utils.mkHomeDir "games";
         data = cfg.utils.mkHomeDir ".local/share";
         config = cfg.utils.mkHomeDir ".config";
@@ -96,6 +95,7 @@ in
         templates = mkNullDir;
 
         # hdd dirs
+        work = cfg.utils.mkStorageDir "work";
         documents = cfg.utils.mkStorageDir "documents";
         download = cfg.utils.mkStorageDir "downloads";
         music = cfg.utils.mkStorageDir "music";
