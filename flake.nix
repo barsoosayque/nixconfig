@@ -3,12 +3,12 @@
 
   # Define system dependencies
   inputs = {
-    # nixpkgs-master = {
-    #   url = "github:NixOS/nixpkgs/master";
-    # };
+    nixpkgs-master = {
+      url = "github:NixOS/nixpkgs/master";
+    };
 
     nixpkgs-stable = {
-      url = "github:NixOS/nixpkgs/22.05";
+      url = "github:NixOS/nixpkgs/23.05";
     };
 
     nixpkgs-unstable = {
@@ -24,8 +24,13 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nixpkgs-steam-fixes = {
+    nixpkgs-steamfixes = {
       url = "github:jonringer/nixpkgs/steam-fixes";
+    };
+
+    helix = {
+      url = "github:helix-editor/helix/master";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     # TODO: manage secrets
@@ -39,30 +44,34 @@
   # NOTE: for every new input from above, put a new argument in inputs below
   outputs =
     inputs@{ self
-    # , nixpkgs-master
+    , nixpkgs-master
     , nixpkgs-stable
     , nixpkgs-unstable
+    , nixpkgs-steamfixes
     # , nixpkgs-staging
     , home-manager
-    , nixpkgs-steam-fixes
+    , helix
     , ...
     }:
     let
       system = "x86_64-linux";
       config = { allowUnfree = true; };
 
+      helix-pkgs = helix.packages."${system}";
+
       # Define pkgs for ease of usage
       pkgsRepo = rec {
-        # master = import nixpkgs-master { inherit system; };
-        stable = import nixpkgs-stable { inherit system; };
-        unstable = import nixpkgs-unstable { inherit system; };
+      	helix = helix-pkgs; 
+        master = import nixpkgs-master { inherit system config; };
+        stable = import nixpkgs-stable { inherit system config; };
+        unstable = import nixpkgs-unstable { inherit system config; };
+        steamFixes = import nixpkgs-steamfixes { inherit system config; };
         # staging = import nixpkgs-staging { inherit system; };
-        steam-fixes = import nixpkgs-steam-fixes { inherit system config; };
         local = self.packages."${system}";
       };
 
-      nixpkgs = nixpkgs-unstable;
-      pkgs = pkgsRepo.unstable;
+      nixpkgs = nixpkgs-master;
+      pkgs = pkgsRepo.master;
 
       # Utils to automatically create outputs
       localLib = import ./lib {
