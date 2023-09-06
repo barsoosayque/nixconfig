@@ -95,6 +95,7 @@
       scissors.enable = true;
       dmenu.enable = true;
       obs.enable = true;
+      beets.enable = true;
     };
 
     services = {
@@ -111,6 +112,7 @@
       gitlabRunner.enable = true;
       picom.enable = true;
       polybar.enable = true;
+      grocy.enable = true;
     };
 
     x11 = {
