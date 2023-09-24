@@ -1,7 +1,7 @@
 { config, options, pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib) mkIf mkOption mkEnableOption types lists;
   
   cfg = config.modules.x11.xsession;
 in
@@ -10,7 +10,7 @@ in
     enable = mkEnableOption "xsession";
 
     videoDrivers = mkOption {
-      type = with types; str;
+      type = with types; enum ["intel" "nvidia"];
       description = "Video drivers to use. See services.xserver.videoDrivers";
     };
   };
@@ -26,8 +26,29 @@ in
 
     services.xserver = {
       enable = true;
-      videoDrivers = [ cfg.videoDrivers ];
+      videoDrivers = lists.optional (cfg.videoDrivers == "nvidia") "nvidia";
       displayManager.startx.enable = true;
+    };
+
+    hardware = {
+      nvidia.package = config.boot.kernelPackages.nvidia_x11;
+      opengl = {
+        enable = true;
+        driSupport32Bit = true;
+        driSupport = true;
+        extraPackages = with pkgs; lists.optionals (cfg.videoDrivers = "intel") [
+          intel-media-driver
+          vaapiIntel
+          vaapiVdpau
+          libvdpau-va-gl
+        ];
+      };
+    };
+
+    nixpkgs.config.packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override {
+        enableHybridCodec = cfg.videoDrivers == "intel";
+      };
     };
 
     system.user.hm.xsession = {

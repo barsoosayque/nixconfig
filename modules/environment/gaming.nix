@@ -99,14 +99,6 @@ in
       ++ (lists.optional cfg.games.cdda cdda)
     ;
 
-    hardware = {
-      nvidia.package = config.boot.kernelPackages.nvidia_x11;
-      opengl = {
-        enable = true;
-        driSupport32Bit = true;
-        driSupport = true;
-      };
-    };
     boot.extraModulePackages = lists.optional cfg.gamepads.xbox config.boot.kernelPackages.xpadneo;
 
     services.joycond.enable = cfg.gamepads.nintendo;
