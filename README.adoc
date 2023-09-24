@@ -14,28 +14,42 @@ big wip
 * [ ] System update event & prograss bar (if possible) notification
 * [ ] Audio change notification
 * [ ] Pick window & audio change it + notification
-* [ ] Polybar
+* [x] Polybar
 
 == Pile of topics to sort
 
 == Install
 
-To install this flake from an installation iso, first enter a Nix shell with dependencies:
+To install this flake from an installation iso, first enter a `sudo` mode and then create a Nix shell with dependencies:
 
 ```sh
+$ sudo -i
 $ nix-shell -p git nixUnstable
 ```
 
 This is required since *git* isn't a hard dependency, and flakes only available in *nixUnstable*.
-Then, partition according to the NixOs manual. (TODO: storage module shenanigans).
+Then, partition according to the NixOs manual. In this nixconfig, there is an option to create and automatically link directories from `/storage` to `/home/user`,
+so it might be usefull to mount `/` to hdd and home directory to ssd.
 
-After that, run the actual installation (assuming that everything is mounted under _/mnt_):
+After that, mount disks and run the actual installation:
 
 ```sh
-$ nixos-install --root /mnt --flake github:barsoosayque/nixconfig#station
+$ mount /dev/disk/by-label/nixos /mnt
+$ mount /dev/disk/by-label/boot /mnt/boot
+# Replace hostname with the actual host config name from _hosts/_
+$ nixos-install --root /mnt --flake .#hostname
+````
+
+=== New host
+
+To add a new host, first you need to create a host dir in _hosts/_, and then generate a hadrware config:
+
+```sh
+$ mkdir hosts/myhost
+$ nixos-generate-config --root /mnt --show-hardware-config > hosts/myhost/hardware.nix
 ```
 
-(TODO: why #station ? why github ? local option w/ custom hardware/system setup)
+Hardware config must be named _hardware.nix_. Then add or copy a `system.nix` file and config a new host system.
 
 === Set background
 
