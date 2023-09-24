@@ -12,6 +12,11 @@ let
       longitude = 91.46667;
       timeZone = "Asia/Krasnoyarsk";
     };
+    Podgorica = {
+      latitude = 42.4399123;
+      longitude = 19.2627733;
+      timeZone = "Europe/Podgorica";
+    };
   };
 in
 {
