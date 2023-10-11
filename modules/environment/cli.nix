@@ -77,13 +77,13 @@ in
             vi = "nvim";
             mv = "mv -v";
             cp = "cp -v";
-            ls = "${pkgs.exa}/bin/exa --icons --group-directories-first --classify ";
+            ls = "${pkgs.eza}/bin/exa --icons --group-directories-first --classify ";
           };
         };
 
-        exa = {
-          enable = true;
-        };
+        # exa = {
+        #   enable = true;
+        # };
         bat = {
           enable = true;
         };
