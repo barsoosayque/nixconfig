@@ -45,7 +45,7 @@
 
     networking = {
       inherit hostName;
-      useDHCP = false;
+      networkmanager.enable = true;
     };
 
     users = {
