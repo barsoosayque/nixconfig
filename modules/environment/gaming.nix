@@ -62,9 +62,12 @@ in
             mb_fmod = pkgs.fmodex.overrideAttrs (prev: {
               installPhase = prev.installPhase + ''ls $out/lib; ln -s $out/lib/libfmodex.so $out/lib/libfmodex64.so; ls $out/lib'';
             });
+            jdk = (pkgs.openjdk20.override {
+              enableJavaFX = true; 
+            });
           in
           {
-            extraPkgs = pkgs: [ pkgs.aria2 pkgs.vulkan-tools ];
+            extraPkgs = pkgs: [ jdk pkgs.aria2 pkgs.vulkan-tools ];
             extraLibraries = pkgs: [ mb_glew mb_fmod pkgs.curlWithGnuTls pkgs.gnome.zenity pkgs.libnice ];
           }
         ));

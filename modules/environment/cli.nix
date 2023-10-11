@@ -24,6 +24,8 @@ in
         pkgs.unrar
         pkgs.curl
         pkgs.xclip
+        pkgs.sad
+        pkgs.fzf
 
         # Utility
         pkgs.nnn

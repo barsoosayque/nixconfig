@@ -37,6 +37,7 @@ in
       pkgs.clang
       pkgs.clang-tools
       pkgs.git
+      pkgs.delta
 
       pkgsRepo.helix.default
     ] ++ optionals cfg.enableRust [ pkgs.rust-analyzer pkgs.rustfmt ];
@@ -106,6 +107,32 @@ in
 
           userName = "barsoosayque";
           userEmail = "shtoshich@gmail.com";
+
+          ignores = [
+            ".local"
+          ];
+
+          difftastic = {
+            enable = true;
+            background = "dark";
+            display = "inline";
+          };
+
+          extraConfig = {
+            pull.rebase = true;
+            branch.autosetuprebase = "always";
+
+            url = {
+              "https://github.com/" = {
+                insteadOf = [
+                  "gh:"
+                  "github:"
+                ];
+              };
+            };
+
+            credential.helper = "cache --timeout 7200";
+          };
         };
       };
     };

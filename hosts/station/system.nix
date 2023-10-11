@@ -52,6 +52,7 @@
     }];
     defaultGateway = "192.168.0.1";
     nameservers = [ "8.8.8.8" "8.8.4.4" ];
+    useDHCP = false;
     # nameservers = [ "84.200.69.80" "84.200.70.40" ]; # https://dns.watch/
     # nameservers = [ "1.1.1.1" "1.0.0.1" ];
   };
@@ -118,10 +119,6 @@
     x11 = {
       monitor.layout = [
         {
-          identifier = "DP-0";
-          resolution = { width = 2560; height = 1440; };
-        }
-        {
           identifier = "HDMI-0";
           resolution = { width = 1920; height = 1080; };
         }
@@ -134,8 +131,7 @@
       bspwm = {
         enable = true;
         monitors = {
-          "DP-0" = [ 1 2 3 4 ];
-          "HDMI-0" = [ 5 6 7 8 ];
+          "HDMI-0" = [ 1 2 3 4 5 6 7 8 ];
         };
       };
     };
