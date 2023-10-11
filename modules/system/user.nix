@@ -101,6 +101,7 @@ in
         music = cfg.utils.mkStorageDir "music";
         pictures = cfg.utils.mkStorageDir "pictures";
         videos = cfg.utils.mkStorageDir "videos";
+        vm = cfg.utils.mkStorageDir "vm";
       };
 
       hm = {
