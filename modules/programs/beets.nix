@@ -26,9 +26,9 @@ in
           write = true;
         };
         paths = {
-          default = "$albumartist/$albumtype/[$year] $album/$track. $title";
-          singleton = "$artist/Unsorted/$title";
-          comp = "Compilations/[$year] $album/$track. $title";
+          default = "$mygenre/$albumartist/$albumtype/[$year] $album/$track. $title";
+          singleton = "$mygenre/$artist/Unsorted/$title";
+          comp = "Compilation/[$year] $album/$track. $title";
           "albumtype:soundtrack" = "OST/$album/$track. $title";
         };
         plugins = [
