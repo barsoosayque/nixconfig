@@ -36,7 +36,7 @@ in
         enable = true;
         driSupport32Bit = true;
         driSupport = true;
-        extraPackages = with pkgs; lists.optionals (cfg.videoDrivers = "intel") [
+        extraPackages = with pkgs; lists.optionals (cfg.videoDrivers == "intel") [
           intel-media-driver
           vaapiIntel
           vaapiVdpau
