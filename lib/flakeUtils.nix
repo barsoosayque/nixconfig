@@ -31,7 +31,7 @@ let
   collectPackages = path: attrs:
     mapDir (p: makeOverridable (import p) attrs) path;
 
-  mkHost = path: attrs@{ modulesPath, home-manager, localLib, ... }:
+  mkHost = path: attrs@{ modulesPath, extraModules, home-manager, localLib, ... }:
     let
       name = baseNameOf path;
     in
@@ -45,10 +45,9 @@ let
           _module.args.hmLib = home-manager.lib;
           _module.args.localLib = localLib;
         }
-        home-manager.nixosModule
         (path + "/system.nix")
         (path + "/hardware.nix")
-      ] ++ (collectModules modulesPath { });
+      ] ++ (collectModules modulesPath { }) ++ extraModules;
 
     };
 in

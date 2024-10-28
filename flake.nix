@@ -8,28 +8,25 @@
     };
 
     nixpkgs-stable = {
-      url = "github:NixOS/nixpkgs/23.05";
+      url = "github:NixOS/nixpkgs/24.05";
     };
 
     nixpkgs-unstable = {
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
 
-    # nixpkgs-staging = {
-    #   url = "github:NixOS/nixpkgs/staging";
-    # };
-
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nixpkgs-steamfixes = {
-      url = "github:jonringer/nixpkgs/steam-fixes";
-    };
-
     helix = {
       url = "github:helix-editor/helix/master";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    musnix = { 
+      url = "github:musnix/musnix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -47,9 +44,8 @@
     , nixpkgs-master
     , nixpkgs-stable
     , nixpkgs-unstable
-    , nixpkgs-steamfixes
-    # , nixpkgs-staging
     , home-manager
+    , musnix
     , helix
     , ...
     }:
@@ -57,6 +53,7 @@
       system = "x86_64-linux";
       config = { allowUnfree = true; };
 
+      musnixModule = musnix.nixosModules.default;
       helix-pkgs = helix.packages."${system}";
 
       # Define pkgs for ease of usage
@@ -65,13 +62,11 @@
         master = import nixpkgs-master { inherit system config; };
         stable = import nixpkgs-stable { inherit system config; };
         unstable = import nixpkgs-unstable { inherit system config; };
-        steamFixes = import nixpkgs-steamfixes { inherit system config; };
-        # staging = import nixpkgs-staging { inherit system; };
         local = self.packages."${system}";
       };
 
-      nixpkgs = nixpkgs-master;
-      pkgs = pkgsRepo.master;
+      nixpkgs = nixpkgs-unstable;
+      pkgs = pkgsRepo.unstable;
 
       # Utils to automatically create outputs
       localLib = import ./lib {
@@ -81,7 +76,11 @@
     {
       # Actuall systems configurations (per host)
       nixosConfigurations = localLib.flakeUtils.collectHosts ./hosts {
-        inherit home-manager localLib;
+        inherit localLib home-manager;
+        extraModules = [
+          home-manager.nixosModule
+          musnixModule
+        ];
         modulesPath = ./modules;
       };
 
