@@ -74,7 +74,7 @@ in
         description = "The one and only";
         extraGroups = [ "wheel" ];
         isNormalUser = true;
-        passwordFile = "${cfg.dirs.config.absolutePath}/nixos/nixpass";
+        hashedPasswordFile = "${cfg.dirs.config.absolutePath}/nixos/nixpass";
       };
 
       utils = {

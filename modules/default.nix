@@ -19,7 +19,7 @@
     };
 
     nix = {
-      package = pkgs.nixUnstable;
+      # package = pkgs.nixVersions.git;
 
       extraOptions = ''
         experimental-features = nix-command flakes
@@ -45,7 +45,11 @@
 
     networking = {
       inherit hostName;
-      networkmanager.enable = true;
+      networkmanager = {
+        enable = true;
+        dns = "dnsmasq";
+      };
+      wireless.dbusControlled = true;
     };
 
     users = {

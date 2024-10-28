@@ -7,11 +7,9 @@ big wip
 * [x] Transmission and its events
 * [x] Alacritty module
 * [ ] Unclutter home
-* [ ] Droidcam module
 * [x] Remove all 'with lib;'
 * [ ] Declarative pretty config: colors and background image(s)
 * [x] Zsh with simple prompt
-* [ ] System update event & prograss bar (if possible) notification
 * [ ] Audio change notification
 * [ ] Pick window & audio change it + notification
 * [x] Polybar
