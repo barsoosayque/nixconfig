@@ -17,6 +17,11 @@ let
       longitude = 19.2627733;
       timeZone = "Europe/Podgorica";
     };
+    Bangkok = {
+      latitude = 13.7540;
+      longitude = 100.5014;
+      timeZone = "Asia/Bangkok";
+    };
   };
 in
 {
