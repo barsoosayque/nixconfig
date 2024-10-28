@@ -10,7 +10,11 @@
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" "noacpi" ];
-  boot.extraModulePackages = [ ];
+  boot.extraModulePackages = with config.boot.kernelPackages; [ 
+    (pkgs.callPackage ./rtl8812au.nix {
+      kernel = config.boot.kernelPackages.kernel;
+    })
+  ];
   hardware.cpu.amd.updateMicrocode = true;
 
   fileSystems."/" =
