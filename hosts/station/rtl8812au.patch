@@ -1,11 +1,23 @@
---- Makefile2	2023-10-31 20:26:19.518289477 +0100
-+++ Makefile	2023-10-31 20:26:43.845713684 +0100
-@@ -1725,7 +1725,7 @@
+diff --git a/Makefile b/Makefile
+index a344591..2130430 100755
+--- a/Makefile
++++ b/Makefile
+@@ -1725,7 +1725,7 @@ export CONFIG_88XXAU = m
  all: modules
  
  modules:
 -	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KSRC) M=$(shell pwd)  modules
-+	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KPATH) M=$(shell pwd)  modules
++	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL_PATH) M=$(shell pwd)  modules
  	@echo "---------------------------------------------------------------------------"
  	@echo "Visit https://github.com/aircrack-ng/rtl8812au for support/reporting issues"
  	@echo "or check for newer versions (branches) of these drivers.                   "
+@@ -1734,8 +1734,7 @@ strip:
+ 	$(CROSS_COMPILE)strip $(MODULE_NAME).ko --strip-unneeded
+ 
+ install:
+-	install -p -m 644 $(MODULE_NAME).ko  $(MODDESTDIR)
+-	/sbin/depmod -a ${KVER}
++	install -p -m 644 $(MODULE_NAME).ko  $(MODULE_PATH)
+ 
+ uninstall:
+ 	rm -f $(MODDESTDIR)/$(MODULE_NAME).ko
