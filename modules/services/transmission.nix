@@ -41,7 +41,7 @@ in
       xdg.configFile."transmission-daemon/settings.json".text = toJSON settings;
     };
 
-    environment.systemPackages = [ pkgs.transmission ];
+    # environment.systemPackages = [ pkgs.transmission_4 ];
 
     systemd.services.transmission = {
       description = "Transmission BitTorrent Service";
@@ -50,7 +50,7 @@ in
 
       serviceConfig = {
         User = config.system.user.name;
-        ExecStart = "${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
+        ExecStart = "${pkgs.transmission_4}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       };
     };
