@@ -90,11 +90,11 @@ in
               y = 0;
             };
           };
-          draw_bold_text_with_bright_colors = true;
 
           colors = {
             normal = mapColors config.system.pretty.theme.colors.normal;
             bright = mapColors config.system.pretty.theme.colors.bright;
+            draw_bold_text_with_bright_colors = true;
           };
         };
       };

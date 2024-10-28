@@ -25,8 +25,8 @@ let
     })
     # mouse support
     (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.2.diff";
-      sha256 = "sha256-IGBvEj0m7nZbqLMH78KZ1LZZnQaqulblpQwfvcejWw0=";
+      url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.3.diff";
+      sha256 = "sha256-Gt7PSGOjZnI07I7Y4ec1DJRjKcbw/uVqAB+imPTU4s0=";
     })
   ];
 

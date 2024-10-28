@@ -16,6 +16,9 @@ in
       plugins = with pkgs.obs-studio-plugins; [
         obs-pipewire-audio-capture
         obs-vkcapture
+        obs-tuna
+        obs-text-pthread
+        input-overlay
         # TODO: upload this plugin to nixpkgs
         # (pkgs.libsForQt5.callPackage
         #   ({ stdenv

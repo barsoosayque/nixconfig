@@ -28,8 +28,11 @@ in
         paths = {
           default = "$mygenre/$albumartist/$albumtype/[$year] $album/$track. $title";
           singleton = "$mygenre/$artist/Unsorted/$title";
-          comp = "Compilation/[$year] $album/$track. $title";
-          "albumtype:soundtrack" = "OST/$album/$track. $title";
+          "ostmedium::.+" = "OST/$ostmedium/$ostwhat/$album/$track. $title";
+          "mygenre::^$" = ".new/$albumartist/$album/$track. $title";
+        };
+        replace = {
+          "[\\/]" = "_";
         };
         plugins = [
           "embedart"
