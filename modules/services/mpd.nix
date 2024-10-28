@@ -21,6 +21,11 @@ in
       default = true;
       description = "Enable mpd web client";
     };
+    enableDiscordRPC = mkOption {
+      type = with types; bool;
+      default = true;
+      description = "Enable mpd discord rpc";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -53,6 +58,13 @@ in
             name "${config.system.user.name} MPD Pipewire output"
           }
         '';
+      };
+    };
+
+    system.user.hm.services.mpd-discord-rpc = mkIf cfg.enableDiscordRPC {
+      enable = true;
+      settings = {
+        hosts = ["${settings.address}:${toString settings.port}"];
       };
     };
 

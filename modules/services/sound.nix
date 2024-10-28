@@ -13,6 +13,12 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.pavucontrol ];
 
+    musnix = {
+      enable = true;
+      # broken ?
+      # kernel.realtime = true;
+    };
+
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
