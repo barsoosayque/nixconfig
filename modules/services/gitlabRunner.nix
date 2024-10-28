@@ -24,19 +24,21 @@ in
       enable = true;
       services = {
         default = {
-          # File should contain at least these two variables:
-          # `CI_SERVER_URL`
-          # `REGISTRATION_TOKEN`
-          registrationConfigFile = "${config.system.user.dirs.config.absolutePath}/nixos/gitlab-runner";
+          description = "nixos-runner";
+          executor = "docker";
 
-          dockerImage = "alpine";
+          # File should contain at least these two variables:
+          # CI_SERVER_URL=<CI server URL>
+          # CI_SERVER_TOKEN=<runner authentication token secret>
+          authenticationTokenConfigFile = "${config.system.user.dirs.config.absolutePath}/nixos/gitlab-runner";
+
+          dockerImage = "public.ecr.aws/docker/library/alpine:latest";
           dockerVolumes = [
             "/nix/store:/nix/store:ro"
             "/nix/var/nix/db:/nix/var/nix/db:ro"
             "/nix/var/nix/daemon-socket:/nix/var/nix/daemon-socket:ro"
           ];
           dockerDisableCache = true;
-          runUntagged = true;
           preBuildScript = pkgs.writeScript "setup-container" ''
             mkdir -p -m 0755 /nix/var/log/nix/drvs
             mkdir -p -m 0755 /nix/var/nix/gcroots
@@ -56,7 +58,6 @@ in
             ${pkgs.nix}/bin/nix-channel --add https://nixos.org/channels/nixpkgs-unstable
             ${pkgs.nix}/bin/nix-channel --update nixpkgs
           '';
-
           environmentVariables = {
             ENV = "/etc/profile";
             USER = "root";
@@ -64,8 +65,6 @@ in
             PATH = "/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin";
             NIX_SSL_CERT_FILE = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
           };
-
-          tagList = [ "nix" ];
         };
       };
     };
