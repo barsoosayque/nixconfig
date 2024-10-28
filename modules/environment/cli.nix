@@ -59,12 +59,14 @@ in
           enable = true;
           enableCompletion = true;
           syntaxHighlighting.enable = true;
-          enableAutosuggestions = true;
+          autosuggestion.enable = true;
           dotDir = "${config.system.user.dirs.data.relativePath}/zsh";
+          autosuggestion.strategy = [ "history" "completion" ];
+          defaultKeymap = "viins";
 
           history = {
             ignoreDups = true;
-            path = "${config.system.user.dirs.data.relativePath}/zsh/history";
+            path = "${config.system.user.dirs.data.absolutePath}/zsh/history";
           };
 
           localVariables = {

@@ -28,7 +28,6 @@ in
     '';
 
     environment.systemPackages = [
-      pkgs.rnix-lsp
       pkgs.direnv
       pkgs.cloc
 
@@ -39,12 +38,19 @@ in
       pkgs.git
       pkgs.delta
 
-      pkgsRepo.helix.default
+      # https://github.com/helix-editor/helix/issues/9866
+      # pkgsRepo.helix.default
+      pkgs.helix
     ] ++ optionals cfg.enableRust [ pkgs.rust-analyzer pkgs.rustfmt ];
 
     system.user.hm = {
+      xdg.configFile."helix/themes/kaolin-valley-dark-transparent.toml".text = ''
+        inherits = "kaolin-valley-dark"
+        "ui.background" = {}
+      '';
+
       xdg.configFile."helix/config.toml".text = ''
-          theme = "kanagawa"
+          theme = "kaolin-valley-dark-transparent"
 
           [editor]
           line-number = "relative"
@@ -84,6 +90,7 @@ in
           rounded_corners true
         }
         default_layout "compact"
+        simplified_ui true
       '' + readFile ./zellij-config.kdl;
 
       programs = {
