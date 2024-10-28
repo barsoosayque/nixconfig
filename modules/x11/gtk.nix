@@ -13,8 +13,8 @@ in
   config = mkIf cfg.enable {
     system.user.hm.gtk = {
       enable = true;
-      iconTheme.package = pkgs.gnome.adwaita-icon-theme;
-      iconTheme.name = "Paper";
+      iconTheme.package = pkgs.adwaita-icon-theme;
+      iconTheme.name = "Adwaita";
       theme.package = pkgs.paper-gtk-theme;
       theme.name = "Paper";
     };

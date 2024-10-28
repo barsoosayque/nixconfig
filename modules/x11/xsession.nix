@@ -1,7 +1,7 @@
 { config, options, pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types lists;
+  inherit (lib) mkIf mkOption mkEnableOption types lists attrsets;
   
   cfg = config.modules.x11.xsession;
 in
@@ -23,6 +23,9 @@ in
         exec startx
       fi
     '';
+    environment.sessionVariables = attrsets.optionalAttrs (cfg.videoDrivers == "nvidia") {
+      VK_DRIVER_FILES = "${config.hardware.nvidia.package}/share/vulkan/icd.d/nvidia_icd.x86_64.json";
+    };
 
     services.xserver = {
       enable = true;
@@ -31,11 +34,15 @@ in
     };
 
     hardware = {
-      nvidia.package = config.boot.kernelPackages.nvidia_x11;
-      opengl = {
+      nvidia = {
+        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        modesetting.enable = true;
+        powerManagement.enable = false;
+        powerManagement.finegrained = false;
+        open = false;
+      };
+      graphics = {
         enable = true;
-        driSupport32Bit = true;
-        driSupport = true;
         extraPackages = with pkgs; lists.optionals (cfg.videoDrivers == "intel") [
           intel-media-driver
           vaapiIntel
