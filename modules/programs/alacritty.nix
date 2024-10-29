@@ -65,8 +65,8 @@ in
               lines = 0;
             };
             padding = {
-              x = 40;
-              y = 40;
+              x = 20;
+              y = 20;
             };
             dynamic_padding = true;
             dynamic_title = true;
