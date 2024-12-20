@@ -17,6 +17,7 @@ in
       systemPackages = [
         # System
         pkgs.htop
+        pkgs.iotop
         pkgs.bottom
         pkgs.openssl
         pkgs.file
@@ -28,7 +29,6 @@ in
         pkgs.fzf
 
         # Utility
-        pkgs.nnn
         pkgs.imagemagick 
 
         # Text
@@ -55,6 +55,23 @@ in
 
     system.user.hm = {
       programs = {
+        nnn = {
+          enable = true;          
+          package = pkgs.nnn.override ({ 
+            withNerdIcons = true;
+          });
+          bookmarks = {
+            s = "${config.system.user.dirs.data.absolutePath}";
+            c = "${config.system.user.dirs.config.absolutePath}";
+            w = "${config.system.user.dirs.work.absolutePath}";
+            d = "${config.system.user.dirs.documents.absolutePath}";
+            D = "${config.system.user.dirs.download.absolutePath}";
+            m = "${config.system.user.dirs.music.absolutePath}";
+            p = "${config.system.user.dirs.pictures.absolutePath}";
+            v = "${config.system.user.dirs.videos.absolutePath}";
+          };
+        };
+
         zsh = {
           enable = true;
           enableCompletion = true;
