@@ -21,6 +21,7 @@
       pkgs.ffmpeg
       pkgs.kdenlive
       pkgs.scrcpy
+      pkgs.kdePackages.okular
 
       # libs
       pkgs.mono
@@ -58,11 +59,13 @@
         enable = true;
         gamepads = {
           xbox = true;
+          nintendo = false;
         };
         software = {
           steam = true;
           lutris = true;
           wine.enable = true;
+          retroarch = true;
         };
         games = {
           cdda = true;
@@ -151,8 +154,5 @@
   #     };
   #   };
   # };
-
-  # TODO: what is this
-  programs.dconf.enable = true;
 }
 

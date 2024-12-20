@@ -13,6 +13,7 @@
     nvidia_x11
   ];
   hardware.cpu.amd.updateMicrocode = true;
+  powerManagement.cpuFreqGovernor = "performance";
 
   fileSystems."/" =
     { device = "/dev/disk/by-label/root";
