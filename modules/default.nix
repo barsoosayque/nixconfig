@@ -29,6 +29,7 @@
         automatic = true;
         dates = "weekly";
         options = "--delete-older-than 14d";
+        randomizedDelaySec = "10m";
       };
     };
 
@@ -42,6 +43,7 @@
     };
 
     fonts.fontconfig.enable = true;
+    programs.nix-ld.enable = true;
 
     networking = {
       inherit hostName;
