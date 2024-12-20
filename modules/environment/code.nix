@@ -86,12 +86,15 @@ in
             orange "${config.system.pretty.theme.colors.bright.yellow.hexRGB}"
           }
         }
-        ui.pane_frames {
-          rounded_corners true
-        }
+        ui.pane_frames false 
         default_layout "compact"
         simplified_ui true
+
+        disable_session_metadata true
+        session_serialization true
       '' + readFile ./zellij-config.kdl;
+
+      services.ssh-agent.enable = true;
 
       programs = {
         zellij = {
@@ -106,6 +109,11 @@ in
           enableBashIntegration = false;
           enableFishIntegration = false;
           nix-direnv.enable = true;
+        };
+
+        ssh = {
+          enable = true;
+          addKeysToAgent = "yes";
         };
 
         git = {
@@ -127,7 +135,9 @@ in
 
           extraConfig = {
             pull.rebase = true;
+            rebase.autostash = true;
             branch.autosetuprebase = "always";
+            push.autoSetupRemote = true;
 
             url = {
               "https://github.com/" = {
@@ -137,8 +147,6 @@ in
                 ];
               };
             };
-
-            credential.helper = "cache --timeout 7200";
           };
         };
       };
