@@ -51,7 +51,14 @@ in
       startupPrograms = [
         "${xsetrootBin} -cursor_name left_ptr"
         "${wmnameBin} LG3D"
+        "${config.system.events.onWMLoadedScript}"
       ];
+
+      rules = {
+        mpv = {
+          state = "floating";
+        };
+      };
     };
 
     system.events.onReload = [ "${bspcBin} wm -r" ];

@@ -105,6 +105,7 @@ let
   commands = [
     { name = "onStartup"; description = "User system startup"; }
     { name = "onReload"; description = "User System reload"; }
+    { name = "onWMLoaded"; description = "WL is loaded"; }
     { name = "onTorrentDone"; description = "Transmission torrent downloaded"; }
     { name = "onScreenshot"; description = "Screenshot made"; }
   ];

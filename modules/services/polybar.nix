@@ -8,6 +8,11 @@ let
   cutBin = "${pkgs.coreutils}/bin/cut";
 
   cfg = config.modules.services.polybar;
+  script = ''
+    for m in $(${xrandrBin} --query | ${grepBin} " connected" | ${cutBin} -d" " -f1); do \
+      MONITOR=$m polybar --reload main & \
+    done
+  '';
 in
 {
   options.modules.services.polybar = {
@@ -15,13 +20,12 @@ in
   };
 
   config = mkIf cfg.enable {
+    system.events.onWMLoaded = [ script ];
+    system.events.onReload = [ script ];
+
     system.user.hm.services.polybar = {
       enable = true;
-      script = ''
-        for m in $(${xrandrBin} --query | ${grepBin} " connected" | ${cutBin} -d" " -f1); do \
-          MONITOR=$m polybar --reload main & \
-        done
-      '';
+      script = ""; # using custom events to load/reload polybar
       settings = {
         "bar/main" = {
           monitor = "\${env:MONITOR:}";
