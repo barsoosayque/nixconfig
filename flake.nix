@@ -53,7 +53,6 @@
       system = "x86_64-linux";
       config = { allowUnfree = true; };
 
-      musnixModule = musnix.nixosModules.default;
       helix-pkgs = helix.packages."${system}";
 
       # Define pkgs for ease of usage
@@ -78,8 +77,8 @@
       nixosConfigurations = localLib.flakeUtils.collectHosts ./hosts {
         inherit localLib home-manager;
         extraModules = [
-          home-manager.nixosModule
-          musnixModule
+          home-manager.nixosModules.default
+          musnix.nixosModules.default
         ];
         modulesPath = ./modules;
       };
