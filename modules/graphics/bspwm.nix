@@ -5,13 +5,13 @@ let
   inherit (pkgs) writeScript;
   inherit (builtins) mapAttrs;
 
-  cfg = config.modules.x11.bspwm;
+  cfg = config.modules.graphics.bspwm;
   xsetrootBin = "${pkgs.xorg.xsetroot}/bin/xsetroot";
   wmnameBin = "${pkgs.wmname}/bin/wmname";
   bspcBin = "${pkgs.bspwm}/bin/bspc";
 in
 {
-  options.modules.x11.bspwm = {
+  options.modules.graphics.bspwm = {
     enable = mkEnableOption "bspwm";
 
     monitors = mkOption {

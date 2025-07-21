@@ -7,7 +7,7 @@ let
   inherit (lib.lists) zipListsWith;
   inherit (builtins) listToAttrs concatStringsSep head tail;
 
-  cfg = config.modules.x11.monitor;
+  cfg = config.modules.graphics.monitor;
 
   resolutionSubmodule = types.submodule ({ ... }: {
     options = {
@@ -52,7 +52,7 @@ let
   mkCmd = layout: dpi: "${pkgs.xorg.xrandr}/bin/xrandr --dpi ${toString dpi} ${mkOutputs layout};";
 in
 {
-  options.modules.x11.monitor = {
+  options.modules.graphics.monitor = {
     layout = mkOption {
       type = with types; listOf layoutSubmodule;
       default = [ ];

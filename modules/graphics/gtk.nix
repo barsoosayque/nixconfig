@@ -3,10 +3,10 @@
 let
   inherit (lib) mkIf mkEnableOption;
 
-  cfg = config.modules.x11.gtk;
+  cfg = config.modules.graphics.gtk;
 in
 {
-  options.modules.x11.gtk = {
+  options.modules.graphics.gtk = {
     enable = mkEnableOption "gtk";
   };
 
