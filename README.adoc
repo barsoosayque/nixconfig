@@ -22,10 +22,10 @@ To install this flake from an installation iso, first enter a `sudo` mode and th
 
 ```sh
 $ sudo -i
-$ nix-shell -p git nixUnstable
+$ nix-shell -p git nixVersions.latest
 ```
 
-This is required since *git* isn't a hard dependency, and flakes only available in *nixUnstable*.
+This is required since *git* isn't a hard dependency, and flakes only available in latest *nix*.
 Then, partition according to the NixOs manual. In this nixconfig, there is an option to create and automatically link directories from `/storage` to `/home/user`,
 so it might be usefull to mount `/` to hdd and home directory to ssd.
 
