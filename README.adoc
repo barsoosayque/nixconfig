@@ -46,13 +46,13 @@ NOTE: `.#hostname` should be a valid host in _hosts/_.
 To add a new host, first you need to create a host dir in _hosts/_, and then generate a hadrware config:
 
 ```sh
-$ mkdir hosts/myhost
-$ nixos-generate-config --root /mnt --show-hardware-config > hosts/myhost/hardware.nix
+# mkdir hosts/myhost
+# nixos-generate-config --root /mnt --show-hardware-config > hosts/myhost/hardware.nix
 ```
 
 Hardware config must be named _hardware.nix_. Then add or copy a `system.nix` file and config a new host system. 
 
-NOTE: Be sure to check out [nixos-hardware](https://github.com/NixOS/nixos-hardware) for more info about specific hardware !
+NOTE: Be sure to check out nixos-hardware[https://github.com/NixOS/nixos-hardware] for more info about specific hardware !
 
 === Set background
 
