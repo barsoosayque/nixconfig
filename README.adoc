@@ -22,21 +22,24 @@ To install this flake from an installation iso, first enter a `sudo` mode and th
 
 ```sh
 $ sudo -i
-$ nix-shell -p git nixVersions.latest
+# nix-shell -p git nixVersions.latest
 ```
 
 This is required since *git* isn't a hard dependency, and flakes only available in latest *nix*.
-Then, partition according to the NixOs manual. In this nixconfig, there is an option to create and automatically link directories from `/storage` to `/home/user`,
-so it might be usefull to mount `/` to hdd and home directory to ssd.
+
+Then, partition according to the [NixOs manual](https://nixos.org/manual/nixos/stable/#sec-installation-manual-partitioning).
+In this nixconfig, there is an option to create and automatically link directories from `/storage` to `/home/user`, so it might be usefull to mount `/` to hdd and home directory to ssd.
 
 After that, mount disks and run the actual installation:
 
 ```sh
-$ mount /dev/disk/by-label/nixos /mnt
-$ mount /dev/disk/by-label/boot /mnt/boot
-# Replace hostname with the actual host config name from _hosts/_
-$ nixos-install --root /mnt --flake .#hostname
-````
+# mount /dev/disk/by-label/nixos /mnt
+# mkdir -p /mnt/boot
+# mount /dev/disk/by-label/boot /mnt/boot
+# nixos-install --root /mnt --flake .#hostname
+```
+
+NOTE: `.#hostname` should be a valid host in _hosts/_.
 
 === New host
 
@@ -47,7 +50,9 @@ $ mkdir hosts/myhost
 $ nixos-generate-config --root /mnt --show-hardware-config > hosts/myhost/hardware.nix
 ```
 
-Hardware config must be named _hardware.nix_. Then add or copy a `system.nix` file and config a new host system.
+Hardware config must be named _hardware.nix_. Then add or copy a `system.nix` file and config a new host system. 
+
+NOTE: Be sure to check out [nixos-hardware](https://github.com/NixOS/nixos-hardware) for more info about specific hardware !
 
 === Set background
 
