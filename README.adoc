@@ -27,7 +27,7 @@ $ sudo -i
 
 This is required since *git* isn't a hard dependency, and flakes only available in latest *nix*.
 
-Then, partition according to the [NixOs manual](https://nixos.org/manual/nixos/stable/#sec-installation-manual-partitioning).
+Then, partition according to the https://nixos.org/manual/nixos/stable/#sec-installation-manual-partitioning[NixOS manual].
 In this nixconfig, there is an option to create and automatically link directories from `/storage` to `/home/user`, so it might be usefull to mount `/` to hdd and home directory to ssd.
 
 After that, mount disks and run the actual installation:
@@ -52,7 +52,7 @@ To add a new host, first you need to create a host dir in _hosts/_, and then gen
 
 Hardware config must be named _hardware.nix_. Then add or copy a `system.nix` file and config a new host system. 
 
-NOTE: Be sure to check out nixos-hardware[https://github.com/NixOS/nixos-hardware] for more info about specific hardware !
+NOTE: Be sure to check out https://github.com/NixOS/nixos-hardware[nixos-hardware] for more info about specific hardware !
 
 === Set background
 
