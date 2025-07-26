@@ -13,6 +13,7 @@ let
   themes = {
     fantasy = import ./themes/fantasy.nix input;
     atelier = import ./themes/atelier.nix input;
+    sunset = import ./themes/sunset.nix input;
   };
 in
 {
@@ -21,7 +22,7 @@ in
 
     themeName = mkOption {
       type = with types; enum (attrNames themes);
-      default = "atelier";
+      default = "sunset";
       readOnly = true;
     };
 
