@@ -9,6 +9,8 @@ let
   xsetrootBin = "${pkgs.xorg.xsetroot}/bin/xsetroot";
   wmnameBin = "${pkgs.wmname}/bin/wmname";
   bspcBin = "${pkgs.bspwm}/bin/bspc";
+  brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+  playerctl = "${pkgs.playerctl}/bin/playerctl";
 in
 {
   options.modules.graphics.bspwm = {
@@ -37,15 +39,24 @@ in
       monitors = mapAttrs (_: l: map toString l) cfg.monitors;
 
       settings = {
-        focused_border_color = config.system.pretty.theme.colors.window.active_border.hexRGBA;
-        normal_border_color = config.system.pretty.theme.colors.window.border.hexRGBA;
-        border_width = 0;
-        border_radius = 20;
-        window_gap = 20;
+        focused_border_color = config.system.pretty.theme.colors.window.active_border.hexRGB;
+        normal_border_color = config.system.pretty.theme.colors.window.border.hexRGB;
+        urgent_border_color = config.system.pretty.theme.colors.window.urgent_border.hexRGB;
+        border_width = 4;
+        border_radius = 30;
+        top_padding = 30;
+        bottom_padding = 30;
+        left_padding = 30;
+        right_padding = 30;
+        window_gap = 30;
         split_ratio = 0.5;
         borderless_monocle = true;
         gapless_monocle = true;
         ignore_ewmh_focus = true;
+
+        focus_follows_pointer = false;
+        history_aware_focus = true;
+        focus_by_distance = true;
       };
 
       startupPrograms = [
@@ -81,6 +92,16 @@ in
         "super + {_,shift + }{0-9}" = "${bspcBin} {desktop -f, node -d} '{0-9}'";
         "super + shift + space" = bspcToggleMode "floating";
         "super + shift + f" = bspcToggleMode "fullscreen";
+        "XF86AudioRaiseVolume" = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+";
+        "XF86AudioLowerVolume" = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-";
+        "XF86AudioMute" = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        "XF86AudioMicMute" = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+        "XF86MonBrightnessUp" = "${brightnessctl} --class=backlight set +10%";
+        "XF86MonBrightnessDown" = "${brightnessctl} --class=backlight set 10%-";
+        "XF86AudioNext" = "${playerctl} next";
+        "XF86AudioPause" = "${playerctl} play-pause";
+        "XF86AudioPlay" = "${playerctl} play-pause";
+        "XF86AudioPrev" = "${playerctl} previous";
       };
   };
 }
