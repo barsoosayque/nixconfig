@@ -45,13 +45,13 @@ in
     ] ++ optionals cfg.enableRust [ pkgs.rust-analyzer pkgs.rustfmt ];
 
     system.user.hm = {
-      xdg.configFile."helix/themes/kaolin-valley-dark-transparent.toml".text = ''
-        inherits = "kaolin-valley-dark"
+      xdg.configFile."helix/themes/nixos-generated.toml".text = ''
+        inherits = "base16_transparent"
         "ui.background" = {}
       '';
 
       xdg.configFile."helix/config.toml".text = ''
-          theme = "kaolin-valley-dark-transparent"
+          theme = "nixos-generated"
 
           [editor]
           line-number = "relative"
