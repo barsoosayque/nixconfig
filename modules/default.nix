@@ -2,7 +2,7 @@
 
 {
   config = {
-    system.stateVersion = "22.11";
+    system.stateVersion = "25.05";
 
     boot = {
       supportedFilesystems = [ "ntfs" ];
@@ -11,7 +11,7 @@
         cleanOnBoot = true;
       };
 
-      kernelPackages = pkgs.linuxPackages_latest;
+      # kernelPackages = pkgs.linuxPackages_zen;
       loader = {
         systemd-boot.enable = true;
         efi.canTouchEfiVariables = true;
