@@ -5,7 +5,7 @@ let
   inherit (builtins) toJSON;
 
   cfg = config.modules.services.transmission;
-  torrentDir = "${config.system.user.dirs.download.absolutePath}/torrent";
+  torrentDir = config.system.user.dirs.torrents.absolutePath;
 
   settings = {
     watch-dir-enabled = true;
@@ -23,6 +23,10 @@ let
     rpc-port = 9091;
     rpc-whitelist-enabled = false;
     rpc-host-whitelist-enabled = false;
+    rpc-authentication-required = false;
+
+    umask = "000";
+    peer-port-random-on-start = true;
   };
 in
 {
@@ -31,38 +35,21 @@ in
   };
 
   config = mkIf cfg.enable {
-    system.user.hm = {
-      home.activation.mkTorrentDirs = hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        install -d -o '${config.system.user.name}' '${settings.download-dir}'
-        install -d -o '${config.system.user.name}' '${settings.watch-dir}'
-        install -d -o '${config.system.user.name}' '${settings.incomplete-dir}'
-      '';
+    # system.user.hm = {
+    #   home.activation.mkTorrentDirs = hmLib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    #     install -d -o 'transmission' '${settings.download-dir}'
+    #     install -d -o 'transmission' '${settings.watch-dir}'
+    #     install -d -o 'transmission' '${settings.incomplete-dir}'
+    #   '';
+    # };
 
-      xdg.configFile."transmission-daemon/settings.json".text = toJSON settings;
+    services.transmission = {
+      enable = true;
+      package = pkgs.transmission_4;
+      openPeerPorts = true;
+      settings = settings;
+      downloadDirPermissions = "777";
+      home = torrentDir;
     };
-
-    # environment.systemPackages = [ pkgs.transmission_4 ];
-
-    systemd.services.transmission = {
-      description = "Transmission BitTorrent Service";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-
-      serviceConfig = {
-        User = config.system.user.name;
-        ExecStart = "${pkgs.transmission_4}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
-        ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-      };
-    };
-    
-    # systemd.services.autoMoveTorrents = {
-    #   description = "Move *.torrent files from downloads to transmission";
-
-    #   serviceConfig = {
-    #     User = config.system.user.name;
-    #     ExecStart = "${pkgs.transmission}/bin/transmission-daemon -f -g '${config.system.user.dirs.config.absolutePath}/transmission-daemon'";
-    #     ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
-    #   };
-    # }
   };
 }

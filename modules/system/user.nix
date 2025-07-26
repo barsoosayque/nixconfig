@@ -41,7 +41,6 @@ in
 
     dirs = mkOption {
       type = with types; attrs;
-      readOnly = true;
       description = "Set of user governed directories";
     };
 
@@ -56,6 +55,12 @@ in
         type = with types; functionTo attrs;
         readOnly = true;
         description = "Utility function to create an external directory in storage and link it to home (for system.user.dirs)";
+      };
+
+      mkDir = mkOption {
+        type = with types; functionTo attrs;
+        readOnly = true;
+        description = "Utility function to create an external directory in an absolute path (for system.user.dirs)";
       };
     };
   };
@@ -83,6 +88,9 @@ in
 
         mkStorageDir = path:
           (mkSymlinkDir "${cfg.home}/${path}" "${config.system.storage.root}/${path}") // { relativePath = "${path}"; };
+
+        mkDir = path:
+          (mkRegularDir path) // { relativePath = "../../${path}"; };
       };
 
       dirs = {
@@ -98,6 +106,7 @@ in
         work = cfg.utils.mkStorageDir "work";
         documents = cfg.utils.mkStorageDir "documents";
         download = cfg.utils.mkStorageDir "downloads";
+        torrents = cfg.utils.mkStorageDir "downloads/torrents";
         music = cfg.utils.mkStorageDir "music";
         pictures = cfg.utils.mkStorageDir "pictures";
         videos = cfg.utils.mkStorageDir "videos";
