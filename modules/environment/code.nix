@@ -37,6 +37,7 @@ in
       pkgs.clang-tools
       pkgs.git
       pkgs.delta
+      pkgs.gitu
 
       # https://github.com/helix-editor/helix/issues/9866
       # pkgsRepo.helix.default

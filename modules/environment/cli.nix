@@ -27,6 +27,7 @@ in
         pkgs.xclip
         pkgs.sad
         pkgs.fzf
+        pkgs._7zz
 
         # Utility
         pkgs.imagemagick 
