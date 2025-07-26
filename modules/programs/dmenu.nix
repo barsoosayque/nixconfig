@@ -9,25 +9,25 @@ let
 
   patches = [
     # fuzzymatch
-    (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/fuzzymatch/dmenu-fuzzymatch-4.9.diff";
-      sha256 = "d9a1e759cd518348fc37c2c83fbd097232098562ebfd1edf85b51413ff524b79";
-    })
+    # (fetchurl {
+    #   url = "https://tools.suckless.org/dmenu/patches/fuzzymatch/dmenu-fuzzymatch-4.9.diff";
+    #   sha256 = "d9a1e759cd518348fc37c2c83fbd097232098562ebfd1edf85b51413ff524b79";
+    # })
     # fuzzymatch highlight (borked)
     # (fetchurl {
     #   url = "https://tools.suckless.org/dmenu/patches/fuzzyhighlight/dmenu-fuzzyhighlight-4.9.diff";
     #   sha256 = "82cbcc1a6a721fb670f6561b98a58e8a2301bffde2e94c87e77868b09927aa57";
     # })
     # numbers
-    (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/numbers/dmenu-numbers-20220512-28fb3e2.diff";
-      sha256 = "sha256-dXAmbub13PUDjygoxsK0PNnCPc5yNWOIPtrNLvy8fSw=";
-    })
+    # (fetchurl {
+    #   url = "https://tools.suckless.org/dmenu/patches/numbers/dmenu-numbers-20220512-28fb3e2.diff";
+    #   sha256 = "sha256-dXAmbub13PUDjygoxsK0PNnCPc5yNWOIPtrNLvy8fSw=";
+    # })
     # mouse support
-    (fetchurl {
-      url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.3.diff";
-      sha256 = "sha256-Gt7PSGOjZnI07I7Y4ec1DJRjKcbw/uVqAB+imPTU4s0=";
-    })
+    # (fetchurl {
+    #   url = "https://tools.suckless.org/dmenu/patches/mouse-support/dmenu-mousesupport-5.3.diff";
+    #   sha256 = "sha256-Gt7PSGOjZnI07I7Y4ec1DJRjKcbw/uVqAB+imPTU4s0=";
+    # })
   ];
 
   params = concatStringsSep " " [
