@@ -66,7 +66,7 @@ let
             writeScript "events-${eventDef.name}-coroutine-${hashString "sha1" cmd}"
               ''
                 #!${pkgs.dash}/bin/dash
-                export CMD_EXITCODE=$(${cmd})
+                ${cmd}
                 ${runCallbacks "update"}
               '';
         in
