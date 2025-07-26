@@ -14,13 +14,6 @@
     ];
   };
 
-  fonts.packages = [
-    pkgs.iosevka-bin
-    pkgs.noto-fonts
-    pkgs.noto-fonts-cjk
-    pkgs.noto-fonts-emoji
-  ];
-
   # general definitions
   system = {
     user.name = "barsoo";

@@ -49,5 +49,14 @@ in
     };
 
     programs.dconf.enable = true;
+    fonts.packages = [
+      config.system.pretty.theme.fonts.primary.package
+      config.system.pretty.theme.fonts.mono.package
+      config.system.pretty.theme.fonts.secondary.package
+      pkgs.twitter-color-emoji
+      pkgs.nerd-fonts."m+"
+      pkgs.noto-fonts
+      # pkgs.noto-fonts-cjk-sans
+    ];
   };
 }

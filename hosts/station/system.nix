@@ -29,13 +29,6 @@
     ];
   };
 
-  fonts.packages = [
-    pkgs.iosevka-bin
-    pkgs.noto-fonts
-    pkgs.noto-fonts-cjk-sans
-    pkgs.noto-fonts-emoji
-  ];
-
   networking = {
     firewall.enable = false;
     useDHCP = false;
@@ -130,7 +123,6 @@
     };
   };
 
-  
 
   # services.samba = {
   #   enable = true;
