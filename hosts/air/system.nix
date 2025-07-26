@@ -8,6 +8,7 @@
       # user
       pkgs.librewolf
       pkgs.discord
+      pkgs.telegram-desktop
       pkgs.nicotine-plus
       pkgs.blender
       pkgs.obsidian
@@ -18,26 +19,21 @@
       pkgs.krita
       pkgs.audacity
       pkgs.ffmpeg
-      pkgs.kdenlive
+      pkgs.kdePackages.kdenlive
       pkgs.kdePackages.okular
     ];
   };
 
-  fonts.packages = [
-    pkgs.iosevka-bin
-    pkgs.noto-fonts
-    pkgs.noto-fonts-cjk-sans
-    pkgs.noto-fonts-emoji
-  ];
-
-  networking = {
-    firewall.enable = false;
-    useDHCP = false;
+  networking.firewall = {
+    enable = false;
   };
 
   # general definitions
   system = {
     user.name = "barsoo";
+    user.dirs = {
+      torrents = config.system.user.utils.mkDir "/sdcard/torrents";
+    };
     locale.locationName = "Abakan";
 
     pretty = {
@@ -60,7 +56,6 @@
           wine.enable = true;
         };
         games = {
-          cdda = true;
           minecraft = true;
         };
       };
@@ -70,6 +65,7 @@
 
     programs = {
       alacritty.enable = true;
+      # wezterm.enable = true;
       mpv.enable = true;
       scissors.enable = true;
       dmenu.enable = true;
@@ -78,80 +74,48 @@
     };
 
     services = {
-      # dunst = {
-      #   enable = true;
-      #   notifySystemEvents = true;
-      # };
-      # redshift.enable = true;
-      # sxhkd.enable = true;
+      dunst = {
+        enable = true;
+        notifySystemEvents = true;
+      };
+      redshift.enable = true;
+      sxhkd.enable = true;
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
       mpd.enable = true;
-      # gitlabRunner.enable = true;
-      # picom.enable = false;
-      # polybar.enable = true;
-      # grocy.enable = false;
-      # miracast.enable = true;
+      picom.enable = true;
+      polybar.enable = true;
     };
 
     graphics = {
-      videoDrivers = "nvidia";
+      enable = true;
+      videoDrivers = "intel/nvidia";
 
-      hyprland.enable = true;
+      # hyprland.enable = true;
       gtk.enable = true;
+      monitor = {
+        layout = [
+          {
+            identifier = "eDP-1";
+            resolution = { width = 2560; height = 1600; };
+          }
+        ];
+        dpi = 144;
+      };
+      bspwm = {
+        enable = true;
+        monitors = {
+          "eDP-1" = [ 1 2 3 4 5 6 7 8 ];
+        };
+      };
+      x11.enable = true;
     };
-
-    # x11 = {
-    #   monitor.layout = [
-    #     # {
-    #     #   identifier = "HDMI-0";
-    #     #   resolution = { width = 1920; height = 1080; };
-    #     # }
-    #     {
-    #       identifier = "DP-0";
-    #       resolution = { width = 1920; height = 1080; };
-    #     }
-    #   ];
-    #   xsession = {
-    #     videoDrivers = "nvidia";
-    #     enable = true;
-    #   };
-    #   gtk.enable = true;
-    #   bspwm = {
-    #     enable = true;
-    #     monitors = {
-    #       # "HDMI-0" = [ 1 2 3 4 ];
-    #       # "DP-0" = [ 5 6 7 8 ];
-    #       "DP-0" = [ 1 2 3 4 5 6 7 8 ];
-    #     };
-    #   };
-    # };
   };
 
-  
-
-  # services.samba = {
-  #   enable = true;
-  #   securityType = "user";
-  #   openFirewall = true;
-  #   extraConfig = ''
-  #     security = user 
-  #     hosts allow = 192.168.1. 192.168.0. 127.0.0.1 localhost
-  #     hosts deny = 0.0.0.0/0
-  #     guest account = nobody
-  #     map to guest = bad user
-  #   '';
-  #   shares = {
-  #     lutris = {
-  #       path = "/home/barsoo/.cache/lutris";
-  #       browseable = "yes";
-  #       "read only" = "yes";
-  #       "guest ok" = "yes";
-  #       "public" = "yes";
-  #       "force user" = "barsoo";
-  #     };
-  #   };
-  # };
+  services.mullvad-vpn.enable = true;
+  # required for wireguard mullvad tunnels
+  # see: https://discourse.nixos.org/t/connected-to-mullvadvpn-but-no-internet-connection/35803/10
+  networking.resolvconf.enable = false;
 }
 

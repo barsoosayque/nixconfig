@@ -12,16 +12,22 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.kernelParams = [ "module_blacklist=modeset" ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/1baf8c36-a2e5-4784-8de4-61d8ff4c8e47";
+    { device = "/dev/disk/by-label/nixos";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/12CE-A600";
+    { device = "/dev/disk/by-label/boot";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
+    };
+
+  fileSystems."/sdcard" =
+    { device = "/dev/disk/by-label/torrents";
+      fsType = "ext4";
     };
 
   swapDevices = [ ];
@@ -37,11 +43,14 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  # sudo lshw -c display
-  hardward.nvidia.prime = {
-    sync.enable = true;
+  hardware.nvidia.prime = {
+    offload = {
+      enable = true;
+      enableOffloadCmd = true;
+    };
 
+    # Check with `nix shell nixpkgs#pciutils -c lspci -d ::03xx`
     intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PIC:1:0:0";
+    nvidiaBusId = "PCI:1:0:0";
   };
 }
