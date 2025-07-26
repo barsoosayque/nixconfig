@@ -6,28 +6,10 @@ let
 
   cfg = config.modules.programs.wezterm;
   pkg = pkgs.wezterm;
-
-  iosevkaCustom = pkgs.nerdfonts.override {
-    fonts = [ "Iosevka" ];
-  };
 in
 {
   options.modules.programs.wezterm = {
     enable = mkEnableOption "wezterm";
-
-    font = {
-      package = mkOption {
-        type = with types; package;
-        default = iosevkaCustom;
-        description = "Font nix package";
-      };
-
-      name = mkOption {
-        type = with types; str;
-        default = "Iosevka Nerd Font";
-        description = "Font name according to the package";
-      };
-    };
   };
 
   config = mkIf cfg.enable {
@@ -35,7 +17,6 @@ in
       "super + Return" = "${pkg}/bin/wezterm";
     };
 
-    fonts.packages = [ cfg.font.package ];
     environment.systemPackages = [ pkg ];
 
     system.user.hm = {
@@ -81,7 +62,7 @@ in
           local config = wezterm.config_builder()
 
           config.front_end = "WebGpu"
-          config.font = wezterm.font('${cfg.font.name}', { weight = "Regular", style = "Normal", stretch = "Normal" })
+          config.font = wezterm.font('${config.system.pretty.theme.fonts.primary.name}', { weight = "Regular", style = "Normal", stretch = "Normal" })
           config.font_size = 13.0
           config.color_scheme = 'nixos'
           config.automatically_reload_config = true

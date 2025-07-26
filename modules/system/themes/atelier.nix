@@ -1,9 +1,26 @@
-{ localLib, ... }:
+{ localLib, pkgs, ... }:
 
 let
   inherit (localLib.colorUtils) mkColorHex;
 in
 {
+  # Fonts
+  fonts = rec {
+    primary = {
+      name = "Iosevka Nerd Font";
+      package = pkgs.nerd-fonts.iosevka;
+    };
+    mono = {
+      name = "Iosevka Nerd Font Mono";
+      package = pkgs.nerd-fonts.iosevka;
+    };
+    secondary = {
+      name = "Ubuntu Bold";
+      package= pkgs.ubuntu_font_family;
+    };
+    bar = primary;
+  };
+
   # General colorscheme: Base16 Atelier heath dark
   colors = rec {
     normal = {

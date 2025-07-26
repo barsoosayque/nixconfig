@@ -65,7 +65,7 @@ in
 
       name = mkOption {
         type = with types; str;
-        default = "Iosevka Medium";
+        default = "Ubuntu Medium";
         description = "Font name according to the package";
       };
 

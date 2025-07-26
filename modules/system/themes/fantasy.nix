@@ -4,6 +4,14 @@ let
   inherit (localLib.colorUtils) mkColorHex;
 in
 {
+  # Fonts
+  fonts = {
+    primary = {
+      name = "Iosevka Nerd Font";
+      package = pkgs.nerd-fonts.iosevka;
+    };
+  };
+
   # General colorscheme: Base16 Material Palenight 256
   colors = rec {
     normal = {

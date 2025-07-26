@@ -7,30 +7,12 @@ let
   cfg = config.modules.programs.alacritty;
   pkg = pkgs.alacritty;
 
-  iosevkaCustom = pkgs.nerdfonts.override {
-    fonts = [ "Iosevka" ];
-  };
-
   mapColors = colors:
     mapAttrs (n: v: v.hexRGB) colors;
 in
 {
   options.modules.programs.alacritty = {
     enable = mkEnableOption "alacritty";
-
-    font = {
-      package = mkOption {
-        type = with types; package;
-        default = iosevkaCustom;
-        description = "Font nix package";
-      };
-
-      name = mkOption {
-        type = with types; str;
-        default = "Iosevka Nerd Font";
-        description = "Font name according to the package";
-      };
-    };
   };
 
   config = mkIf cfg.enable {
@@ -38,7 +20,6 @@ in
       "super + Return" = "${pkg}/bin/alacritty";
     };
 
-    fonts.packages = [ cfg.font.package ];
     environment.systemPackages = [ pkg ];
 
     system.user.hm = {
@@ -77,14 +58,14 @@ in
           # Text
           font = {
             normal = {
-              family = "${cfg.font.name}";
-              style = "Medium";
+              family = config.system.pretty.theme.fonts.primary.name;
+              style = "Bold";
             };
             bold = {
-              family = "${cfg.font.name}";
-              style = "Heavy";
+              family = config.system.pretty.theme.fonts.primary.name;
+              style = "Bold";
             };
-            size = 13.0;
+            size = 12.0;
             glyph_offset = {
               x = 0;
               y = 0;

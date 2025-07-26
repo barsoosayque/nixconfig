@@ -18,13 +18,13 @@ in
     osdFont = {
       package = mkOption {
         type = with types; package;
-        default = pkgs.iosevka-bin;
+        default = config.system.pretty.theme.fonts.primary.package;
         description = "OSD Font nix package";
       };
 
       name = mkOption {
         type = with types; str;
-        default = "Iosevka";
+        default = config.system.pretty.theme.fonts.primary.name;
         description = "OSD Font name according to the package";
       };
     };
@@ -32,13 +32,13 @@ in
     subFont = {
       package = mkOption {
         type = with types; package;
-        default = pkgs.ubuntu_font_family;
+        default = config.system.pretty.theme.fonts.secondary.package;
         description = "Subtitles font nix package";
       };
 
       name = mkOption {
         type = with types; str;
-        default = "Ubuntu Bold";
+        default = config.system.pretty.theme.fonts.secondary.name;
         description = "Subtitles font name according to the package";
       };
     };
