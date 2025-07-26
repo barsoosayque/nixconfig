@@ -4,51 +4,56 @@ let
   inherit (lib) mkIf mkOption mkEnableOption types lists attrsets;
   
   cfg = config.modules.graphics;
+
+  isNvidia = (cfg.videoDrivers == "nvidia" || cfg.videoDrivers == "intel/nvidia");
+  isIntel = (cfg.videoDrivers == "intel" || cfg.videoDrivers == "intel/nvidia");
 in
 {
   options.modules.graphics = {
     enable = mkEnableOption "graphics";
 
     videoDrivers = mkOption {
-      type = with types; enum ["intel" "nvidia"];
+      type = with types; enum ["intel" "nvidia" "intel/nvidia"];
       description = "Video drivers to use. See services.xserver.videoDrivers";
     };
   };
 
   config = mkIf cfg.enable {
-    environment.sessionVariables = attrsets.optionalAttrs (cfg.videoDrivers == "nvidia") {
+    environment.sessionVariables = attrsets.optionalAttrs isNvidia {
       VK_DRIVER_FILES = "${config.hardware.nvidia.package}/share/vulkan/icd.d/nvidia_icd.x86_64.json";
     };
 
     # Set drivers for both Wayland and X11
-    services.xserver.videoDrivers = lists.optional (cfg.videoDrivers == "nvidia") "nvidia";
+    services.xserver.videoDrivers =
+      (lists.optional isNvidia "nvidia");
+      # ++ (lists.optional isIntel "intel");
 
     hardware = {
-      nvidia = {
+      nvidia = attrsets.optionalAttrs isNvidia {
         package = config.boot.kernelPackages.nvidiaPackages.stable;
-        modesetting.enable = true;
+        modesetting.enable = false;
         powerManagement.enable = true;
-        powerManagement.finegrained = false;
-        open = false;
+        powerManagement.finegrained = true;
+        open = true;
       };
       graphics = {
         enable = true;
-        extraPackages = with pkgs; lists.optionals (cfg.videoDrivers == "intel") [
+        extraPackages = with pkgs; lists.optionals isIntel [
           intel-media-driver
           vaapiIntel
           vaapiVdpau
           libvdpau-va-gl
+          vpl-gpu-rt
         ];
       };
     };
 
     nixpkgs.config.packageOverrides = pkgs: {
       vaapiIntel = pkgs.vaapiIntel.override {
-        enableHybridCodec = cfg.videoDrivers == "intel";
+        enableHybridCodec = isIntel;
       };
     };
 
-    programs.dconf.enable = true;
     fonts.packages = [
       config.system.pretty.theme.fonts.primary.package
       config.system.pretty.theme.fonts.mono.package

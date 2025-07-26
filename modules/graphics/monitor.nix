@@ -61,7 +61,7 @@ in
 
     dpi = mkOption {
       type = with types; int;
-      default = 94;
+      default = 96;
       description = "Screen DPI";
     };
   };
@@ -70,5 +70,14 @@ in
     system.events.onStartup = [
       (mkCmd cfg.layout cfg.dpi)
     ];
+    services.xserver = {
+      dpi = cfg.dpi;
+      monitorSection = ''
+        Option "DPI" "${toString cfg.dpi} x ${toString cfg.dpi}"
+      '';
+    };
+    system.user.hm.xresources.properties = {
+      "Xft.dpi" = cfg.dpi;
+    };
   };
 }

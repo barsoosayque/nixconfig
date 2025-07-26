@@ -3,10 +3,10 @@
 let
   inherit (lib) mkIf mkOption mkEnableOption types lists attrsets;
   
-  cfg = config.modules.x11;
+  cfg = config.modules.graphics.x11;
 in
 {
-  options.modules.x11 = {
+  options.modules.graphics.x11 = {
     enable = mkEnableOption "x11";
   };
 
@@ -22,6 +22,10 @@ in
     services.xserver = {
       enable = true;
       displayManager.startx.enable = true;
+    };
+    services.libinput = {
+      touchpad.naturalScrolling = true;
+      mouse.naturalScrolling = true;
     };
 
     system.user.hm.xsession = {
