@@ -60,9 +60,12 @@ rec {
       hexG = "${toHex g}";
       hexB = "${toHex b}";
       hexA = "${toHex a}";
-      hexRGB = "#${hexR}${hexG}${hexB}";
-      hexRGBA = "#${hexR}${hexG}${hexB}${hexA}";
-      hexARGB = "#${hexA}${hexR}${hexG}${hexB}";
+      hexRGBbase = "${hexR}${hexG}${hexB}";
+      hexRGB = "#${hexRGBbase}";
+      hexRGBAbase = "${hexR}${hexG}${hexB}${hexA}";
+      hexRGBA = "#${hexRGBAbase}";
+      hexARGBbase = "${hexA}${hexR}${hexG}${hexB}";
+      hexARGB = "#${hexARGBbase}";
 
       modify = modifiers:
         mkColor
