@@ -87,12 +87,20 @@ in
             orange "${config.system.pretty.theme.colors.bright.yellow.hexRGB}"
           }
         }
-        ui.pane_frames false 
+        pane_frames false 
         default_layout "compact"
         simplified_ui true
+        ui {
+            pane_frames {
+                rounded_corners true
+            }
+        }
 
         disable_session_metadata true
-        session_serialization true
+        session_serialization false
+        show_startup_tips false
+        show_release_notes false
+        on_force_close "quit"
       '' + readFile ./zellij-config.kdl;
 
       services.ssh-agent.enable = true;
