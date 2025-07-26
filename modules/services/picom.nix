@@ -13,32 +13,57 @@ in
   config = mkIf cfg.enable {
     system.user.hm.services.picom = {
       enable = true;
-      settings = {
-        blur = {
-          method = "dual_kawase";
-          strength = 10;
-          # kern = "7x7box";
-        };
-        blur-background-exclude = [
-          "name ?= 'slop'"
-          "class_g = 'Peek'"
-        ];
-        # shadow = true;
-
-        backend = "glx";
-        # round-borders = 1;
-        # corner-radius = 15;
-
-        unredir-if-possible = false;
-        vsync = true;
-        no-use-damage = true;
-        # xrender-sync-fence = true;
-        # vsync-use-glfinish = true;
-        # mark-wmwin-focused = true;
-        # mark-ovredir-focused = true;
-        # detect-client-opacity = true;
-        # detect-rounded-corners = true;
-      };
+      backend = "glx";
     };
+
+    system.user.hm.xdg.configFile."picom/picom.conf".text = ''
+      wintype: {
+        dropdown_menu = { opacity = 1; shadow = false; };
+        popup_menu    = { opacity = 1; shadow = false; };
+        utility       = { opacity = 1; shadow = false; };
+        tooltip = { fade = true; shadow = true; opacity = 1; focus = true; full-shadow = false; };
+        dock = { shadow = false; };
+        dnd = { shadow = false; };
+      };
+
+      unredir-if-possible = false;
+      vsync = false;
+      no-use-damage = true;
+      detect-rounded-corners = true;
+      fading = false;
+
+      shadow = true;
+      shadow-radius = 20;
+      shadow-opacity = 0.6;
+      shadow-offset-x = -10;
+      shadow-offset-y = -10;
+      shadow-exclude = [
+        "class_g ?= 'polybar'"
+      ];
+
+      blur: {
+        method = "dual_kawase";
+        strength = 10;
+      };
+      blur-background-exclude = [
+        "name ?= 'slop'",
+        "class_g = 'Peek'",
+        "class_g ?= 'polybar'"
+      ];
+      blur-background-frame = true;
+
+      animations = (
+        {
+          triggers = [ "open", "show" ];
+          preset = "appear";
+          duration = 0.06;
+        },
+        {
+          triggers = [ "close", "hide" ];
+          preset = "disappear";
+          duration = 0.06;
+        }
+      );
+    '';
   };
 }
