@@ -48,7 +48,6 @@ in
       blur-background-exclude = [
         "name ?= 'slop'",
         "class_g = 'Peek'",
-        "class_g ?= 'polybar'"
       ];
       blur-background-frame = true;
 
