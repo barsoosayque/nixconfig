@@ -1,9 +1,8 @@
-{ config, options, pkgs, lib, pkgsRepo, ... }:
+{ config,  pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
   inherit (lib.lists) optionals;
-  inherit (pkgs.vscode-utils) extensionsFromVscodeMarketplace;
   inherit (builtins) readFile;
 
   cfg = config.modules.environment.code;
@@ -35,6 +34,9 @@ in
       pkgs.gnumake
       pkgs.clang
       pkgs.clang-tools
+
+      pkgs.nixd
+
       pkgs.git
       pkgs.delta
       pkgs.gitu
