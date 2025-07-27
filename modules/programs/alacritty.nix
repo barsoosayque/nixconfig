@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib) mkIf mkEnableOption;
   inherit (builtins) mapAttrs;
 
   cfg = config.modules.programs.alacritty;
@@ -65,7 +65,7 @@ in
               family = config.system.pretty.theme.fonts.primary.name;
               style = "Bold";
             };
-            size = 12.0;
+            size = 14.0;
             glyph_offset = {
               x = 0;
               y = 0;

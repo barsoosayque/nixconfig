@@ -1,4 +1,4 @@
-{ config, options, pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkEnableOption;
@@ -34,9 +34,9 @@ in
         "bar/main" = {
           monitor = "\${env:MONITOR:}";
           width = "100%";
-          height = "40px";
+          height = "30px";
           module-margin = "15px";
-          padding = "30px";
+          padding = "20px";
           # bottom = true;
           # override-redirect = false;
           fixed-center = true;
@@ -46,7 +46,7 @@ in
           wm-restack = "bspwm";
           separator = "";
           dpi = "";
-          font = [ "${config.system.pretty.theme.fonts.bar.name}:style=Bold:size=15;3" ];
+          font = [ "${config.system.pretty.theme.fonts.bar.name}:style=Bold:size=11;3" ];
           border-color = config.system.pretty.theme.colors.bar.background.hexARGB;
           background = config.system.pretty.theme.colors.bar.background.hexARGB;
           foreground = config.system.pretty.theme.colors.bar.foreground.hexARGB;

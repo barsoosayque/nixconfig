@@ -6,8 +6,8 @@ let
   cfg = config.modules.programs.bemenu;
   settings = cli.toGNUCommandLineShell {} rec {
     l = 20;
-    fn = "${config.system.pretty.theme.fonts.menu.name} Bold 16";
-
+    fn = "${config.system.pretty.theme.fonts.menu.name} Bold 14";
+    
     bdr = config.system.pretty.theme.colors.window.active_border.hexRGB;
     tb = config.system.pretty.theme.colors.primary.background.hexRGB;
     tf = config.system.pretty.theme.colors.bright.yellow.hexRGB;
@@ -21,7 +21,7 @@ let
     af = config.system.pretty.theme.colors.normal.white.hexRGB;
     cf = fb;
     cb = cf;
-    line-height = 40;
+    line-height = 30;
      
     ignorecase = true;
     counter = true;

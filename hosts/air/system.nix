@@ -98,10 +98,11 @@
         layout = [
           {
             identifier = "eDP-1";
-            resolution = { width = 2560; height = 1600; };
+            resolution = { width = 1920; height = 1200; };
+            hz = 165;
           }
         ];
-        dpi = 144;
+        dpi = 96;
       };
       bspwm = {
         enable = true;

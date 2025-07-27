@@ -1,4 +1,4 @@
-{ config, options, pkgs, lib, modulesLib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types;
@@ -43,12 +43,12 @@ in
         normal_border_color = config.system.pretty.theme.colors.window.border.hexRGB;
         urgent_border_color = config.system.pretty.theme.colors.window.urgent_border.hexRGB;
         border_width = 4;
-        border_radius = 30;
+        border_radius = 20;
         top_padding = 30;
         bottom_padding = 30;
         left_padding = 30;
         right_padding = 30;
-        window_gap = 30;
+        window_gap = 20;
         split_ratio = 0.5;
         borderless_monocle = true;
         gapless_monocle = true;
