@@ -76,7 +76,6 @@ let
     writeScript "events-${eventDef.name}-run" ''
       #!${pkgs.dash}/bin/dash
 
-      export TMP=$(mktemp -d)
       export EVENT_DESCRIPTION="${eventDef.description}"
 
       ${runCallbacks "beforeCommands"}
