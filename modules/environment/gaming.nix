@@ -50,7 +50,8 @@ in
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [(self: super: 
-      (attrsets.optionalAttrs cfg.software.steam {
+      {
+      } // (attrsets.optionalAttrs cfg.software.steam {
         # # https://github.com/NixOS/nixpkgs/pull/157907
         # steam = (pkgsRepo.steamFixes.steam.override {
         #   extraProfile = ''
@@ -87,6 +88,7 @@ in
 
     environment.systemPackages = [
       pkgs.vulkan-tools
+      pkgs.protonup
     ] ++ (lists.optionals cfg.software.wine.enable [
       cfg.software.wine.package
       pkgs.winetricks
@@ -117,6 +119,7 @@ in
       JAVA_BIN = "${JAVA_HOME}/bin/java";
       JAVA_8_HOME = "${jdk8}/lib/openjdk";
       JAVA_8_BIN = "${JAVA_8_HOME}/bin/java";
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "~/.steam/root/compatibilitytools.d";
     };
 
     boot.extraModulePackages = lists.optional cfg.gamepads.xbox config.boot.kernelPackages.xpadneo;
@@ -125,10 +128,22 @@ in
     services.zerotierone = {
       enable = true;
     };
-    programs.steam.enable = cfg.software.steam;
+    programs.steam = {
+      enable = cfg.software.steam;
+    };
     programs.java = {
       enable = true;
       package = jdk;
+    };
+    programs.gamemode.enable = true;
+    programs.gamescope = {
+      enable = true;
+      capSysNice = true;
+      env = {
+        __NV_PRIME_RENDER_OFFLOAD = "1";
+        __VK_LAYER_NV_optimus = "NVIDIA_only";
+        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      };
     };
 
     system.user.hm.home.file = attrsets.optionalAttrs cfg.games.cdda {

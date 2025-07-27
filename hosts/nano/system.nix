@@ -51,7 +51,7 @@
       alacritty.enable = true;
       mpv.enable = true;
       scissors.enable = true;
-      dmenu.enable = true;
+      bemenu.enable = true;
     };
 
     services = {

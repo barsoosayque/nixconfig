@@ -19,6 +19,7 @@ in
       package= pkgs.nerd-fonts.ubuntu;
     };
     bar = primary;
+    menu = primary;
   };
 
   # General colorscheme: Melange

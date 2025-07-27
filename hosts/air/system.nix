@@ -68,7 +68,7 @@
       # wezterm.enable = true;
       mpv.enable = true;
       scissors.enable = true;
-      dmenu.enable = true;
+      bemenu.enable = true;
       obs.enable = true;
       beets.enable = true;
     };
