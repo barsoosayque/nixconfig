@@ -23,10 +23,6 @@ in
       enable = true;
       displayManager.startx.enable = true;
     };
-    services.libinput = {
-      touchpad.naturalScrolling = true;
-      mouse.naturalScrolling = true;
-    };
 
     system.user.hm.xsession = {
       enable = true;
