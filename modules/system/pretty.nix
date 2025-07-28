@@ -39,12 +39,16 @@ in
     {
       system.pretty.theme = theme;
 
-      system.events.onStartup = optional cfg.backgroundEnable
+      system.events.onWMLoaded = optional cfg.backgroundEnable
         "${setrootBin} --restore";
 
       # setroot generates a script to restore background images, but the script
       # assumes that setroot in PATH, and that's not the case within nixos
       environment.systemPackages = optional cfg.backgroundEnable
-        (writeScriptBin "background" "${setrootBin} $@ && echo ${setrootBin} $@ > ~/.config/setroot/.setroot-restore");
+        (writeScriptBin "background" ''
+          ${setrootBin} $@
+          echo ${setrootBin} $@ > ~/.config/setroot/.setroot-restore
+          chmod +x ~/.config/setroot/.setroot-restore
+        '');
     };
 }
