@@ -66,6 +66,7 @@ if [ -z $SAVEPOINT ]; then
             "Using default one in ${COLOR_GOLD}$HOME/${COLOR_DROP}"
     SAVEPOINT="$HOME"
 fi
+mkdir -p "$SAVEPOINT"
 
 # Taking a shot
 PICTURE="${SAVEPOINT}/${OUTPUT}.png"

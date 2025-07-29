@@ -18,8 +18,9 @@ in
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = [ pkgsRepo.local.scissors ];
     system.keyboard.bindings = {
-      "{_,shift +} Print" = "${bin} -d ${cfg.screenshotsDir} {-s,_} -x ${config.system.events.onScreenshotScript}";
+      "{_,shift +} Print" = "${bin} -d '${cfg.screenshotsDir}' {-s,_} -x ${config.system.events.onScreenshotScript}";
     };
   };
 }
