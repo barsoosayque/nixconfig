@@ -9,10 +9,10 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "thunderbolt" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "xe" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  boot.kernelParams = [ "module_blacklist=modeset" ];
+  boot.kernelParams = [ "xe.force_probe=46a6" ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-label/nixos";

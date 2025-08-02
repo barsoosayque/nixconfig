@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsRepo, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [ ];
@@ -65,7 +65,6 @@
 
     programs = {
       alacritty.enable = true;
-      # wezterm.enable = true;
       mpv.enable = true;
       scissors.enable = true;
       bemenu.enable = true;
@@ -92,7 +91,6 @@
       enable = true;
       videoDrivers = "intel/nvidia";
 
-      # hyprland.enable = true;
       gtk.enable = true;
       monitor = {
         layout = [
@@ -118,5 +116,8 @@
   # required for wireguard mullvad tunnels
   # see: https://discourse.nixos.org/t/connected-to-mullvadvpn-but-no-internet-connection/35803/10
   networking.resolvconf.enable = false;
+
+  services.throttled.enable = true;
+  services.thinkfan.enable = true;
 }
 
