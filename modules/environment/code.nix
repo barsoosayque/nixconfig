@@ -1,9 +1,9 @@
 { config,  pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib) mkIf mkOption mkEnableOption types getExe concatStringsSep;
   inherit (lib.lists) optionals;
-  inherit (builtins) readFile;
+  inherit (builtins) readFile map;
 
   cfg = config.modules.environment.code;
 in
@@ -50,9 +50,25 @@ in
       xdg.configFile."helix/themes/nixos-generated.toml".text = ''
         inherits = "base16_transparent"
         "ui.background" = {}
+        "namespace" = { fg = "yellow", modifiers = ["italic"] }
+        "ui.virtual.inlay-hint" = { fg = "gray", bg = "", modifiers = ["italic", "dim"] }
+        "ui.virtual.inlay-hint.parameter" = { fg = "gray", bg = "", modifiers = ["italic", "dim"] }
+        "ui.virtual.inlay-hint.type" = { fg = "gray", bg = "", modifiers = ["italic", "dim"] }
       '';
 
-      xdg.configFile."helix/config.toml".text = ''
+      xdg.configFile."helix/config.toml".text = let
+        runTUI = pkg: "[" + (concatStringsSep "," (map (cmd: ''"${cmd}"'') [
+          ":wa"
+          ":new"
+          ":insert-output ${getExe pkg} >/dev/tty"
+          ":set mouse false"
+          ":set mouse true"
+          ":buffer-close!"
+          ":redraw"
+          ":reload-all"
+        ])) + "]";
+      in
+        ''
           theme = "nixos-generated"
 
           [editor]
@@ -71,6 +87,13 @@ in
           [editor.lsp]
           enable = true
           display-inlay-hints = true
+
+          [keys.normal]
+          C-s = ":w" 
+
+          [keys.normal.C-x]
+          f = ${runTUI pkgs.scooter} # Gloabl find and replace (scooter)
+          g = ${runTUI pkgs.gitui} # Interactive Git (gitui)
       '';
 
       xdg.configFile."zellij/config.kdl".text = ''
