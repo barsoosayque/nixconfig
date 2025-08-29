@@ -7,7 +7,7 @@ let
   cfg = config.modules.environment.gaming;
   
   cdda = (pkgsRepo.local.cdda.override rec {
-    typeface = [ "${pkgs.iosevka-comfy.comfy}/share/fonts/truetype/iosevka-comfy-bold.ttf" ];
+    typeface = [ "${pkgs.iosevka-comfy.comfy}/share/fonts/truetype/iosevka-comfy-normalboldupright.ttf" ];
     map_typeface = [ "${pkgs.ocr-a}/share/fonts/truetype/OCRA.ttf" ];
     overmap_typeface = map_typeface;
 
