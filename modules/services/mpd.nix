@@ -1,8 +1,7 @@
-{ config, options, pkgs, pkgsRepo, lib, hmLib, ... }:
+{ config, lib, ... }:
 
 let
   inherit (lib) mkIf mkEnableOption mkOption types;
-  inherit (pkgs) writeText fetchFromGitHub;
 
   cfg = config.modules.services.mpd;
 
@@ -23,7 +22,7 @@ in
     };
     enableDiscordRPC = mkOption {
       type = with types; bool;
-      default = true;
+      default = false;
       description = "Enable mpd discord rpc";
     };
   };
