@@ -47,7 +47,7 @@ in
     };
 
     cursor = {
-      accent = normal.yellow;
+      accent = normal.green;
       text = normal.black;
       cursor = primary.foreground;
     };
@@ -65,10 +65,10 @@ in
 
     bar = {
       background = primary.background.modify { a = 215; };
-      foreground = primary.foreground;
-      danger = normal.red;
-      accent = normal.yellow;
-      empty = normal.white;
+      foreground = normal.white;
+      danger = normal.yellow;
+      accent = normal.green;
+      empty = normal.black;
     };
 
     window = {
