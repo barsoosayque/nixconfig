@@ -32,11 +32,11 @@ in
 
     xdg.portal = {
       enable = true;
-      extraPortals = with pkgs; [ pantheon.xdg-desktop-portal-pantheon ];
+      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
       xdgOpenUsePortal = true;
       config = {
         common = {
-          default = "pantheon";
+          default = "gtk";
         };
       };
     };

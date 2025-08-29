@@ -18,5 +18,10 @@ in
       theme.package = pkgs.paper-gtk-theme;
       theme.name = "Paper";
     };
+    system.user.hm.qt = {
+      enable = true;
+      platformTheme.name = "adwaita";
+      style.name = "adwaita";
+    };
   };
 }
