@@ -37,12 +37,12 @@ in
           height = "30px";
           module-margin = "15px";
           padding = "20px";
-          # bottom = true;
+          bottom = true;
           # override-redirect = false;
           fixed-center = true;
-          modules-left = "keyboard time date bspwm";
-          modules-center = "";
-          modules-right = "battery backlight pulse cpu ram tray";
+          modules-left = "date time keyboard pulse";
+          modules-center = "bspwm";
+          modules-right = "backlight battery cpu ram tray";
           wm-restack = "bspwm";
           separator = "";
           dpi = "";
@@ -56,30 +56,36 @@ in
           type = "internal/bspwm";
 
           label-separator = " ";
-          label-empty = " ";
+          label-empty = " ";
           label-occupied  = " ";
           label-focused = " ";
-          label-urgent = "󰗖 ";
-
-          label-urgent-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
+          label-urgent = " ";
         };
 
         "module/cpu" = {
           type = "internal/cpu";
 
-          format = "  <label>";
-          format-warn = "  <label-warn>";
+          format = "  <label>";
+          format-warn = "  <label-warn>";
+          format-warn-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
+          label-warn-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
         };
 
         "module/keyboard" = {
           type = "internal/xkeyboard";
+          format = "  <label-layout>";
         };
 
         "module/ram" = {
           type = "internal/memory";
+          warn-percentage = 80;
 
-          format = " <label>";
+          format = "󰆼 <label>";
+          format-warn = "󱘺 <label-warn>";
           label = "%percentage_used%%";
+          label-warn = "%percentage_used%%";
+          format-warn-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
+          label-warn-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
         };
 
         "module/net" = {
@@ -99,7 +105,7 @@ in
         "module/time" = {
           type = "internal/date";
           interval = 1;
-          format = "<label>";
+          format = "  <label>";
           time = "%R %p";
           label = "%time%";
         };
@@ -107,7 +113,7 @@ in
         "module/date" = {
           type = "internal/date";
           interval = 60;
-          format = "<label>";
+          format = "  <label>";
           date = "%d %B %Y";
           label = "%date%";
         };
@@ -118,40 +124,40 @@ in
           low-at = 15;
           battery = "BAT0";
           adapter = "AC";
-          poll-interval = 5;
+          poll-interval = 1;
           time-format = "%H:%M";
 
-          format-charging = "<animation-charging> <label-charging>";
+          format-charging = "<animation-charging> <label-charging>";
           label-charging = "%percentage%%";
-          animation-charging-0 = " ";
-          animation-charging-1 = " ";
-          animation-charging-2 = " ";
-          animation-charging-3 = " ";
-          animation-charging-4 = " ";
-          animation-charging-framerate = "750";
+          animation-charging-0 = "󰢟";
+          animation-charging-1 = "󰂇";
+          animation-charging-2 = "󰂉";
+          animation-charging-3 = "󰂅";
+          animation-charging-framerate = "500";
 
-          format-discharging = "<ramp-capacity> <label-discharging>";
+          format-discharging = "<ramp-capacity> <label-discharging>";
           label-discharging = "%percentage%%";
-          animation-discharging-0 = " ";
-          animation-discharging-1 = " ";
-          animation-discharging-2 = " ";
-          animation-discharging-3 = " ";
-          animation-discharging-4 = " ";
-          animation-discharging-framerate = "500";
-
           format-full = "<ramp-capacity> <label-full>";
           label-full = "full";
-          ramp-capacity-0 = " ";
-          ramp-capacity-1 = " ";
-          ramp-capacity-2 = " ";
-          ramp-capacity-3 = " ";
-          ramp-capacity-4 = " ";
 
-          format-low = "  <label-low> <animation-low>";
+          ramp-capacity-9 = "󰁹";
+          ramp-capacity-8 = "󰂂";
+          ramp-capacity-7 = "󰂁";
+          ramp-capacity-6 = "󰂀";
+          ramp-capacity-5 = "󰁿";
+          ramp-capacity-4 = "󰁾";
+          ramp-capacity-3 = "󰁽";
+          ramp-capacity-2 = "󰁼";
+          ramp-capacity-1 = "󰁻";
+          ramp-capacity-0 = "󰁺";
+
+          format-low = "<label-low> <animation-low>";
           label-low = "%percentage%%";
-          animation-low-0 = "";
-          animation-low-1 = "";
-          animation-low-framerate = "200";
+          animation-low-0 = "󱃍";
+          animation-low-1 = "󰂎";
+          animation-low-framerate = "500";
+          format-low-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
+          label-low-foreground = config.system.pretty.theme.colors.bar.danger.hexARGB;
         };
 
         "module/backlight" = {
@@ -188,6 +194,7 @@ in
           type = "internal/tray";
           tray-size = "55%";
           tray-spacing = "5px";
+          tray-foreground = config.system.pretty.theme.colors.bar.foreground.hexARGB;
           # format-margin = "8px";
         };
       };
