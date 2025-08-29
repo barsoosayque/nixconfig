@@ -12,7 +12,8 @@ let
 in
 {
   mkSymlinkDir = path: source:
-    throwIfNot (hasPrefix "/" path) "mkSymlinkDir path must be absolute (It's ${path})"
+    (throwIfNot (hasPrefix "/" path) "mkSymlinkDir path must be absolute (It's ${path})")
+    (throwIfNot (hasPrefix "/" source) "mkSymlinkDir path must be absolute (It's ${source})")
     {
       _dirType = types.symlink;
       absolutePath = path;

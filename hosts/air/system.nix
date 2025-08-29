@@ -117,7 +117,28 @@
   # see: https://discourse.nixos.org/t/connected-to-mullvadvpn-but-no-internet-connection/35803/10
   networking.resolvconf.enable = false;
 
-  services.throttled.enable = true;
-  services.thinkfan.enable = true;
+  services.fstrim.enable = true;
+
+  # move zcfan to its own module
+  environment.etc = {
+    "zcfan.conf".text = ''
+      max_temp 80
+      med_temp 70
+      low_temp 60
+      temp_hysteresis 10
+
+      max_level full-speed
+      med_level 4
+      low_level 1
+    '';
+  };
+  systemd.services.zcfan = {
+    description = "zcfan: A zero-configuration fan daemon for ThinkPads. ";
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.zcfan}/bin/zcfan";
+      Type = "simple";
+    };
+  };
 }
 

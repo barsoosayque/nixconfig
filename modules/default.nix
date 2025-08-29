@@ -7,7 +7,7 @@
     boot = {
       supportedFilesystems = [ "ntfs" ];
       tmp = {
-        useTmpfs = false;
+        useTmpfs = true;
         cleanOnBoot = true;
       };
 
