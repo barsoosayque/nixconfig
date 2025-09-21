@@ -1,20 +1,9 @@
 = nixconfig
 
-big wip
+Nixos config for my machines using flakes.
 
-== TODO
-* [x] Dunst notifications (or something else)  and plug notifications to events
-* [x] Transmission and its events
-* [x] Alacritty module
-* [ ] Unclutter home
-* [x] Remove all 'with lib;'
-* [ ] Declarative pretty config: colors and background image(s)
-* [x] Zsh with simple prompt
-* [ ] Audio change notification
-* [ ] Pick window & audio change it + notification
-* [x] Polybar
-
-== Pile of topics to sort
+Honest to God I cannot tell you how it works (as per usual with nix or nixos).
+I coded it while being possessed so here it is. Probably it is usable.
 
 == Install
 
@@ -41,7 +30,7 @@ After that, mount disks and run the actual installation:
 
 NOTE: `.#hostname` should be a valid host in _hosts/_.
 
-=== New host
+== Adding a new host
 
 To add a new host, first you need to create a host dir in _hosts/_, and then generate a hadrware config:
 
@@ -56,11 +45,20 @@ NOTE: Be sure to check out https://github.com/NixOS/nixos-hardware[nixos-hardwar
 
 === Set background
 
-Background management is made with `background` command (which is a shortcut to `setroot --store`). To see available options and usage, consult `man setroot`. In general, you just want to simply set background pictures:
+Background management is made with `background` command (which is a shortcut to `setroot --store`). Why though ? Eh.
+
+To see available options and usage, consult `man setroot` (but since *setroot* is not included in environemnt packanges: `nix shell nixpkgs#setroot -c "man setroot"`).
+In general, you just want to simply set background pictures:
 
 ```sh
 $ background pictures/wallpapers/left-monitor-picture.png \
              pictures/wallpapers/right-monitor-picture.png
 ```
 
-Every run of `background` command is saved so it would be restored at the next system start (at `.xinit` execution).
+Every run of `background` command is saved so it would be restored at the next system start (via `onStartupScript`).
+
+== Future work
+* Unclutter home
+* Audio change notification
+* Pick window & audio change it + notification
+* Move to miri (wayland gogogo)
