@@ -1,8 +1,7 @@
-{ config, options, pkgs, lib, pkgsRepo, ... }:
+{ config, pkgs, lib, pkgsRepo, ... }:
 
 let
   inherit (lib) types mkIf mkEnableOption mkOption lists attrsets;
-  inherit (builtins) toJSON fetchurl;
 
   cfg = config.modules.environment.gaming;
   
@@ -33,11 +32,6 @@ in
       retroarch = mkEnableOption "retroarch";
       wine = {
         enable = mkEnableOption "wine";
-        package = mkOption {
-          type = with types; package;
-          default = pkgs.wine64;
-          description = "Wine package";
-        };
       };
     };
 
@@ -90,7 +84,8 @@ in
       pkgs.vulkan-tools
       pkgs.protonup
     ] ++ (lists.optionals cfg.software.wine.enable [
-      cfg.software.wine.package
+      pkgs.wine
+      pkgs.wine64
       pkgs.winetricks
     ]) ++ (lists.optional cfg.software.retroarch 
       (pkgs.retroarch.override {
