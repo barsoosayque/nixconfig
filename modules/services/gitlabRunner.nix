@@ -2,10 +2,24 @@
 
 let
   inherit (lib) mkIf mkEnableOption concatStringsSep;
+  inherit (lib.strings) makeBinPath;
 
   cfg = config.modules.services.gitlabRunner;
 
-  dockerHost = "127.0.0.1:2375";
+  env = pkgs.buildEnv {
+    name = "gitlab-docker-env";
+    paths = with pkgs; [
+      bash
+      toybox
+      gnugrep
+      nixVersions.latest
+      git
+      curlFull
+      openssh
+      openssl
+    ];
+    pathsToLink = [ "/bin" "/etc" ];
+  };
 in
 {
   options.modules.services.gitlabRunner = {
@@ -25,14 +39,13 @@ in
       services = {
         default = {
           description = "nixos-runner";
-          executor = "docker";
-
           # File should contain at least these two variables:
           # CI_SERVER_URL=<CI server URL>
           # CI_SERVER_TOKEN=<runner authentication token secret>
           authenticationTokenConfigFile = "${config.system.user.dirs.config.absolutePath}/nixos/gitlab-runner";
 
-          dockerImage = "public.ecr.aws/docker/library/alpine:latest";
+          executor = "docker";
+          dockerImage = "alpine:latest";
           dockerVolumes = [
             "/nix/store:/nix/store:ro"
             "/nix/var/nix/db:/nix/var/nix/db:ro"
@@ -50,20 +63,18 @@ in
             mkdir -p -m 0755 /nix/var/nix/profiles/per-user/root
             mkdir -p -m 0700 "$HOME/.nix-defexpr"
 
-            . ${pkgs.nix}/etc/profile.d/nix.sh
+            . ${pkgs.nix}/etc/profile.d/nix-daemon.sh
 
-            ${pkgs.nix}/bin/nix-env -i ${concatStringsSep " " (with pkgs; [ nix cacert git openssh curl ])}
-            mkdir -p /root/.config/nix && echo "experimental-features = nix-command flakes ca-references" > /root/.config/nix/nix.conf
+            mkdir -p /etc/ssl/certs
+            cp -a "${pkgs.cacert}/etc/ssl/certs" /etc/ssl/certs 
 
-            ${pkgs.nix}/bin/nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-            ${pkgs.nix}/bin/nix-channel --update nixpkgs
+            mkdir -p /root/.config/nix && echo "experimental-features = nix-command flakes" > /root/.config/nix/nix.conf
           '';
           environmentVariables = {
             ENV = "/etc/profile";
             USER = "root";
             NIX_REMOTE = "daemon";
-            PATH = "/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin";
-            NIX_SSL_CERT_FILE = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+            PATH = "${env}/bin:/sbin:/usr/bin:/usr/sbin";
           };
         };
       };
