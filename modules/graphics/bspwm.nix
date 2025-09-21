@@ -44,8 +44,8 @@ in
         urgent_border_color = config.system.pretty.theme.colors.window.urgent_border.hexRGB;
         border_width = 4;
         border_radius = 20;
-        top_padding = 30;
-        bottom_padding = 30;
+        top_padding = 10;
+        bottom_padding = 40;
         left_padding = 30;
         right_padding = 30;
         window_gap = 20;
