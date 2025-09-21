@@ -23,5 +23,10 @@ in
     nixpkgs.config = attrsets.optionalAttrs cfg.androidStudio {
       android_sdk.accept_license = true; # Accept the Android SDK licence
     };
+
+    environment.variables = {
+      # Move .android from home
+      ANDROID_USER_HOME =  "${config.system.user.dirs.data.absolutePath}/android";
+    };
   };
 }
