@@ -21,6 +21,8 @@
       pkgs.ffmpeg
       pkgs.kdePackages.kdenlive
       pkgs.kdePackages.okular
+
+      pkgs.openttd-jgrpp
     ];
   };
 
@@ -53,7 +55,6 @@
         software = {
           steam = true;
           lutris = true;
-          wine.enable = true;
         };
         games = {
           minecraft = true;
@@ -69,7 +70,7 @@
       scissors.enable = true;
       bemenu.enable = true;
       obs.enable = true;
-      beets.enable = true;
+      # beets.enable = true;
     };
 
     services = {
@@ -85,6 +86,7 @@
       mpd.enable = true;
       picom.enable = true;
       polybar.enable = true;
+      gitlabRunner.enable = true;
     };
 
     graphics = {
@@ -118,27 +120,9 @@
   networking.resolvconf.enable = false;
 
   services.fstrim.enable = true;
-
-  # move zcfan to its own module
-  environment.etc = {
-    "zcfan.conf".text = ''
-      max_temp 80
-      med_temp 70
-      low_temp 60
-      temp_hysteresis 10
-
-      max_level full-speed
-      med_level 4
-      low_level 1
-    '';
-  };
-  systemd.services.zcfan = {
-    description = "zcfan: A zero-configuration fan daemon for ThinkPads. ";
-    wantedBy = [ "default.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.zcfan}/bin/zcfan";
-      Type = "simple";
-    };
+  services.thermald = {
+    enable = true;
+    ignoreCpuidCheck = true;
   };
 }
 
