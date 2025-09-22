@@ -14,6 +14,7 @@
   boot.extraModulePackages = [ ];
   boot.kernelParams = [
     "xe.force_probe=46a6"
+    "intel_pstate=active"
     "thinkpad_acpi.fan_control=1"
   ];
   powerManagement.cpuFreqGovernor = "performance";
