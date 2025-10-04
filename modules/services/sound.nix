@@ -11,7 +11,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.pavucontrol ];
+    environment.systemPackages = [
+      pkgs.pavucontrol
+      pkgs.easyeffects
+    ];
 
     musnix = {
       enable = true;
@@ -19,6 +22,7 @@ in
       # kernel.realtime = true;
     };
 
+    programs.noisetorch.enable = true;
     services.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
