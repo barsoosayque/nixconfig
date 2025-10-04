@@ -141,6 +141,13 @@ in
         workspace "web"
         workspace "chat"
 
+        output "eDP-1" {
+            // off
+            mode "1920x1200@165.019"
+            scale 1.0
+            focus-at-startup
+        }
+
         binds {
           Mod+Return { spawn "${pkgs.foot}/bin/foot"; }
           Mod+D { spawn "bash" "-c" "${pkgs.tofi}/bin/tofi-run | xargs niri msg action spawn --"; }
