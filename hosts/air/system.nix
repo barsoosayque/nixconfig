@@ -83,6 +83,7 @@
       transmission.enable = true;
       sound.enable = true;
       mpd.enable = true;
+      gitlabRunner.enable = true;
       picom.enable = true;
       polybar.enable = true;
     };
@@ -92,6 +93,8 @@
       videoDrivers = "intel/nvidia";
 
       gtk.enable = true;
+      # niri.enable = true;
+
       monitor = {
         layout = [
           {
@@ -102,6 +105,7 @@
         ];
         dpi = 96;
       };
+
       bspwm = {
         enable = true;
         monitors = {
