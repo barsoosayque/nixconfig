@@ -38,6 +38,7 @@ in
       pkgs.nixd
 
       pkgs.git
+      pkgs.gh
       pkgs.delta
       pkgs.gitui
 
