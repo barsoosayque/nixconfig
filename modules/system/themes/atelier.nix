@@ -16,7 +16,7 @@ in
     };
     secondary = {
       name = "Ubuntu Bold";
-      package= pkgs.ubuntu_font_family;
+      package= pkgs.ubuntu-classic;
     };
     bar = primary;
   };

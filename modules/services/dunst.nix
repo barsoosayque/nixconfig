@@ -59,7 +59,7 @@ in
     font = {
       package = mkOption {
         type = with types; package;
-        default = pkgs.ubuntu_font_family;
+        default = pkgs.ubuntu-classic;
         description = "Font nix package";
       };
 

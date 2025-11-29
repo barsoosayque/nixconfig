@@ -1,7 +1,7 @@
-{ config, pkgs, pkgsRepo, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib) mkIf mkEnableOption;
 
   cfg = config.modules.programs.beets;
 in
@@ -13,7 +13,7 @@ in
   config = mkIf cfg.enable {
     system.user.hm.programs.beets = {
       enable = true;
-      package = pkgs.beets-unstable;
+      package = pkgs.beets;
       # mpdIntegration = {
       #   enableStats = true;
       #   enableUpdate = true;

@@ -13,7 +13,7 @@ let
     config_dir = "${config.system.user.dirs.games.relativePath}/cataclysmdda/";
   });
   jdk = pkgs.openjdk17.override {
-    enableJavaFX = true;
+    # enableJavaFX = true;
   };
   jdk8 = pkgs.jdk8;
 in
@@ -82,7 +82,7 @@ in
 
     environment.systemPackages = [
       pkgs.vulkan-tools
-      pkgs.protonup
+      pkgs.protonup-ng
     ] ++ (lists.optionals cfg.software.wine.enable [
       pkgs.wine
       pkgs.wine64
