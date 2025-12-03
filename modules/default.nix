@@ -44,6 +44,7 @@
 
     fonts.fontconfig.enable = true;
     programs.nix-ld.enable = true;
+    zramSwap.enable = true;
 
     networking = {
       inherit hostName;
