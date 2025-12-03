@@ -21,10 +21,20 @@ in
   config = mkIf cfg.enable {
     fonts.packages = [ pkgs.fira-code ];
 
-    nix.extraOptions = ''
-      keep-outputs = true
-      keep-derivations = true
-    '';
+    nix = {
+      extraOptions = ''
+        keep-outputs = true
+        keep-derivations = true
+      ''; 
+      settings = {
+        substituters = [
+          "https://cache.nixos-cuda.org"
+        ];
+        trusted-public-keys = [
+          "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+        ];
+      };
+    };
 
     environment.systemPackages = [
       pkgs.direnv

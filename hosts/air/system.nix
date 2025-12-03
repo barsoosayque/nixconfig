@@ -45,6 +45,7 @@
   modules = {
     environment = {
       code.enable = true;
+      cuda.enable = true;
       gaming = {
         enable = true;
         gamepads = {
