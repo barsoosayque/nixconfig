@@ -12,6 +12,7 @@
       pkgs.nicotine-plus
       pkgs.blender
       pkgs.obsidian
+      pkgs.anki-bin
 
       # multimedia
       pkgs.feh
@@ -140,6 +141,18 @@
     relay.enable = true;
     overrideFolders = false;
     overrideDevices = false;
+  };
+  services.anki-sync-server = {
+    enable = true;    
+    openFirewall = true;
+    address = "0.0.0.0";
+    port = 27701;
+    users = [
+      {
+        username = "default";
+        password = "password";
+      }
+    ];
   };
 }
 
