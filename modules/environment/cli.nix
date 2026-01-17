@@ -78,7 +78,7 @@ in
           enableCompletion = true;
           syntaxHighlighting.enable = true;
           autosuggestion.enable = true;
-          dotDir = "${config.system.user.dirs.data.relativePath}/zsh";
+          dotDir = "${config.system.user.dirs.data.absolutePath}/zsh";
           autosuggestion.strategy = [ "history" "completion" ];
           defaultKeymap = "viins";
 
