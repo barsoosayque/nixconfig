@@ -1,7 +1,7 @@
 { config, pkgs, lib, pkgsRepo, ... }:
 
 let
-  inherit (lib) types mkIf mkEnableOption mkOption lists attrsets;
+  inherit (lib) mkIf mkEnableOption lists attrsets;
 
   cfg = config.modules.environment.gaming;
   

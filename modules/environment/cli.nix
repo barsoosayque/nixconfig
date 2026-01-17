@@ -1,4 +1,4 @@
-{ config, options, pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   inherit (lib) mkIf mkEnableOption lists;
@@ -58,9 +58,9 @@ in
       programs = {
         nnn = {
           enable = true;          
-          package = pkgs.nnn.override ({ 
+          package = pkgs.nnn.override { 
             withNerdIcons = true;
-          });
+          };
           bookmarks = {
             s = "${config.system.user.dirs.data.absolutePath}";
             c = "${config.system.user.dirs.config.absolutePath}";
