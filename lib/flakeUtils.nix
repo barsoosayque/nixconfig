@@ -36,7 +36,7 @@ let
       name = baseNameOf path;
     in
     nixpkgs.lib.nixosSystem {
-      system = pkgs.system;
+      system = pkgs.stdenv.hostPlatform.system;
 
       modules = [
         {
