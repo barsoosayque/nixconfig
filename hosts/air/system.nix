@@ -131,26 +131,15 @@
     ignoreCpuidCheck = true;
   };
 
-  # move zcfan to its own module
-  # environment.etc = {
-  #   "zcfan.conf".text = ''
-  #     max_temp 85
-  #     med_temp 65
-  #     low_temp 50
-  #     temp_hysteresis 10
-
-  #     max_level full-speed
-  #     med_level 4
-  #     low_level 1
-  #   '';
-  # };
-  # systemd.services.zcfan = {
-  #   description = "zcfan: A zero-configuration fan daemon for ThinkPads. ";
-  #   wantedBy = [ "default.target" ];
-  #   serviceConfig = {
-  #     ExecStart = "${pkgs.zcfan}/bin/zcfan";
-  #     Type = "simple";
-  #   };
-  # };
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true;
+    user = config.system.user.name;
+    dataDir = "${config.system.user.dirs.data.absolutePath}/syncthing";
+    configDir = "${config.system.user.dirs.config.absolutePath}/syncthing";
+    relay.enable = true;
+    overrideFolders = false;
+    overrideDevices = false;
+  };
 }
 
