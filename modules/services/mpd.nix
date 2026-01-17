@@ -42,21 +42,21 @@ in
         enable = true;
 
         user = config.system.user.name;
-        musicDirectory = config.system.user.dirs.music.absolutePath;
         dataDir = settings.dataDir;
 
-        network = {
-          port = settings.port;
-          listenAddress = settings.address;
-        };
-
         startWhenNeeded = true;
-        extraConfig = ''
-          audio_output {
-            type "pipewire"
-            name "${config.system.user.name} MPD Pipewire output"
-          }
-        '';
+        settings = {
+          music_directory = config.system.user.dirs.music.absolutePath;
+          playlist_directory = "${config.system.user.dirs.music.absolutePath}/.playlist";
+          port = settings.port;
+          bind_to_address = settings.address;
+          audio_output = [
+            {
+              type = "pipewire";
+              name = "Pipewire (PulseAudio) sink";
+            }
+          ];
+        };
       };
     };
 
