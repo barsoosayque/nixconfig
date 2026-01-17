@@ -167,20 +167,14 @@ in
           enable = true;
           lfs.enable = true;
 
-          userName = "barsoosayque";
-          userEmail = "shtoshich@gmail.com";
-
           ignores = [
             ".local"
           ];
 
-          difftastic = {
-            enable = true;
-            background = "dark";
-            display = "inline";
-          };
+          settings = {
+            user.name = "barsoosayque";
+            user.email = "shtoshich@gmail.com";
 
-          extraConfig = {
             pull.rebase = true;
             rebase.autostash = true;
             branch.autosetuprebase = "always";
