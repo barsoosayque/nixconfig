@@ -88,8 +88,7 @@ in
       pkgs.wine64
       pkgs.winetricks
     ]) ++ (lists.optional cfg.software.retroarch 
-      (pkgs.retroarch.override {
-        cores = with pkgs.libretro; [
+      (pkgs.retroarch.withCores(cores: with cores; [
           # Playstation
           swanstation # PS1 emulator  
           ppsspp # PSP emulator
@@ -100,8 +99,8 @@ in
           desmume # Nintendo DS emulator 
           snes9x # SNES emulator 
           vba-next # Gameboy advaтсe emulator
-        ];
-      })
+        ]
+      ))
     ) ++ (lists.optional cfg.software.steam pkgs.steam)
       ++ (lists.optional cfg.software.lutris pkgs.lutris)
       ++ (lists.optional cfg.games.veloren pkgs.airshipper)
