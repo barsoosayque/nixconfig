@@ -35,6 +35,8 @@ in
           "[\\/]" = "_";
         };
         plugins = [
+          "fromfilename"
+          "musicbrainz"
           "embedart"
           "albumtypes"
           "fetchart"  
