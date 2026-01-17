@@ -4,8 +4,8 @@
 let
   inherit (pkgs.lib.strings) fixedWidthString stringToCharacters removePrefix toUpper;
   inherit (pkgs.lib.trivial) toHexString;
-  inherit (pkgs.lib.lists) imap0 fold reverseList;
-  inherit (builtins) genList substring stringLength elem elemAt;
+  inherit (pkgs.lib.lists) imap0 foldr reverseList;
+  inherit (builtins) substring stringLength elem elemAt;
 in
 rec {
   # Convert 0-255 color part representation to 00-FF
@@ -39,12 +39,12 @@ rec {
         if n == 0 then 1
         else if n == 1 then a
         else (pow a (n - 1)) * a;
-      # else fold(v : sum: v * a + sum) 0 (genList (i: n) (n - 1));
+      # else foldr(v : sum: v * a + sum) 0 (genList (i: n) (n - 1));
 
       chars = stringToCharacters string;
       numeric = imap0 (i: v: (pow 16 i) * (fromHexDigit v)) (reverseList chars);
     in
-    fold (v: sum: sum + v) 0 numeric;
+    foldr (v: sum: sum + v) 0 numeric;
 
   # Makes a comprehensive color structure with different formats.
   # Color inputs should be a 0-255 int number.
