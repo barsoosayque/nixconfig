@@ -18,7 +18,7 @@ in
       #   enableStats = true;
       #   enableUpdate = true;
       # };
-      settings = {
+      settings = rec {
         directory = config.system.user.dirs.music.absolutePath;
         library = "${config.system.user.dirs.music.absolutePath}/.library.db";
         import = {
@@ -26,13 +26,20 @@ in
           write = true;
         };
         paths = {
-          default = "$mygenre/$albumartist/$albumtype/[$year] $album/$track. $title";
-          singleton = "$mygenre/$artist/Unsorted/$title";
-          "ostmedium::.+" = "OST/$ostmedium/$ostwhat/$album/$track. $title";
-          "mygenre::^$" = ".new/$albumartist/$album/$track. $title";
+          default = ".new/$albumartist/$albumtype/[$year] $album/$track. $title";
+          singleton = ".new/$artist/Unsorted/$title";
+          "ostmedium::.+" = ".new/OST/$ostmedium/$ostwhat/$album/$track. $title";
+          # "mygenre::^$" = ".new/$albumartist/$album/$track. $title";
         };
         replace = {
-          "[\\/]" = "_";
+          "[\\/]" = "∕";
+          "[:]" = "꞉";
+          "[*]" = "∗";
+          "[?]" = "？";
+          "[\"]" = "″";
+          "[<]" = "‹";
+          "[>]" = "›";
+          "[|]" = "∣";
         };
         plugins = [
           "fromfilename"
@@ -41,7 +48,14 @@ in
           "albumtypes"
           "fetchart"  
           "lastgenre"
+          "convert"
         ];
+        convert = {
+          "auto" = false;
+          "format" = "mp3";
+          "bitrate" = 320;
+          "dest" = "${directory}/.convert";
+        };
         embedart = {
           auto = true;
           maxwidth = 1024;
