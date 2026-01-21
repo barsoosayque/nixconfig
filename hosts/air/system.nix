@@ -25,10 +25,6 @@
     ];
   };
 
-  networking.firewall = {
-    enable = false;
-  };
-
   # general definitions
   system = {
     user.name = "barsoo";
