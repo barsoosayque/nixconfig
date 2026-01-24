@@ -3,7 +3,7 @@
 let
   inherit (lib) mkIf mkEnableOption;
 
-  cfg = config.modules.environment.cli;
+  cfg = config.modules.environment.cuda;
 in
 {
   options.modules.environment.cuda = {
