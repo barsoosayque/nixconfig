@@ -30,6 +30,10 @@ in
       initExtra = "${config.system.events.onStartupScript}";
     };
 
+    # https://github.com/NixOS/nixpkgs/issues/189851#issuecomment-1238907955
+    systemd.user.extraConfig = ''
+      DefaultEnvironment="PATH=/run/current-system/sw/bin"
+    '';
     xdg.portal = {
       enable = true;
       extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
