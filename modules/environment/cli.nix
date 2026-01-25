@@ -17,23 +17,17 @@ in
       systemPackages = [
         # System
         pkgs.htop
-        pkgs.iotop
-        pkgs.bottom
         pkgs.openssl
         pkgs.file
         pkgs.unzip
         pkgs.unrar
         pkgs.curl
-        pkgs.xclip
         pkgs.sad
         pkgs.fzf
         pkgs._7zz
 
         # Utility
         pkgs.imagemagick 
-
-        # Text
-        pkgs.neovim
       ] ++ lists.optionals cfg.enableFlexing [
         pkgs.neofetch
         pkgs.pipes
@@ -93,8 +87,6 @@ in
           };
 
           shellAliases = {
-            vim = "nvim";
-            vi = "nvim";
             mv = "mv -v";
             cp = "cp -v";
             ls = "${pkgs.eza}/bin/exa --icons --group-directories-first --classify ";

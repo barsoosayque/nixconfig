@@ -4,6 +4,29 @@ let
   inherit (lib) mkIf mkOption mkEnableOption types lists attrsets;
   
   cfg = config.modules.graphics.x11;
+
+  xclip-file = pkgs.writeShellApplication {
+    name = "xclip-file";
+    runtimeInputs = [ pkgs.coreutils pkgs.xclip ];
+    text = ''
+      set -euo pipefail
+
+      if [ "$#" -eq 0 ]; then
+        echo "Usage: xclip-file-url <file> [...]" >&2
+        exit 1
+      fi
+
+      for file in "$@"; do
+        if [ ! -e "$file" ]; then
+          echo "Error: file does not exist: $file" >&2
+          exit 1
+        fi
+        printf 'file://%s\n' "$(realpath "$file")"
+      done | xclip -selection clipboard -t text/uri-list
+
+      echo "Copied $# file(s) to clipboard"
+    '';
+  };
 in
 {
   options.modules.graphics.x11 = {
@@ -22,6 +45,13 @@ in
     services.xserver = {
       enable = true;
       displayManager.startx.enable = true;
+    };
+
+    environment = {
+      systemPackages = [
+        pkgs.xclip
+        xclip-file
+      ];
     };
 
     system.user.hm.xsession = {
