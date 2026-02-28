@@ -1,7 +1,18 @@
-{ config, pkgs, pkgsRepo, lib, ... }:
+{
+  config,
+  pkgs,
+  pkgsRepo,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.modules.programs.scissors;
   bin = "${pkgsRepo.local.scissors}/bin/scissors";
@@ -20,7 +31,8 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgsRepo.local.scissors ];
     system.keyboard.bindings = {
-      "{_,shift +} Print" = "${bin} -d '${cfg.screenshotsDir}' {-s,_} -x ${config.system.events.onScreenshotScript}";
+      "{_,shift +} Print" =
+        "${bin} -d '${cfg.screenshotsDir}' {-s,_} -x ${config.system.events.onScreenshotScript}";
     };
   };
 }

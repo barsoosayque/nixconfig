@@ -1,4 +1,10 @@
-{ config, options, pkgs, lib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption;
@@ -22,9 +28,11 @@ in
       };
     };
 
-    services.nginx.virtualHosts."grocy".listen = [{
-      port = 9093;      
-      addr = "192.168.0.111";
-    }];
+    services.nginx.virtualHosts."grocy".listen = [
+      {
+        port = 9093;
+        addr = "192.168.0.111";
+      }
+    ];
   };
 }

@@ -97,7 +97,10 @@
         layout = [
           {
             identifier = "eDP-1";
-            resolution = { width = 1920; height = 1200; };
+            resolution = {
+              width = 1920;
+              height = 1200;
+            };
             hz = 165;
           }
         ];
@@ -107,7 +110,16 @@
       bspwm = {
         enable = true;
         monitors = {
-          "eDP-1" = [ 1 2 3 4 5 6 7 8 ];
+          "eDP-1" = [
+            1
+            2
+            3
+            4
+            5
+            6
+            7
+            8
+          ];
         };
       };
       x11.enable = true;
@@ -139,7 +151,7 @@
     overrideDevices = false;
   };
   services.anki-sync-server = {
-    enable = true;    
+    enable = true;
     openFirewall = true;
     address = "0.0.0.0";
     port = 27701;
@@ -151,4 +163,3 @@
     ];
   };
 }
-

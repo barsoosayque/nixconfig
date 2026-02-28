@@ -1,7 +1,18 @@
-{ config, options, pkgs, lib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkOption types literalExpression mkAliasDefinitions;
+  inherit (lib)
+    mkOption
+    types
+    literalExpression
+    mkAliasDefinitions
+    ;
   inherit (builtins) concatStringsSep attrNames;
 
   cfg = config.system.keyboard;
@@ -26,7 +37,10 @@ in
 
     layouts = mkOption {
       type = with types; listOf str;
-      default = [ "us" "ru" ];
+      default = [
+        "us"
+        "ru"
+      ];
       description = "Keyboard layouts to use";
     };
 

@@ -1,7 +1,20 @@
-{ config, options, pkgs, pkgsRepo, lib, hmLib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  pkgsRepo,
+  lib,
+  hmLib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkEnableOption mkOption types;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
   inherit (pkgs) writeText fetchFromGitHub;
 
   cfg = config.modules.services.miracast;
@@ -10,8 +23,6 @@ in
   options.modules.services.miracast = {
     enable = mkEnableOption "miracast";
   };
-
-  
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
@@ -22,7 +33,7 @@ in
 
     nixpkgs.overlays = [
       (self: super: {
-        wpa_supplicant = super.wpa_supplicant.overrideAttrs(old: {
+        wpa_supplicant = super.wpa_supplicant.overrideAttrs (old: {
           extraConfig = old.extraConfig + ''
             CONFIG_WIFI_DISPLAY=y
             CONFIG_WFD=y

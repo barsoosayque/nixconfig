@@ -11,34 +11,31 @@ let
   };
 in
 {
-  mkSymlinkDir = path: source:
+  mkSymlinkDir =
+    path: source:
     (throwIfNot (hasPrefix "/" path) "mkSymlinkDir path must be absolute (It's ${path})")
-    (throwIfNot (hasPrefix "/" source) "mkSymlinkDir path must be absolute (It's ${source})")
-    {
-      _dirType = types.symlink;
-      absolutePath = path;
-      inherit source;
-    };
+      (throwIfNot (hasPrefix "/" source) "mkSymlinkDir path must be absolute (It's ${source})")
+      {
+        _dirType = types.symlink;
+        absolutePath = path;
+        inherit source;
+      };
 
-  mkRegularDir = path:
-    throwIfNot (hasPrefix "/" path) "mkRegularDir path must be absolute (It's ${path})"
-    {
+  mkRegularDir =
+    path:
+    throwIfNot (hasPrefix "/" path) "mkRegularDir path must be absolute (It's ${path})" {
       _dirType = types.regular;
       absolutePath = path;
     };
 
-  mkNullDir =
-    {
-      _dirType = "null";
-      absolutePath = "/dev/null";
-    };
+  mkNullDir = {
+    _dirType = "null";
+    absolutePath = "/dev/null";
+  };
 
-  isSymlinkDir = dir:
-    dir._dirType or null == types.symlink; 
+  isSymlinkDir = dir: dir._dirType or null == types.symlink;
 
-  isRegularDir = dir:
-    dir._dirType or null == types.regular;
+  isRegularDir = dir: dir._dirType or null == types.regular;
 
-  isNullDir = dir:
-    dir._dirType or null == types.null;
+  isNullDir = dir: dir._dirType or null == types.null;
 }

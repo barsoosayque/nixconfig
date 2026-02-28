@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption;
@@ -46,7 +51,7 @@ in
           "musicbrainz"
           "embedart"
           "albumtypes"
-          "fetchart"  
+          "fetchart"
           "lastgenre"
           "convert"
         ];

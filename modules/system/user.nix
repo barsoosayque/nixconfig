@@ -1,9 +1,24 @@
-{ config, options, pkgs, lib, hostName, hmLib, localLib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  hostName,
+  hmLib,
+  localLib,
+  ...
+}:
 
 let
   inherit (lib) mkOption mkAliasDefinitions types;
   inherit (lib.strings) hasPrefix removePrefix;
-  inherit (localLib.userDirsUtils) mkRegularDir mkSymlinkDir mkNullDir isRegularDir isSymlinkDir;
+  inherit (localLib.userDirsUtils)
+    mkRegularDir
+    mkSymlinkDir
+    mkNullDir
+    isRegularDir
+    isSymlinkDir
+    ;
   inherit (builtins) filter attrValues concatStringsSep;
 
   cfg = config.system.user;
@@ -83,14 +98,16 @@ in
       };
 
       utils = {
-        mkHomeDir = path:
-          (mkRegularDir "${cfg.home}/${path}") // { relativePath = "${path}"; };
+        mkHomeDir = path: (mkRegularDir "${cfg.home}/${path}") // { relativePath = "${path}"; };
 
-        mkStorageDir = path:
-          (mkSymlinkDir "${cfg.home}/${path}" "${config.system.storage.root}/${path}") // { relativePath = "${path}"; };
+        mkStorageDir =
+          path:
+          (mkSymlinkDir "${cfg.home}/${path}" "${config.system.storage.root}/${path}")
+          // {
+            relativePath = "${path}";
+          };
 
-        mkDir = path:
-          (mkRegularDir path) // { relativePath = "../../${path}"; };
+        mkDir = path: (mkRegularDir path) // { relativePath = "../../${path}"; };
       };
 
       dirs = {
@@ -128,11 +145,12 @@ in
               let
                 dirs = filter isSymlinkDir (attrValues cfg.dirs);
 
-                linkCmd = dir:
-                  "$DRY_RUN_CMD [ ! -L ${dir.absolutePath} ] && ln -s ${dir.source} ${dir.absolutePath}";
+                linkCmd =
+                  dir: "$DRY_RUN_CMD [ ! -L ${dir.absolutePath} ] && ln -s ${dir.source} ${dir.absolutePath}";
               in
-              hmLib.hm.dag.entryAfter [ "writeBoundary" "createUserDirs" ]
-                (concatStringsSep "\n" (map linkCmd dirs));
+              hmLib.hm.dag.entryAfter [ "writeBoundary" "createUserDirs" ] (
+                concatStringsSep "\n" (map linkCmd dirs)
+              );
           };
         };
 

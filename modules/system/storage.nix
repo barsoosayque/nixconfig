@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkOption types;
@@ -36,11 +41,10 @@ in
   config = {
     system.activationScripts =
       let
-        mkStorageDirCmd = dir:
-          ''
-            install -d -m 1777 ${cfg.root}/${dir}
-            chown '${cfg.user}:${cfg.group}' ${cfg.root}/${dir}
-          '';
+        mkStorageDirCmd = dir: ''
+          install -d -m 1777 ${cfg.root}/${dir}
+          chown '${cfg.user}:${cfg.group}' ${cfg.root}/${dir}
+        '';
       in
       {
         createStorageRoot = mkStorageDirCmd "";

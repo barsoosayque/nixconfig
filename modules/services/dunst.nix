@@ -1,7 +1,19 @@
-{ config, options, pkgs, pkgsRepo, lib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  pkgsRepo,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
   inherit (lib.strings) optionalString;
   inherit (pkgs) writeScript;
   inherit (config.helpers) mkAllEventsCallback;
@@ -10,44 +22,60 @@ let
 
   notifySend = "${pkgs.libnotify}/bin/notify-send";
 
-  mkSendScript = { title, msg, icon ? null, ... }: writeScript "dunst-event-script" ''
-    #!${pkgs.dash}/bin/dash
+  mkSendScript =
+    {
+      title,
+      msg,
+      icon ? null,
+      ...
+    }:
+    writeScript "dunst-event-script" ''
+      #!${pkgs.dash}/bin/dash
 
-    # see https://github.com/phuhl/notify-send.py#notify-sendpy-as-root-user
-    # and https://dunst-project.org/faq/
+      # see https://github.com/phuhl/notify-send.py#notify-sendpy-as-root-user
+      # and https://dunst-project.org/faq/
 
-    export XAUTHORITY=${config.system.user.home}/.Xauthority
-    export DISPLAY=:0
-    export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus
+      export XAUTHORITY=${config.system.user.home}/.Xauthority
+      export DISPLAY=:0
+      export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus
 
-    TITLE="${title}"
-    MSG="${msg}"
+      TITLE="${title}"
+      MSG="${msg}"
 
-    /run/wrappers/bin/sudo -u ${config.system.user.name} \
-        XAUTHORITY=${config.system.user.home}/.Xauthority \
-        DISPLAY=:0 \
-        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus \
-        ${notifySend} "$TITLE" "$MSG" \
-        ${optionalString (icon != null) "--icon=${icon}" }
-  '';
+      /run/wrappers/bin/sudo -u ${config.system.user.name} \
+          XAUTHORITY=${config.system.user.home}/.Xauthority \
+          DISPLAY=:0 \
+          DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus \
+          ${notifySend} "$TITLE" "$MSG" \
+          ${optionalString (icon != null) "--icon=${icon}"}
+    '';
 
   scripts = {
     default = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Completed";
-      icon = pkgsRepo.local.remixicon.mkIcon { id = "notification-line"; color = config.system.pretty.theme.colors.notification.accent; };
+      icon = pkgsRepo.local.remixicon.mkIcon {
+        id = "notification-line";
+        color = config.system.pretty.theme.colors.notification.accent;
+      };
     };
 
     torrent = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "$TR_TORRENT_NAME";
-      icon = pkgsRepo.local.remixicon.mkIcon { id = "folder-download-line"; color = config.system.pretty.theme.colors.notification.accent; };
+      icon = pkgsRepo.local.remixicon.mkIcon {
+        id = "folder-download-line";
+        color = config.system.pretty.theme.colors.notification.accent;
+      };
     };
 
     screenshoot = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Saved to clipboard and $SCREENSHOT_PATH";
-      icon = pkgsRepo.local.remixicon.mkIcon { id = "screenshot-line"; color = config.system.pretty.theme.colors.notification.accent; };
+      icon = pkgsRepo.local.remixicon.mkIcon {
+        id = "screenshot-line";
+        color = config.system.pretty.theme.colors.notification.accent;
+      };
     };
   };
 in
@@ -117,7 +145,15 @@ in
       {
         users = [ "ALL" ];
         runAs = config.system.user.name;
-        commands = [{ command = notifySend; options = [ "NOPASSWD" "SETENV" ]; }];
+        commands = [
+          {
+            command = notifySend;
+            options = [
+              "NOPASSWD"
+              "SETENV"
+            ];
+          }
+        ];
       }
     ];
   };

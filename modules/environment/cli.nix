@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption lists;
@@ -27,8 +32,11 @@ in
         pkgs._7zz
 
         # Utility
-        pkgs.imagemagick 
-      ] ++ lists.optionals cfg.enableFlexing [
+        pkgs.imagemagick
+        pkgs.nixfmt
+        pkgs.nixfmt-tree
+      ]
+      ++ lists.optionals cfg.enableFlexing [
         pkgs.neofetch
         pkgs.pipes
         pkgs.terminal-parrot
@@ -51,8 +59,8 @@ in
     system.user.hm = {
       programs = {
         nnn = {
-          enable = true;          
-          package = pkgs.nnn.override { 
+          enable = true;
+          package = pkgs.nnn.override {
             withNerdIcons = true;
           };
           bookmarks = {
@@ -73,7 +81,10 @@ in
           syntaxHighlighting.enable = true;
           autosuggestion.enable = true;
           dotDir = "${config.system.user.dirs.data.absolutePath}/zsh";
-          autosuggestion.strategy = [ "history" "completion" ];
+          autosuggestion.strategy = [
+            "history"
+            "completion"
+          ];
           defaultKeymap = "viins";
 
           history = {

@@ -1,4 +1,9 @@
-{ config, pkgs, pkgsRepo, ... }:
+{
+  config,
+  pkgs,
+  pkgsRepo,
+  ...
+}:
 
 {
   imports = [ ];
@@ -71,7 +76,10 @@
       monitor.layout = [
         {
           identifier = "HDMI-0";
-          resolution = { width = 1366; height = 768; };
+          resolution = {
+            width = 1366;
+            height = 768;
+          };
         }
       ];
       xsession = {
@@ -82,7 +90,16 @@
       bspwm = {
         enable = true;
         monitors = {
-          "HDMI-0" = [ 1 2 3 4 5 6 7 8 ];
+          "HDMI-0" = [
+            1
+            2
+            3
+            4
+            5
+            6
+            7
+            8
+          ];
         };
       };
     };
@@ -91,4 +108,3 @@
   # TODO: what is this
   programs.dconf.enable = true;
 }
-

@@ -1,4 +1,6 @@
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 with pkgs;
 let
@@ -6,8 +8,12 @@ let
     ${nixFlakes}/bin/nix --option experimental-features "nix-command flakes" "$@"
   '';
 
-in mkShell {
-  buildInputs = [ git nix-bash-completions ];
+in
+mkShell {
+  buildInputs = [
+    git
+    nix-bash-completions
+  ];
 
   shellHook = ''
     export FLAKE="$(pwd)"

@@ -1,7 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
   inherit (pkgs) writeScript;
   inherit (builtins) mapAttrs;
 
@@ -76,16 +86,19 @@ in
 
     system.keyboard.bindings =
       let
-        bspcToggleMode = mode: toString (writeScript "bspwm-toggle-${mode}"
-          ''
-            MODE="${mode}";
+        bspcToggleMode =
+          mode:
+          toString (
+            writeScript "bspwm-toggle-${mode}" ''
+              MODE="${mode}";
 
-            if [ -z $(${bspcBin} query -N -n focused.tiled) ]; then
-              MODE="tiled";
-            fi
+              if [ -z $(${bspcBin} query -N -n focused.tiled) ]; then
+                MODE="tiled";
+              fi
 
-            ${bspcBin} node focused -t $MODE
-          '');
+              ${bspcBin} node focused -t $MODE
+            ''
+          );
       in
       {
         "super + {shift,shift + ctrl} + q" = "${bspcBin} node -{c,k}";

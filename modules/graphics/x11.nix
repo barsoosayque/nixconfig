@@ -1,13 +1,29 @@
-{ config, options, pkgs, lib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types lists attrsets;
-  
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    lists
+    attrsets
+    ;
+
   cfg = config.modules.graphics.x11;
 
   xclip-file = pkgs.writeShellApplication {
     name = "xclip-file";
-    runtimeInputs = [ pkgs.coreutils pkgs.xclip ];
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.xclip
+    ];
     text = ''
       set -euo pipefail
 

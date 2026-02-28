@@ -1,4 +1,9 @@
-{ config, pkgs, pkgsRepo, ... }:
+{
+  config,
+  pkgs,
+  pkgsRepo,
+  ...
+}:
 
 {
   imports = [ ];
@@ -104,7 +109,10 @@
         # }
         {
           identifier = "DP-0";
-          resolution = { width = 1920; height = 1080; };
+          resolution = {
+            width = 1920;
+            height = 1080;
+          };
         }
       ];
       xsession = {
@@ -117,19 +125,27 @@
         monitors = {
           # "HDMI-0" = [ 1 2 3 4 ];
           # "DP-0" = [ 5 6 7 8 ];
-          "DP-0" = [ 1 2 3 4 5 6 7 8 ];
+          "DP-0" = [
+            1
+            2
+            3
+            4
+            5
+            6
+            7
+            8
+          ];
         };
       };
     };
   };
-
 
   # services.samba = {
   #   enable = true;
   #   securityType = "user";
   #   openFirewall = true;
   #   extraConfig = ''
-  #     security = user 
+  #     security = user
   #     hosts allow = 192.168.1. 192.168.0. 127.0.0.1 localhost
   #     hosts deny = 0.0.0.0/0
   #     guest account = nobody
@@ -147,4 +163,3 @@
   #   };
   # };
 }
-

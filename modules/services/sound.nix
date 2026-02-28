@@ -1,4 +1,11 @@
-{ config, options, pkgs, pkgsRepo, lib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  pkgsRepo,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption;

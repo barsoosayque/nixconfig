@@ -25,7 +25,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    musnix = { 
+    musnix = {
       url = "github:musnix/musnix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
@@ -40,24 +40,27 @@
   # Define desired systems
   # NOTE: for every new input from above, put a new argument in inputs below
   outputs =
-    inputs@{ self
-    , nixpkgs-master
-    , nixpkgs-stable
-    , nixpkgs-unstable
-    , home-manager
-    , musnix
-    , helix
-    , ...
+    {
+      self,
+      nixpkgs-master,
+      nixpkgs-stable,
+      nixpkgs-unstable,
+      home-manager,
+      musnix,
+      helix,
+      ...
     }:
     let
       system = "x86_64-linux";
-      config = { allowUnfree = true; };
+      config = {
+        allowUnfree = true;
+      };
 
       helix-pkgs = helix.packages."${system}";
 
       # Define pkgs for ease of usage
-      pkgsRepo = rec {
-      	helix = helix-pkgs; 
+      pkgsRepo = {
+        helix = helix-pkgs;
         master = import nixpkgs-master { inherit system config; };
         stable = import nixpkgs-stable { inherit system config; };
         unstable = import nixpkgs-unstable { inherit system config; };

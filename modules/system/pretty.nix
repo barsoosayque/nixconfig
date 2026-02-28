@@ -1,4 +1,11 @@
-input@{ config, pkgs, pkgsRepo, lib, localLib /* For some reason, unless localLib is matched here, it won't be captured in input ???*/, ... }:
+input@{
+  config,
+  pkgs,
+  pkgsRepo,
+  lib,
+  localLib, # For some reason, unless localLib is matched here, it won't be captured in input ???
+  ...
+}:
 
 let
   inherit (lib) mkOption mkEnableOption types;
@@ -39,16 +46,16 @@ in
     {
       system.pretty.theme = theme;
 
-      system.events.onWMLoaded = optional cfg.backgroundEnable
-        "${setrootBin} --restore";
+      system.events.onWMLoaded = optional cfg.backgroundEnable "${setrootBin} --restore";
 
       # setroot generates a script to restore background images, but the script
       # assumes that setroot in PATH, and that's not the case within nixos
-      environment.systemPackages = optional cfg.backgroundEnable
-        (writeScriptBin "background" ''
+      environment.systemPackages = optional cfg.backgroundEnable (
+        writeScriptBin "background" ''
           ${setrootBin} $@
           echo ${setrootBin} $@ > ~/.config/setroot/.setroot-restore
           chmod +x ~/.config/setroot/.setroot-restore
-        '');
+        ''
+      );
     };
 }

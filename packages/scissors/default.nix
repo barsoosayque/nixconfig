@@ -1,10 +1,14 @@
 { pkgs, ... }:
 
 # TODO: writeShellApplication
-with pkgs; stdenv.mkDerivation {
+with pkgs;
+stdenv.mkDerivation {
   pname = "scissors";
   version = "1.1";
-  buildInputs = [ maim xclip ];
+  buildInputs = [
+    maim
+    xclip
+  ];
   src = ./.;
   dontBuild = true;
   dontStrip = true;

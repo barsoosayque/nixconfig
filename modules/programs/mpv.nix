@@ -1,7 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.modules.programs.mpv;
 in
@@ -54,7 +64,10 @@ in
     ];
 
     environment.systemPackages = [ pkgs.mpv ];
-    fonts.packages = [ cfg.osdFont.package cfg.subFont.package ];
+    fonts.packages = [
+      cfg.osdFont.package
+      cfg.subFont.package
+    ];
 
     system.user.hm.programs.mpv = {
       enable = true;
@@ -93,7 +106,15 @@ in
         osd-bar-w = 60;
 
         sub-auto = "fuzzy";
-        sub-file-paths-append = [ "ass" "srt" "sub" "subs" "subtitles" "RUS Subs" "SUB" ];
+        sub-file-paths-append = [
+          "ass"
+          "srt"
+          "sub"
+          "subs"
+          "subtitles"
+          "RUS Subs"
+          "SUB"
+        ];
         embeddedfonts = false;
         sub-scale-with-window = true;
         sub-ass-override = "force";
@@ -104,8 +125,20 @@ in
         sub-border-color = "#FF000000";
         sub-border-size = 5;
 
-        slang = [ "ru" "rus" "eng" "en" ];
-        alang = [ "ja" "jp" "jpn" "en" "eng" "ru" ];
+        slang = [
+          "ru"
+          "rus"
+          "eng"
+          "en"
+        ];
+        alang = [
+          "ja"
+          "jp"
+          "jpn"
+          "en"
+          "eng"
+          "ru"
+        ];
 
         audio-file-auto = "fuzzy";
         audio-pitch-correction = true;

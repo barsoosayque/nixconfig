@@ -1,37 +1,62 @@
 # Utility functions to use in the main flake.nix
 # Mostly just scrappers
-{ nixpkgs, pkgs, pkgsRepo, ... }:
+{
+  nixpkgs,
+  pkgs,
+  pkgsRepo,
+  ...
+}:
 
 let
   inherit (pkgs.lib) mapAttrsToList makeOverridable;
   inherit (pkgs.lib.strings) hasSuffix;
   inherit (pkgs.lib.lists) flatten;
   inherit (pkgs.lib.attrsets) optionalAttrs;
-  inherit (builtins) pathExists readDir filter mapAttrs isFunction;
-
-  mapDir = mapper: path:
+  inherit (builtins)
+    pathExists
+    readDir
+    filter
     mapAttrs
-      (n: v: let p = path + "/${n}"; in mapper p)
-      (optionalAttrs (pathExists path) (readDir path));
+    isFunction
+    ;
 
-  mapAllFiles = mapper: path: depth:
-    flatten
-      (
-        mapAttrsToList
-          (n: v: let p = path + "/${n}"; in if v == "directory" then mapAllFiles mapper p (depth - 1) else mapper p)
-          (optionalAttrs ((pathExists path) && depth >= 0) (readDir path))
-      );
+  mapDir =
+    mapper: path:
+    mapAttrs (
+      n: v:
+      let
+        p = path + "/${n}";
+      in
+      mapper p
+    ) (optionalAttrs (pathExists path) (readDir path));
 
-  collectHosts = path: attrs:
-    mapDir (p: mkHost p attrs) path;
+  mapAllFiles =
+    mapper: path: depth:
+    flatten (
+      mapAttrsToList (
+        n: v:
+        let
+          p = path + "/${n}";
+        in
+        if v == "directory" then mapAllFiles mapper p (depth - 1) else mapper p
+      ) (optionalAttrs ((pathExists path) && depth >= 0) (readDir path))
+    );
 
-  collectModules = path: attrs:
-    mapAllFiles (p: if hasSuffix ".nix" p then import p else {}) path 1;
+  collectHosts = path: attrs: mapDir (p: mkHost p attrs) path;
 
-  collectPackages = path: attrs:
-    mapDir (p: makeOverridable (import p) attrs) path;
+  collectModules = path: attrs: mapAllFiles (p: if hasSuffix ".nix" p then import p else { }) path 1;
 
-  mkHost = path: attrs@{ modulesPath, extraModules, home-manager, localLib, ... }:
+  collectPackages = path: attrs: mapDir (p: makeOverridable (import p) attrs) path;
+
+  mkHost =
+    path:
+    attrs@{
+      modulesPath,
+      extraModules,
+      home-manager,
+      localLib,
+      ...
+    }:
     let
       name = baseNameOf path;
     in
@@ -47,7 +72,9 @@ let
         }
         (path + "/system.nix")
         (path + "/hardware.nix")
-      ] ++ (collectModules modulesPath { }) ++ extraModules;
+      ]
+      ++ (collectModules modulesPath { })
+      ++ extraModules;
 
     };
 in

@@ -1,7 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
   inherit (builtins) mapAttrs;
 
   cfg = config.modules.programs.wezterm;
@@ -54,8 +64,8 @@ in
             cursor_border = config.system.pretty.theme.colors.cursor.accent.hexRGB;
             cursor_fg = config.system.pretty.theme.colors.cursor.text.hexRGB;
             selection_bg = config.system.pretty.theme.colors.cursor.text.hexRGB;
-            selection_fg = config.system.pretty.theme.colors.cursor.cursor.hexRGB;            
-          };  
+            selection_fg = config.system.pretty.theme.colors.cursor.cursor.hexRGB;
+          };
         };
 
         extraConfig = ''

@@ -1,9 +1,10 @@
-{ pkgs
-, typeface ? [ ]
-, map_typeface ? [ ]
-, overmap_typeface ? [ ]
-, config_dir ? null
-, ...
+{
+  pkgs,
+  typeface ? [ ],
+  map_typeface ? [ ],
+  overmap_typeface ? [ ],
+  config_dir ? null,
+  ...
 }:
 
 with pkgs;
@@ -12,8 +13,7 @@ let
   inherit (lib.lists) last;
   inherit (builtins) toJSON map;
 
-  mkFontdataPath = font:
-    "${last (splitString "/" font)}";
+  mkFontdataPath = font: "${last (splitString "/" font)}";
 
   fontdata = {
     typeface = map mkFontdataPath typeface;
@@ -21,14 +21,23 @@ let
     overmap_typeface = map mkFontdataPath overmap_typeface;
   };
 
-  userdir = optionalString (! isNull config_dir) "--userdir ${config_dir}";
+  userdir = optionalString (!isNull config_dir) "--userdir ${config_dir}";
 in
 stdenv.mkDerivation rec {
   pname = "cataclysmdda";
   version = "2025-08-08-0308";
 
-  buildInputs = [ SDL2 SDL2_image SDL2_mixer SDL2_ttf freetype ];
-  nativeBuildInputs = [ autoPatchelfHook makeWrapper ];
+  buildInputs = [
+    SDL2
+    SDL2_image
+    SDL2_mixer
+    SDL2_ttf
+    freetype
+  ];
+  nativeBuildInputs = [
+    autoPatchelfHook
+    makeWrapper
+  ];
 
   src = fetchurl {
     url = "https://github.com/CleverRaven/Cataclysm-DDA/releases/download/cdda-experimental-${version}/cdda-linux-with-graphics-and-sounds-x64-${version}.tar.gz";

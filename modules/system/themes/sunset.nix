@@ -16,7 +16,7 @@ in
     };
     secondary = {
       name = "Ubuntu Nerd Font Bold";
-      package= pkgs.nerd-fonts.ubuntu;
+      package = pkgs.nerd-fonts.ubuntu;
     };
     bar = primary;
     menu = primary;
@@ -25,25 +25,25 @@ in
   # General colorscheme: Melange
   colors = rec {
     normal = {
-      black      = mkColorHex "#34302C";
-      red        = mkColorHex "#BD8183";
-      green      = mkColorHex "#78997A";
-      yellow     = mkColorHex "#E49B5D";
-      blue       = mkColorHex "#7F91B2";
-      magenta    = mkColorHex "#B380B0";
-      cyan       = mkColorHex "#7B9695";
-      white      = mkColorHex "#C1A78E";
+      black = mkColorHex "#34302C";
+      red = mkColorHex "#BD8183";
+      green = mkColorHex "#78997A";
+      yellow = mkColorHex "#E49B5D";
+      blue = mkColorHex "#7F91B2";
+      magenta = mkColorHex "#B380B0";
+      cyan = mkColorHex "#7B9695";
+      white = mkColorHex "#C1A78E";
     };
 
     bright = {
-      black      = mkColorHex "#867462";
-      red        = mkColorHex "#D47766";
-      green      = mkColorHex "#85B695";
-      yellow     = mkColorHex "#EBC06D";
-      blue       = mkColorHex "#A3A9CE";
-      magenta    = mkColorHex "#CF9BC2";
-      cyan       = mkColorHex "#89B3B6";
-      white      = mkColorHex "#ECE1D7";
+      black = mkColorHex "#867462";
+      red = mkColorHex "#D47766";
+      green = mkColorHex "#85B695";
+      yellow = mkColorHex "#EBC06D";
+      blue = mkColorHex "#A3A9CE";
+      magenta = mkColorHex "#CF9BC2";
+      cyan = mkColorHex "#89B3B6";
+      white = mkColorHex "#ECE1D7";
     };
 
     cursor = {

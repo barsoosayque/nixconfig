@@ -1,4 +1,11 @@
-{ config, options, pkgs, lib, hostName, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  hostName,
+  ...
+}:
 
 {
   config = {
@@ -36,7 +43,7 @@
     # Gamers.
     nixpkgs.config.allowUnfree = true;
 
-    security.sudo ={
+    security.sudo = {
       enable = true;
       # This is really annoying, sorry
       wheelNeedsPassword = false;

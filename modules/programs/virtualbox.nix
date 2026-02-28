@@ -1,7 +1,18 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) types mkIf mkOption mkEnableOption concatStringsSep;
+  inherit (lib)
+    types
+    mkIf
+    mkOption
+    mkEnableOption
+    concatStringsSep
+    ;
 
   cfg = config.modules.programs.virtualbox;
 in
@@ -26,8 +37,8 @@ in
 
     system.user.hm.dconf.settings = {
       "org/virt-manager/virt-manager/connections" = {
-        autoconnect = ["qemu:///system"];
-        uris = ["qemu:///system"];
+        autoconnect = [ "qemu:///system" ];
+        uris = [ "qemu:///system" ];
       };
     };
   };

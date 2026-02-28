@@ -1,14 +1,26 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types attrsets cli;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    attrsets
+    cli
+    ;
   inherit (pkgs) writeScript;
 
   cfg = config.modules.programs.bemenu;
-  settings = cli.toGNUCommandLineShell {} rec {
+  settings = cli.toGNUCommandLineShell { } rec {
     l = 20;
     fn = "${config.system.pretty.theme.fonts.menu.name} Bold 14";
-    
+
     bdr = config.system.pretty.theme.colors.window.active_border.hexRGB;
     tb = config.system.pretty.theme.colors.primary.background.hexRGB;
     tf = config.system.pretty.theme.colors.bright.yellow.hexRGB;
@@ -23,7 +35,7 @@ let
     cf = fb;
     cb = cf;
     line-height = 30;
-     
+
     ignorecase = true;
     counter = true;
     center = true;
@@ -47,7 +59,8 @@ in
   config = mkIf cfg.enable {
     system.keyboard.bindings = {
       "super + d" = "${pkgs.bemenu}/bin/bemenu-run ${settings} -p '  Run:'";
-    } // attrsets.optionalAttrs cfg.enableEmoji {
+    }
+    // attrsets.optionalAttrs cfg.enableEmoji {
       "super + e" = writeScript "run-bemenu-emoji" ''
         export BEMOJI_PICKER_CMD="${pkgs.bemenu}/bin/bemenu ${settings} -p '󰞅  Emoji:'"
         export BEMOJI_TYPE_CMD="${pkgs.xdotool}/bin/xdotool type"

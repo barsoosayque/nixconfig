@@ -1,47 +1,63 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkOption types;
   inherit (lib.strings) optionalString;
   inherit (lib.lists) zipListsWith;
-  inherit (builtins) map concatStringsSep head tail;
+  inherit (builtins)
+    map
+    concatStringsSep
+    head
+    tail
+    ;
 
   cfg = config.modules.graphics.monitor;
   xrandrBin = "${pkgs.xorg.xrandr}/bin/xrandr";
 
-  resolutionSubmodule = types.submodule ({ ... }: {
-    options = {
-      width = mkOption {
-        type = with types; int;
-        description = "Width of the monitor";
-      };
+  resolutionSubmodule = types.submodule (
+    { ... }:
+    {
+      options = {
+        width = mkOption {
+          type = with types; int;
+          description = "Width of the monitor";
+        };
 
-      height = mkOption {
-        type = with types; int;
-        description = "Height of the monitor";
+        height = mkOption {
+          type = with types; int;
+          description = "Height of the monitor";
+        };
       };
-    };
-  });
+    }
+  );
 
-  layoutSubmodule = types.submodule ({ ... }: {
-    options = {
-      identifier = mkOption {
-        type = with types; str;
-        description = "Xrandr monitor identifier";
-      };
+  layoutSubmodule = types.submodule (
+    { ... }:
+    {
+      options = {
+        identifier = mkOption {
+          type = with types; str;
+          description = "Xrandr monitor identifier";
+        };
 
-      resolution = mkOption {
-        type = resolutionSubmodule;
-        description = "Monitor resolution";
-      };
+        resolution = mkOption {
+          type = resolutionSubmodule;
+          description = "Monitor resolution";
+        };
 
-      hz = mkOption {
-        type = with types; int;
-        default = 60;
-        description = "Monitor refresh rate";
+        hz = mkOption {
+          type = with types; int;
+          default = 60;
+          description = "Monitor refresh rate";
+        };
       };
-    };
-  });
+    }
+  );
 
   mkOutput = head: prevHead: ''
     --output ${head.identifier} \
@@ -51,7 +67,9 @@ let
 
   mkOutputsCmd = layout: dpi: ''
     ${xrandrBin} --dpi ${toString dpi} ${
-      concatStringsSep "" ([ (mkOutput (head layout) null) ] ++ (zipListsWith mkOutput (tail layout) layout))
+      concatStringsSep "" (
+        [ (mkOutput (head layout) null) ] ++ (zipListsWith mkOutput (tail layout) layout)
+      )
     }
   '';
 

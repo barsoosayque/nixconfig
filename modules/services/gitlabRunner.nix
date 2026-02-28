@@ -1,4 +1,10 @@
-{ config, options, pkgs, lib, ... }:
+{
+  config,
+  options,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption concatStringsSep;
@@ -18,7 +24,10 @@ let
       openssh
       openssl
     ];
-    pathsToLink = [ "/bin" "/etc" ];
+    pathsToLink = [
+      "/bin"
+      "/etc"
+    ];
   };
 in
 {
@@ -27,11 +36,11 @@ in
   };
 
   config = mkIf cfg.enable {
-    # enabling ip_forward on the host machine is important for the docker 
+    # enabling ip_forward on the host machine is important for the docker
     # container to be able to perform networking tasks (such as cloning the gitlab repo)
     boot.kernel.sysctl."net.ipv4.ip_forward" = true;
     virtualisation.docker = {
-      enable = true; 
+      enable = true;
     };
 
     services.gitlab-runner = {

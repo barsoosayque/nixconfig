@@ -1,8 +1,20 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types lists attrsets;
-  
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    lists
+    attrsets
+    ;
+
   cfg = config.modules.graphics;
 
   isNvidia = (cfg.videoDrivers == "nvidia" || cfg.videoDrivers == "intel/nvidia");
@@ -13,7 +25,13 @@ in
     enable = mkEnableOption "graphics";
 
     videoDrivers = mkOption {
-      type = with types; enum ["intel" "nvidia" "intel/nvidia"];
+      type =
+        with types;
+        enum [
+          "intel"
+          "nvidia"
+          "intel/nvidia"
+        ];
       description = "Video drivers to use. See services.xserver.videoDrivers";
     };
   };
@@ -24,9 +42,8 @@ in
     };
 
     # Set drivers for both Wayland and X11
-    services.xserver.videoDrivers =
-      (lists.optional isNvidia "nvidia");
-      # ++ (lists.optional isIntel "modesetting");
+    services.xserver.videoDrivers = (lists.optional isNvidia "nvidia");
+    # ++ (lists.optional isIntel "modesetting");
 
     hardware = {
       nvidia = attrsets.optionalAttrs isNvidia {
@@ -40,13 +57,15 @@ in
       };
       graphics = {
         enable = true;
-        extraPackages = with pkgs; lists.optionals isIntel [
-          intel-media-driver
-          intel-vaapi-driver
-          intel-compute-runtime
-          intel-ocl
-          vpl-gpu-rt
-        ];
+        extraPackages =
+          with pkgs;
+          lists.optionals isIntel [
+            intel-media-driver
+            intel-vaapi-driver
+            intel-compute-runtime
+            intel-ocl
+            vpl-gpu-rt
+          ];
       };
     };
 

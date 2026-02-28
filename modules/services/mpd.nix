@@ -1,7 +1,12 @@
 { config, lib, ... }:
 
 let
-  inherit (lib) mkIf mkEnableOption mkOption types;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
 
   cfg = config.modules.services.mpd;
 
@@ -63,7 +68,7 @@ in
     system.user.hm.services.mpd-discord-rpc = mkIf cfg.enableDiscordRPC {
       enable = true;
       settings = {
-        hosts = ["${settings.address}:${toString settings.port}"];
+        hosts = [ "${settings.address}:${toString settings.port}" ];
       };
     };
 

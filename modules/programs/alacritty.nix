@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption;
@@ -7,8 +12,7 @@ let
   cfg = config.modules.programs.alacritty;
   pkg = pkgs.alacritty;
 
-  mapColors = colors:
-    mapAttrs (n: v: v.hexRGB) colors;
+  mapColors = colors: mapAttrs (n: v: v.hexRGB) colors;
 in
 {
   options.modules.programs.alacritty = {

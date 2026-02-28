@@ -1,7 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkEnableOption lists attrsets;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    lists
+    attrsets
+    ;
 
   cfg = config.modules.environment.android;
 in
@@ -18,7 +28,7 @@ in
     };
 
     programs.adb.enable = true;
-    users.users."${config.system.user.name}".extraGroups = ["adbusers"];
+    users.users."${config.system.user.name}".extraGroups = [ "adbusers" ];
 
     nixpkgs.config = attrsets.optionalAttrs cfg.androidStudio {
       android_sdk.accept_license = true; # Accept the Android SDK licence
@@ -26,7 +36,7 @@ in
 
     environment.variables = {
       # Move .android from home
-      ANDROID_USER_HOME =  "${config.system.user.dirs.data.absolutePath}/android";
+      ANDROID_USER_HOME = "${config.system.user.dirs.data.absolutePath}/android";
     };
   };
 }

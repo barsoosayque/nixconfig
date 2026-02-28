@@ -1,7 +1,19 @@
-{ config,  pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkOption mkEnableOption types getExe concatStringsSep;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    getExe
+    concatStringsSep
+    ;
   inherit (lib.lists) optionals;
   inherit (builtins) readFile map;
 
@@ -25,7 +37,7 @@ in
       extraOptions = ''
         keep-outputs = true
         keep-derivations = true
-      ''; 
+      '';
       settings = {
         substituters = [
           "https://cache.nixos-cuda.org"
@@ -55,7 +67,11 @@ in
       # https://github.com/helix-editor/helix/issues/9866
       # pkgsRepo.helix.default
       pkgs.helix
-    ] ++ optionals cfg.enableRust [ pkgs.rust-analyzer pkgs.rustfmt ];
+    ]
+    ++ optionals cfg.enableRust [
+      pkgs.rust-analyzer
+      pkgs.rustfmt
+    ];
 
     system.user.hm = {
       xdg.configFile."helix/themes/nixos-generated.toml".text = ''
@@ -67,18 +83,25 @@ in
         "ui.virtual.inlay-hint.type" = { fg = "gray", bg = "", modifiers = ["italic", "dim"] }
       '';
 
-      xdg.configFile."helix/config.toml".text = let
-        runTUI = pkg: "[" + (concatStringsSep "," (map (cmd: ''"${cmd}"'') [
-          ":wa"
-          ":new"
-          ":insert-output ${getExe pkg} >/dev/tty"
-          ":set mouse false"
-          ":set mouse true"
-          ":buffer-close!"
-          ":redraw"
-          ":reload-all"
-        ])) + "]";
-      in
+      xdg.configFile."helix/config.toml".text =
+        let
+          runTUI =
+            pkg:
+            "["
+            + (concatStringsSep "," (
+              map (cmd: ''"${cmd}"'') [
+                ":wa"
+                ":new"
+                ":insert-output ${getExe pkg} >/dev/tty"
+                ":set mouse false"
+                ":set mouse true"
+                ":buffer-close!"
+                ":redraw"
+                ":reload-all"
+              ]
+            ))
+            + "]";
+        in
         ''
           theme = "nixos-generated"
 
@@ -86,7 +109,7 @@ in
           line-number = "relative"
           bufferline = "always"
           color-modes = true
-          
+
           [editor.statusline]
           left = ["mode", "spacer", "spinner", "spacer", "version-control", "spacer", "workspace-diagnostics"]
           center = ["file-modification-indicator", "file-name", "position" ]
@@ -94,7 +117,7 @@ in
           mode.normal = "󰇀"
           mode.insert = "󰆈"
           mode.select = "󰒉"
-          
+
           [editor.lsp]
           enable = true
           display-inlay-hints = true
@@ -105,7 +128,7 @@ in
           [keys.normal.C-x]
           f = ${runTUI pkgs.scooter} # Gloabl find and replace (scooter)
           g = ${runTUI pkgs.gitui} # Interactive Git (gitui)
-      '';
+        '';
 
       xdg.configFile."zellij/config.kdl".text = ''
         themes {
@@ -137,7 +160,8 @@ in
         show_startup_tips false
         show_release_notes false
         on_force_close "quit"
-      '' + readFile ./zellij-config.kdl;
+      ''
+      + readFile ./zellij-config.kdl;
 
       services.ssh-agent.enable = true;
 

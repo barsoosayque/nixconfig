@@ -1,10 +1,11 @@
-{ pkgs
-, lib
-, fetchFromGitHub
-, kernel ? pkgs.linuxPackages_latest.kernel
+{
+  pkgs,
+  lib,
+  fetchFromGitHub,
+  kernel ? pkgs.linuxPackages_latest.kernel,
 }:
 
-let 
+let
   modulePath = "$out/lib/modules/${kernel.modDirVersion}/kernel/net/wireless/";
 in
 pkgs.stdenv.mkDerivation rec {
@@ -18,7 +19,10 @@ pkgs.stdenv.mkDerivation rec {
     sha256 = "sha256-JCvFin8iPXS1Qgd9LxPDcP21pfbPiQZbWTBeqvPHGFA=";
   };
 
-  hardeningDisable = [ "pic" "format" ];
+  hardeningDisable = [
+    "pic"
+    "format"
+  ];
   nativeBuildInputs = kernel.moduleBuildDependencies;
   makeFlags = kernel.makeFlags;
 
@@ -29,7 +33,7 @@ pkgs.stdenv.mkDerivation rec {
       --replace '$(MODDESTDIR)' "${modulePath}"
   '';
 
-   preInstall = ''
+  preInstall = ''
     mkdir -p "$out/lib/modules/${kernel.modDirVersion}/kernel/net/wireless/"
   '';
 
