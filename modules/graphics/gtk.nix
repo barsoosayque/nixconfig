@@ -23,6 +23,7 @@ in
       iconTheme.name = "Adwaita";
       theme.package = pkgs.paper-gtk-theme;
       theme.name = "Paper";
+      gtk4.theme = config.system.user.hm.gtk.theme;
     };
     system.user.hm.qt = {
       enable = true;

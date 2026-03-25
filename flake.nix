@@ -3,13 +3,9 @@
 
   # Define system dependencies
   inputs = {
-    nixpkgs-master = {
-      url = "github:NixOS/nixpkgs/master";
-    };
-
-    nixpkgs-stable = {
-      url = "github:NixOS/nixpkgs/24.05";
-    };
+    # nixpkgs-master = {
+    #   url = "github:NixOS/nixpkgs/master";
+    # };
 
     nixpkgs-unstable = {
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -42,8 +38,7 @@
   outputs =
     {
       self,
-      nixpkgs-master,
-      nixpkgs-stable,
+      # nixpkgs-master,
       nixpkgs-unstable,
       home-manager,
       musnix,
@@ -61,8 +56,7 @@
       # Define pkgs for ease of usage
       pkgsRepo = {
         helix = helix-pkgs;
-        master = import nixpkgs-master { inherit system config; };
-        stable = import nixpkgs-stable { inherit system config; };
+        # master = import nixpkgs-master { inherit system config; };
         unstable = import nixpkgs-unstable { inherit system config; };
         local = self.packages."${system}";
       };

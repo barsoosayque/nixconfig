@@ -24,10 +24,12 @@ in
 
   config = mkIf cfg.enable {
     environment = {
-      systemPackages = lists.optional cfg.androidStudio [ pkgs.android-studio ];
+      systemPackages = [
+        pkgs.android-tools
+      ]
+      ++ (lists.optional cfg.androidStudio [ pkgs.android-studio ]);
     };
 
-    programs.adb.enable = true;
     users.users."${config.system.user.name}".extraGroups = [ "adbusers" ];
 
     nixpkgs.config = attrsets.optionalAttrs cfg.androidStudio {

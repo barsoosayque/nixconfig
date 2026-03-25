@@ -169,6 +169,7 @@ in
 
             enable = true;
             createDirectories = false;
+            setSessionVariables = true;
           };
         };
       };
