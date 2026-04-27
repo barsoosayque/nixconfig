@@ -75,12 +75,12 @@
         enable = true;
         notifySystemEvents = true;
       };
+      jellyfin.enable = true;
       redshift.enable = true;
       sxhkd.enable = true;
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
-      mpd.enable = true;
       gitlabRunner.enable = true;
       picom.enable = true;
       polybar.enable = true;
