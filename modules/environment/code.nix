@@ -87,12 +87,13 @@ in
         let
           runTUI =
             pkg:
+            args:
             "["
             + (concatStringsSep "," (
               map (cmd: ''"${cmd}"'') [
                 ":wa"
                 ":new"
-                ":insert-output ${getExe pkg} >/dev/tty"
+                ":insert-output ${getExe pkg} ${args} >/dev/tty"
                 ":set mouse false"
                 ":set mouse true"
                 ":buffer-close!"
@@ -126,8 +127,8 @@ in
           C-s = ":w" 
 
           [keys.normal.C-x]
-          f = ${runTUI pkgs.scooter} # Gloabl find and replace (scooter)
-          g = ${runTUI pkgs.gitui} # Interactive Git (gitui)
+          f = ${runTUI pkgs.scooter "--no-stdin"} # Gloabl find and replace (scooter)
+          g = ${runTUI pkgs.gitui ""} # Interactive Git (gitui)
         '';
 
       xdg.configFile."zellij/config.kdl".text = ''
