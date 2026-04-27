@@ -31,7 +31,7 @@
     user.dirs = {
       torrents = config.system.user.utils.mkDir "/sdcard/torrents";
     };
-    locale.locationName = "Abakan";
+    locale.locationName = "Bishkek";
 
     pretty = {
       backgroundEnable = true;

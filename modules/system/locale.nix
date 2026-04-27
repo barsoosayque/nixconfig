@@ -27,6 +27,11 @@ let
       longitude = 100.5014;
       timeZone = "Asia/Bangkok";
     };
+    Bishkek = {
+      latitude = 42.87;
+      longitude = 74.59;
+      timeZone = "Asia/Bishkek";
+    };
   };
 in
 {
