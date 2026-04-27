@@ -126,6 +126,17 @@
     };
   };
 
+  # There is a bug when it resume from hybernation freezes
+  systemd.services = builtins.listToAttrs (map (service: {
+    name = service;
+    value.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
+  }) [
+    "systemd-suspend"
+    "systemd-hibernate"
+    "systemd-hybrid-sleep"
+    "systemd-suspend-then-hibernate-sleep"
+  ]);
+
   services.mullvad-vpn.enable = true;
 
   services.fstrim.enable = true;
