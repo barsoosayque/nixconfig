@@ -47,7 +47,7 @@ in
 
     hardware = {
       nvidia = attrsets.optionalAttrs isNvidia {
-        package = config.boot.kernelPackages.nvidiaPackages.beta;
+        package = config.boot.kernelPackages.nvidiaPackages.stable;
         modesetting.enable = true;
         # dynamicBoost.enable = true;
         # forceFullCompositionPipeline = true;
