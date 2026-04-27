@@ -60,7 +60,13 @@
         dns = "dnsmasq";
       };
       wireless.dbusControlled = true;
+      useDHCP = false;
+      dhcpcd.enable = false;
+      # required for wireguard mullvad tunnels
+      # see: https://discourse.nixos.org/t/connected-to-mullvadvpn-but-no-internet-connection/35803/10
+      resolvconf.enable = false;
     };
+
 
     users = {
       mutableUsers = false;

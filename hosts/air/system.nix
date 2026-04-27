@@ -127,9 +127,6 @@
   };
 
   services.mullvad-vpn.enable = true;
-  # required for wireguard mullvad tunnels
-  # see: https://discourse.nixos.org/t/connected-to-mullvadvpn-but-no-internet-connection/35803/10
-  networking.resolvconf.enable = false;
 
   services.fstrim.enable = true;
   services.throttled = {
