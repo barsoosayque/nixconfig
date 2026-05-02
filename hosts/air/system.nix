@@ -80,6 +80,10 @@
       gitlabRunner.enable = true;
       waybar.enable = true;
       wpaperd.enable = true;
+      vod2pod-rss = {
+        enable = true;
+        credentialsFile = "${config.system.user.dirs.config.absolutePath}/vod2pod-rss/env";
+      };
     };
 
     graphics = {
