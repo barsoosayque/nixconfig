@@ -23,6 +23,8 @@
       pkgs.kdePackages.kdenlive
       pkgs.kdePackages.okular
       pkgs.picard
+
+      pkgs.opencode
     ];
   };
 
