@@ -65,10 +65,11 @@ in
 
     bar = {
       background = primary.background.modify { a = 215; };
-      hover = primary.background;
       foreground = normal.white;
+      backgroundHover = bright.black.modify { a = 215; };
+      foregroundHover = bright.white;
       danger = normal.yellow;
-      accent = normal.green.modify { a = 180; };
+      accent = normal.green;
       empty = normal.black;
     };
 

@@ -225,7 +225,8 @@ in
         #memory:hover,
         #cpu:hover,
         #clock:hover {
-          background-color: ${config.system.pretty.theme.colors.bar.hover.cssRgba};
+          background-color: ${config.system.pretty.theme.colors.bar.backgroundHover.cssRgba};
+          color: ${config.system.pretty.theme.colors.bar.foregroundHover.cssRgba};
         }
 
         #language {
@@ -246,11 +247,23 @@ in
         }
 
         #workspaces button {
-          background: transparent;
           border: none;
+          background: none;
+          box-shadow: none;
           color: ${config.system.pretty.theme.colors.bar.foreground.cssRgba};
           padding: 2px 8px;
           margin: 0 2px;
+        }
+
+        #workspaces button:hover {
+          border: none;
+          background: none;
+          box-shadow: none;
+          text-shadow: none;
+          -gtk-icon-shadow: none;
+          -gtk-icon-effect: none;
+          transition: none;
+          color: ${config.system.pretty.theme.colors.bar.foregroundHover.cssRgba};
         }
 
         #network {
