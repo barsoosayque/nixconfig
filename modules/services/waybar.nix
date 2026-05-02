@@ -16,7 +16,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    system.events.onWMLoaded = [ "${pkgs.waybar}" ];
+    system.events.onWMLoaded = [ "${pkgs.waybar}/bin/waybar" ];
 
     system.user.hm.programs.waybar = {
       enable = true;
