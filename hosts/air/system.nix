@@ -32,10 +32,6 @@
       torrents = config.system.user.utils.mkDir "/sdcard/torrents";
     };
     locale.locationName = "Bishkek";
-
-    pretty = {
-      backgroundEnable = true;
-    };
   };
 
   # homebrew modules
@@ -63,6 +59,7 @@
 
     programs = {
       alacritty.enable = true;
+      foot.enable = true;
       mpv.enable = true;
       scissors.enable = true;
       bemenu.enable = true;
@@ -77,13 +74,11 @@
       };
       jellyfin.enable = true;
       redshift.enable = true;
-      sxhkd.enable = true;
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
       gitlabRunner.enable = true;
-      picom.enable = true;
-      polybar.enable = true;
+      waybar.enable = true;
     };
 
     graphics = {
@@ -91,7 +86,7 @@
       videoDrivers = "intel/nvidia";
 
       gtk.enable = true;
-      # niri.enable = true;
+      niri.enable = true;
 
       monitor = {
         layout = [
@@ -106,36 +101,23 @@
         ];
         dpi = 96;
       };
-
-      bspwm = {
-        enable = true;
-        monitors = {
-          "eDP-1" = [
-            1
-            2
-            3
-            4
-            5
-            6
-            7
-            8
-          ];
-        };
-      };
-      x11.enable = true;
     };
   };
 
   # There is a bug when it resume from hybernation freezes
-  systemd.services = builtins.listToAttrs (map (service: {
-    name = service;
-    value.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
-  }) [
-    "systemd-suspend"
-    "systemd-hibernate"
-    "systemd-hybrid-sleep"
-    "systemd-suspend-then-hibernate-sleep"
-  ]);
+  systemd.services = builtins.listToAttrs (
+    map
+      (service: {
+        name = service;
+        value.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
+      })
+      [
+        "systemd-suspend"
+        "systemd-hibernate"
+        "systemd-hybrid-sleep"
+        "systemd-suspend-then-hibernate-sleep"
+      ]
+  );
 
   services.mullvad-vpn.enable = true;
 
@@ -147,6 +129,7 @@
     enable = true;
     ignoreCpuidCheck = true;
   };
+  # services.thinkfan.enable = true;
 
   services.syncthing = {
     enable = true;
