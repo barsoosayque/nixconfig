@@ -77,6 +77,7 @@
       sound.enable = true;
       gitlabRunner.enable = true;
       waybar.enable = true;
+      wpaperd.enable = true;
     };
 
     graphics = {

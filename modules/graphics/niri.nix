@@ -1,7 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
-  inherit (lib) mkIf mkEnableOption strings lists;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    strings
+    lists
+    ;
   inherit (builtins) elemAt;
 
   cfg = config.modules.graphics.niri;
@@ -13,22 +23,30 @@ let
   # Convert sxhkd key combo to niri format
   # "super + d" -> "Mod+D"
   # "super + shift + q" -> "Mod+Shift+Q"
-  sxhkdKeyToNiri = keyStr:
+  sxhkdKeyToNiri =
+    keyStr:
     let
       parts = strings.splitString " + " keyStr;
-      convertedParts = lists.map (part:
-        if part == "super" then "Mod"
-        else if part == "shift" then "Shift"
-        else if part == "ctrl" || part == "control" then "Ctrl"
-        else if part == "alt" then "Alt"
-        else strings.toUpper part
+      convertedParts = lists.map (
+        part:
+        if part == "super" then
+          "Mod"
+        else if part == "shift" then
+          "Shift"
+        else if part == "ctrl" || part == "control" then
+          "Ctrl"
+        else if part == "alt" then
+          "Alt"
+        else
+          strings.toUpper part
       ) parts;
     in
-      strings.concatStringsSep "+" convertedParts;
+    strings.concatStringsSep "+" convertedParts;
 
   # Split action string into list of arguments
   # "bemenu --fg #fff" -> [ "bemenu" "--fg" "#fff" ]
-  splitAction = action:
+  splitAction =
+    action:
     let
       parts = strings.splitString " " action;
       filtered = lists.filter (s: s != "") parts;
@@ -37,16 +55,18 @@ let
 
   # Convert sxhkd bindings to niri config string
   # Returns lines indented by 2 spaces (for inside binds { } block)
-  toNiriBinds = bindings:
+  toNiriBinds =
+    bindings:
     let
-      convertOne = key: action:
+      convertOne =
+        key: action:
         let
           niriKey = sxhkdKeyToNiri key;
           args = splitAction action;
           spawnArgs = strings.concatStringsSep " " (lists.map (a: "\"${a}\"") args);
         in
-        ''  ${niriKey} { spawn ${spawnArgs}; }'';
-      
+        "${niriKey} { spawn ${spawnArgs}; }";
+
       lines = lib.mapAttrsToList convertOne bindings;
     in
     strings.concatStringsSep "\n" lines;
@@ -100,7 +120,6 @@ in
 
     system.user.hm = {
       xdg.configFile."niri/config.kdl".text = ''
-        spawn-at-startup "bash" "-c" "${pkgs.wpaperd}/bin/wpaperd -d"
         spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "${config.system.events.onWMLoadedScript}"
 
         prefer-no-csd
@@ -271,13 +290,6 @@ in
           Mod+BracketRight { spawn "${wpaperctl}" "next"; }
           Mod+BracketLeft  { spawn "${wpaperctl}" "previous"; }
         }
-      '';
-
-      xdg.configFile."wpaperd/config.toml".text = ''
-        [default]
-        path = "${config.system.user.dirs.config.absolutePath}/wpaperd/rotation"
-        duration = "10m"
-        sorting = "random"
       '';
     };
   };
