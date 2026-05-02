@@ -19,10 +19,6 @@ in
     system.user.hm.programs.beets = {
       enable = true;
       package = pkgs.beets;
-      # mpdIntegration = {
-      #   enableStats = true;
-      #   enableUpdate = true;
-      # };
       settings = rec {
         directory = config.system.user.dirs.music.absolutePath;
         library = "${config.system.user.dirs.music.absolutePath}/.library.db";
@@ -31,9 +27,9 @@ in
           write = true;
         };
         paths = {
-          default = ".new/$albumartist/$albumtype/[$year] $album/$track. $title";
-          singleton = ".new/$artist/Unsorted/$title";
-          "ostmedium::.+" = ".new/OST/$ostmedium/$ostwhat/$album/$track. $title";
+          default = "$albumartist/$albumtype/[$year] $album/$track. $title";
+          singleton = "$artist/Unsorted/$title";
+          "ostmedium::.+" = "OST/$album/$track. $title";
           # "mygenre::^$" = ".new/$albumartist/$album/$track. $title";
         };
         replace = {
@@ -54,6 +50,11 @@ in
           "fetchart"
           "lastgenre"
           "convert"
+          "scrub"
+          "advancedrewrite"
+        ];
+        include = [
+          "rewrite.yaml"
         ];
         convert = {
           "auto" = false;

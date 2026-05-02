@@ -22,6 +22,7 @@
       pkgs.ffmpeg
       pkgs.kdePackages.kdenlive
       pkgs.kdePackages.okular
+      pkgs.picard
     ];
   };
 
@@ -62,7 +63,6 @@
       mpv.enable = true;
       bemenu.enable = true;
       obs.enable = true;
-      beets.enable = true;
     };
 
     services = {
