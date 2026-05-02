@@ -1,15 +1,12 @@
 {
   config,
-  options,
   pkgs,
   lib,
-  hmLib,
   ...
 }:
 
 let
   inherit (lib) mkIf mkEnableOption;
-  inherit (builtins) toJSON;
 
   cfg = config.modules.services.transmission;
   torrentDir = config.system.user.dirs.torrents.absolutePath;
@@ -31,9 +28,14 @@ let
     rpc-whitelist-enabled = false;
     rpc-host-whitelist-enabled = false;
     rpc-authentication-required = false;
+    bind-address-ipv4 = "0.0.0.0";
+    bind-address-ipv6 = "::";
 
     umask = "000";
-    peer-port-random-on-start = true;
+    peer-port = 51413;
+    pex-enabled = true;
+    dht-enabled = true;
+    lpd-enabled = true;
   };
 in
 {

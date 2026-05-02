@@ -2,18 +2,18 @@
 keybinds {
     normal clear-defaults=true {
         bind "Alt q" { Quit; }
-        bind "Alt d" { Detach; }
         bind "Alt p" { SwitchToMode "pane"; }
         bind "Alt r" { SwitchToMode "resize"; }
         bind "Alt t" { SwitchToMode "tab"; }
         bind "Alt s" { SwitchToMode "scroll"; }
         bind "Alt m" { SwitchToMode "move"; }
-        bind "Alt n" { NewPane; }
+        bind "Alt n" { NewPane "Down"; }
         bind "Alt h" { MoveFocusOrTab "Left"; }
         bind "Alt l" { MoveFocusOrTab "Right"; }
         bind "Alt j" { MoveFocus "Down"; }
         bind "Alt k" { MoveFocus "Up"; }
         bind "Alt +" { Resize "Increase"; }
+        bind "Alt =" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
 		bind "Alt w" { ToggleFloatingPanes; }
     }

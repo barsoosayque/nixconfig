@@ -22,13 +22,14 @@
     "rtsx_pci_sdmmc"
     "thinkpad_acpi"
   ];
-  boot.initrd.kernelModules = [ "xe" ];
+  boot.initrd.kernelModules = [ "xe" "thinkpad_acpi" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   boot.kernelParams = [
     "xe.force_probe=46a6"
     "intel_pstate=active"
     "thinkpad_acpi.fan_control=1"
+    "acpi_backlight=native"
   ];
   powerManagement.cpuFreqGovernor = "performance";
 
