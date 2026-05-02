@@ -16,7 +16,6 @@ let
     ;
   inherit (lib.strings) optionalString;
   inherit (pkgs) writeScript;
-  inherit (config.helpers) mkAllEventsCallback;
 
   cfg = config.modules.services.dunst;
 
@@ -123,7 +122,7 @@ in
 
           frame_width = 1;
           separator_width = 1;
-          corner_radius = 20;
+          corner_radius = 2;
 
           frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
           background = config.system.pretty.theme.colors.notification.background.hexRGBA;

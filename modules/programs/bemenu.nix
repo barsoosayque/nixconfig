@@ -1,23 +1,11 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, pkgs, lib, ... }:
 
 let
-  inherit (lib)
-    mkIf
-    mkOption
-    mkEnableOption
-    types
-    attrsets
-    cli
-    ;
+  inherit (lib) mkIf mkOption mkEnableOption types attrsets cli ;
   inherit (pkgs) writeScript;
 
   cfg = config.modules.programs.bemenu;
-  settings = cli.toGNUCommandLineShell { } rec {
+  settings = cli.toCommandLineShellGNU { } rec {
     l = 20;
     fn = "${config.system.pretty.theme.fonts.menu.name} Bold 14";
 
@@ -34,15 +22,15 @@ let
     af = config.system.pretty.theme.colors.normal.white.hexRGB;
     cf = fb;
     cb = cf;
-    line-height = 30;
+    line-height = 32;
 
     ignorecase = true;
     counter = true;
     center = true;
     width-factor = 0.66;
     margin = 60;
-    border = 4;
-    border-radius = 10;
+    border = 1;
+    border-radius = 2;
   };
 in
 {
@@ -58,7 +46,9 @@ in
 
   config = mkIf cfg.enable {
     system.keyboard.bindings = {
-      "super + d" = "${pkgs.bemenu}/bin/bemenu-run ${settings} -p '  Run:'";
+      "super + d" = writeScript "run-bemenu" ''
+        eval "${pkgs.bemenu}/bin/bemenu-run ${settings} -p '  Run:'"
+      '';
     }
     // attrsets.optionalAttrs cfg.enableEmoji {
       "super + e" = writeScript "run-bemenu-emoji" ''

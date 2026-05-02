@@ -58,10 +58,8 @@
     };
 
     programs = {
-      alacritty.enable = true;
       foot.enable = true;
       mpv.enable = true;
-      scissors.enable = true;
       bemenu.enable = true;
       obs.enable = true;
       beets.enable = true;

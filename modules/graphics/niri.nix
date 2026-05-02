@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkIf mkEnableOption strings lists;
   inherit (builtins) elemAt;
 
   cfg = config.modules.graphics.niri;
@@ -9,6 +9,47 @@ let
   wpaperctl = "${pkgs.wpaperd}/bin/wpaperctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
+
+  # Convert sxhkd key combo to niri format
+  # "super + d" -> "Mod+D"
+  # "super + shift + q" -> "Mod+Shift+Q"
+  sxhkdKeyToNiri = keyStr:
+    let
+      parts = strings.splitString " + " keyStr;
+      convertedParts = lists.map (part:
+        if part == "super" then "Mod"
+        else if part == "shift" then "Shift"
+        else if part == "ctrl" || part == "control" then "Ctrl"
+        else if part == "alt" then "Alt"
+        else strings.toUpper part
+      ) parts;
+    in
+      strings.concatStringsSep "+" convertedParts;
+
+  # Split action string into list of arguments
+  # "bemenu --fg #fff" -> [ "bemenu" "--fg" "#fff" ]
+  splitAction = action:
+    let
+      parts = strings.splitString " " action;
+      filtered = lists.filter (s: s != "") parts;
+    in
+    filtered;
+
+  # Convert sxhkd bindings to niri config string
+  # Returns lines indented by 2 spaces (for inside binds { } block)
+  toNiriBinds = bindings:
+    let
+      convertOne = key: action:
+        let
+          niriKey = sxhkdKeyToNiri key;
+          args = splitAction action;
+          spawnArgs = strings.concatStringsSep " " (lists.map (a: "\"${a}\"") args);
+        in
+        ''  ${niriKey} { spawn ${spawnArgs}; }'';
+      
+      lines = lib.mapAttrsToList convertOne bindings;
+    in
+    strings.concatStringsSep "\n" lines;
 in
 {
   options.modules.graphics.niri = {
@@ -37,13 +78,7 @@ in
       };
     };
 
-    security.polkit.enable = true; # polkit
-    # services.gnome.gnome-keyring.enable = true; # secret service
-    # security.pam.services.swaylock = {};
-    # security = {
-    #   pam.services.hyprlock = {};
-    # };
-
+    security.polkit.enable = true;
     services.playerctld.enable = true;
 
     environment.sessionVariables = {
@@ -65,9 +100,8 @@ in
 
     system.user.hm = {
       xdg.configFile."niri/config.kdl".text = ''
-        // spawn-at-startup "${pkgs.waybar}/bin/waybar"
         spawn-at-startup "bash" "-c" "${pkgs.wpaperd}/bin/wpaperd -d"
-        spawn-at-startup "${config.system.events.onWMLoadedScript}"
+        spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "${config.system.events.onWMLoadedScript}"
 
         prefer-no-csd
 
@@ -161,15 +195,16 @@ in
         }
 
         binds {
-          Mod+Return { spawn "${pkgs.foot}/bin/foot"; }
-          Mod+D { spawn "bash" "-c" "${pkgs.tofi}/bin/tofi-run | xargs niri msg action spawn --"; }
+          ${toNiriBinds config.system.keyboard.bindings}
+          Mod+Shift+S { spawn "${pkgs.wayshot}/bin/wayshot" "--clipboard" "--cursor"; }
+          Mod+S { spawn "${pkgs.wayshot}/bin/wayshot" "-g" "--clipboard" "--cursor"; }
+
           Mod+O repeat=false { toggle-overview; }
           Mod+Shift+Q repeat=false { close-window; }
           Mod+Shift+F { fullscreen-window; }
           Mod+Shift+Space { toggle-window-floating; }
           Mod+Shift+M { quit; }
           Mod+Shift+P { power-off-monitors; }
-          Mod+S { spawn "${pkgs.wayshot}/bin/wayshot" "--clipboard" "--cursor"; }
 
           Mod+1 { focus-workspace "scratch"; }
           Mod+2 { focus-workspace "work"; }
