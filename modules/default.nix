@@ -67,6 +67,31 @@
       resolvconf.enable = false;
     };
 
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+      xdgOpenUsePortal = true;
+      wlr = {
+        enable = true;
+        # settings = { # uninteresting for this problem, for completeness only
+        #   screencast = {
+        #     output_name = "eDP-1";
+        #     max_fps = 30;
+        #     chooser_type = "simple";
+        #     chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or";
+        #   };
+        # };
+      };
+      # config = {
+      #   common = {
+      #     default = "gtk";
+      #   };
+      # };
+    };
+    programs.dconf.enable = true;
 
     users = {
       mutableUsers = false;

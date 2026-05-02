@@ -51,8 +51,8 @@ in
         modesetting.enable = true;
         # dynamicBoost.enable = true;
         # forceFullCompositionPipeline = true;
-        powerManagement.enable = true;
-        powerManagement.finegrained = true;
+        # powerManagement.enable = true;
+        # powerManagement.finegrained = true;
         open = true;
       };
       graphics = {

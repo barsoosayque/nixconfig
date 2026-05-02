@@ -80,16 +80,5 @@ in
     systemd.user.extraConfig = ''
       DefaultEnvironment="PATH=/run/current-system/sw/bin"
     '';
-    xdg.portal = {
-      enable = true;
-      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
-      xdgOpenUsePortal = true;
-      config = {
-        common = {
-          default = "gtk";
-        };
-      };
-    };
-    programs.dconf.enable = true;
   };
 }

@@ -87,6 +87,8 @@ rec {
     hexARGBbase = "${hexA}${hexR}${hexG}${hexB}";
     hexARGB = "#${hexARGBbase}";
 
+    cssRgba = "rgba(${toString r}, ${toString g}, ${toString b}, ${toString(a * 0.00392156862745)})";
+
     modify =
       modifiers: mkColor (modifiers.r or r) (modifiers.g or g) (modifiers.b or b) (modifiers.a or a);
 

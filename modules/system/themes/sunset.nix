@@ -18,7 +18,7 @@ in
       name = "Ubuntu Nerd Font Bold";
       package = pkgs.nerd-fonts.ubuntu;
     };
-    bar = primary;
+    bar = secondary;
     menu = primary;
   };
 
@@ -65,9 +65,10 @@ in
 
     bar = {
       background = primary.background.modify { a = 215; };
+      hover = primary.background;
       foreground = normal.white;
       danger = normal.yellow;
-      accent = normal.green;
+      accent = normal.green.modify { a = 180; };
       empty = normal.black;
     };
 
@@ -75,7 +76,7 @@ in
       border = normal.black;
       active_border = bright.black;
       urgent_border = bright.yellow;
-      shadow = primary.background.modify { a = 160; };
+      shadow = mkColorHex "#11111133";
     };
   };
 }
