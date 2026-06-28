@@ -38,7 +38,7 @@ in
 
   config = mkIf cfg.enable {
     environment.sessionVariables = attrsets.optionalAttrs isNvidia {
-      VK_DRIVER_FILES = "${config.hardware.nvidia.package}/share/vulkan/icd.d/nvidia_icd.x86_64.json";
+      VK_DRIVER_FILES = "${config.hardware.nvidia.package}/share/vulkan/icd.d/nvidia_icd.json";
     };
 
     # Set drivers for both Wayland and X11

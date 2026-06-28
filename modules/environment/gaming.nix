@@ -72,9 +72,6 @@ in
         // (attrsets.optionalAttrs cfg.software.steam {
           # # https://github.com/NixOS/nixpkgs/pull/157907
           # steam = (pkgsRepo.steamFixes.steam.override {
-          #   extraProfile = ''
-          #     export VK_ICD_FILENAMES=${config.hardware.nvidia.package}/share/vulkan/icd.d/nvidia_icd.json:${config.hardware.nvidia.package.lib32}/share/vulkan/icd.d/nvidia_icd32.json:$VK_ICD_FILENAMES
-          #   '';
           # });
         })
         // (attrsets.optionalAttrs cfg.software.lutris {
