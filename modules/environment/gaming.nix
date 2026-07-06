@@ -171,9 +171,14 @@ in
     };
 
     system.user.hm.home.file = attrsets.optionalAttrs cfg.games.cdda {
-      "${config.system.user.dirs.games.relativePath}/cataclysmdda/game".source = "${cdda}";
-      "${config.system.user.dirs.games.relativePath}/cataclysmdda/config/fonts.json".source =
-        "${cdda}/data/fontdata.json";
+      "${config.system.user.dirs.games.relativePath}/cataclysmdda/game" = {
+        source = "${cdda}";
+        force = true;
+      };
+      "${config.system.user.dirs.games.relativePath}/cataclysmdda/config/fonts.json"= {
+        source = "${cdda}/data/fontdata.json";
+        force = true;
+      };
     };
   };
 }

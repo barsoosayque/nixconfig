@@ -25,13 +25,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "cataclysmdda";
-  version = "2025-08-08-0308";
+  version = "2026-06-28-0628";
 
   buildInputs = [
-    SDL2
-    SDL2_image
-    SDL2_mixer
-    SDL2_ttf
+    sdl3
+    sdl3-image
+    sdl3-mixer
+    sdl3-ttf
     freetype
   ];
   nativeBuildInputs = [
@@ -41,7 +41,8 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/CleverRaven/Cataclysm-DDA/releases/download/cdda-experimental-${version}/cdda-linux-with-graphics-and-sounds-x64-${version}.tar.gz";
-    sha256 = "sha256-b2uTUjSagcNCB7RRPHu9/g2PmFkozWNxHixXKRUL/5w=";
+    # url = "https://github.com/CleverRaven/Cataclysm-DDA/releases/download/0.I/cdda-linux-with-graphics-and-sounds-x64-${version}.tar.gz";
+    sha256 = "sha256-eMcjnSTB0K2DsvKWTxW9jgljO/g/0rylHFCtK23rOHg=";
   };
 
   installPhase = ''
