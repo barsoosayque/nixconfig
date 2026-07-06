@@ -222,6 +222,7 @@ in
           Mod+Shift+Q repeat=false { close-window; }
           Mod+Shift+F { fullscreen-window; }
           Mod+Shift+Space { toggle-window-floating; }
+          Mod+Shift+W { toggle-column-tabbed-display; }
           Mod+Shift+M { quit; }
           Mod+Shift+P { power-off-monitors; }
 
@@ -241,8 +242,6 @@ in
           Mod+Shift+6 { move-column-to-workspace 6; }
           Mod+Shift+7 { move-column-to-workspace 7; }
           Mod+Shift+8 { move-column-to-workspace 8; }
-          Mod+Tab       { move-workspace-down; }
-          Mod+Shift+Tab { move-workspace-up; }
 
           Mod+Left  { focus-column-left; }
           Mod+Down  { focus-window-down; }
