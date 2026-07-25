@@ -11,7 +11,7 @@ with pkgs;
 let
   inherit (lib.strings) concatLines splitString optionalString;
   inherit (lib.lists) last;
-  inherit (builtins) toJSON map;
+  inherit (builtins) toJSON;
 
   mkFontdataPath = font: "${last (splitString "/" font)}";
 
@@ -25,7 +25,7 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "cataclysmdda";
-  version = "2026-06-28-0628";
+  version = "2026-07-18-0036";
 
   buildInputs = [
     sdl3
@@ -42,7 +42,7 @@ stdenv.mkDerivation rec {
   src = fetchurl {
     url = "https://github.com/CleverRaven/Cataclysm-DDA/releases/download/cdda-experimental-${version}/cdda-linux-with-graphics-and-sounds-x64-${version}.tar.gz";
     # url = "https://github.com/CleverRaven/Cataclysm-DDA/releases/download/0.I/cdda-linux-with-graphics-and-sounds-x64-${version}.tar.gz";
-    sha256 = "sha256-eMcjnSTB0K2DsvKWTxW9jgljO/g/0rylHFCtK23rOHg=";
+    sha256 = "sha256-RA5+w2LBl+QqRTt6xEmcaGx91LR82WbZUUqCu3r9QgQ=";
   };
 
   installPhase = ''
