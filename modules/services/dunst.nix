@@ -1,6 +1,5 @@
 {
   config,
-  options,
   pkgs,
   pkgsRepo,
   lib,
@@ -10,6 +9,7 @@
 let
   inherit (lib)
     mkIf
+    mkMerge
     mkOption
     mkEnableOption
     types
@@ -21,6 +21,13 @@ let
 
   notifySend = "${pkgs.libnotify}/bin/notify-send";
 
+  mkIcon =
+    id:
+    pkgsRepo.local.remixicon.mkIcon {
+      inherit id;
+      color = config.system.pretty.theme.colors.notification.accent;
+    };
+
   mkSendScript =
     {
       title,
@@ -28,6 +35,9 @@ let
       icon ? null,
       ...
     }:
+    let
+      iconPath = if icon == null then null else mkIcon icon;
+    in
     writeScript "dunst-event-script" ''
       #!${pkgs.dash}/bin/dash
 
@@ -46,35 +56,20 @@ let
           DISPLAY=:0 \
           DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus \
           ${notifySend} "$TITLE" "$MSG" \
-          ${optionalString (icon != null) "--icon=${icon}"}
+          ${optionalString (iconPath != null) "--icon=${iconPath}"}
     '';
 
   scripts = {
     default = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Completed";
-      icon = pkgsRepo.local.remixicon.mkIcon {
-        id = "notification-line";
-        color = config.system.pretty.theme.colors.notification.accent;
-      };
-    };
-
-    torrent = mkSendScript {
-      title = "$EVENT_DESCRIPTION";
-      msg = "$TR_TORRENT_NAME";
-      icon = pkgsRepo.local.remixicon.mkIcon {
-        id = "folder-download-line";
-        color = config.system.pretty.theme.colors.notification.accent;
-      };
+      icon = "notification-line";
     };
 
     screenshoot = mkSendScript {
       title = "$EVENT_DESCRIPTION";
       msg = "Saved to clipboard and $SCREENSHOT_PATH";
-      icon = pkgsRepo.local.remixicon.mkIcon {
-        id = "screenshot-line";
-        color = config.system.pretty.theme.colors.notification.accent;
-      };
+      icon = "screenshot-line";
     };
   };
 in
@@ -102,58 +97,71 @@ in
         description = "Text size";
       };
     };
+
+    notify = mkOption {
+      type = with types; functionTo package;
+      readOnly = true;
+      description = ''
+        Function `{ title, msg, icon ? null }: <script>` other modules can use
+        to send a notification through dunst instead of calling notify-send directly.
+        `icon`, if given, is a RemixIcon id (e.g. "screenshot-line").
+      '';
+    };
   };
 
-  config = mkIf cfg.enable {
-    fonts.packages = [ cfg.font.package ];
+  config = mkMerge [
+    { modules.services.dunst.notify = mkSendScript; }
 
-    system.user.hm.services.dunst = {
-      enable = true;
+    (mkIf cfg.enable {
+      fonts.packages = [ cfg.font.package ];
 
-      settings = {
-        global = {
-          follow = "keyboard";
+      system.user.hm.services.dunst = {
+        enable = true;
 
-          offset = "20x20";
-          padding = 20;
-          horizontal_padding = 20;
-          width = 400;
-          height = 200;
+        settings = {
+          global = {
+            follow = "keyboard";
 
-          frame_width = 1;
-          separator_width = 1;
-          corner_radius = 2;
+            offset = "20x20";
+            padding = 20;
+            horizontal_padding = 20;
+            width = 400;
+            height = 200;
 
-          frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
-          background = config.system.pretty.theme.colors.notification.background.hexRGBA;
-          foreground = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+            frame_width = 1;
+            separator_width = 1;
+            corner_radius = 2;
 
-          font = "${cfg.font.name} ${toString cfg.font.size}";
+            frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+            background = config.system.pretty.theme.colors.notification.background.hexRGBA;
+            foreground = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+
+            font = "${cfg.font.name} ${toString cfg.font.size}";
+          };
         };
       };
-    };
 
-    system.events = mkIf cfg.notifySystemEvents {
-      onReloadCallbacks.afterCommands = [ scripts.default ];
-      onTorrentDoneCallbacks.afterCommands = [ scripts.torrent ];
-      onScreenshotCallbacks.afterCommands = [ scripts.screenshoot ];
-    };
+      system.events = mkIf cfg.notifySystemEvents {
+        onReloadCallbacks.afterCommands = [ scripts.default ];
+        onScreenshotCallbacks.afterCommands = [ scripts.screenshoot ];
+      };
 
-    # whitelist notify-send so other users can run onEventScript and trigger notifications
-    security.sudo.extraRules = [
-      {
-        users = [ "ALL" ];
-        runAs = config.system.user.name;
-        commands = [
-          {
-            command = notifySend;
-            options = [
-              "NOPASSWD"
-              "SETENV"
-            ];
-          }
-        ];
-      }
-    ];
-  };
+      # whitelist notify-send so other users can run onEventScript and trigger notifications
+      security.sudo.extraRules = [
+        {
+          users = [ "ALL" ];
+          runAs = config.system.user.name;
+          commands = [
+            {
+              command = notifySend;
+              options = [
+                "NOPASSWD"
+                "SETENV"
+              ];
+            }
+          ];
+        }
+      ];
+    })
+  ];
 }

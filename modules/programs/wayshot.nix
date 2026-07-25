@@ -10,7 +10,7 @@ let
     pkgs.writeShellScript "wayshot-${name}" ''
       dir="${cfg.screenshotsDir}/$(date +%Y)/$(date +%m)"
       mkdir -p "$dir"
-      ${pkgs.wayshot}/bin/wayshot ${geometryArgs} --cursor --clipboard "$dir"
+      ${pkgs.wayshot}/bin/wayshot ${geometryArgs} --cursor --clipboard --silent "$dir"
       ${config.system.events.onScreenshotScript}
     '';
 in

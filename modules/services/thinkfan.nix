@@ -7,15 +7,26 @@ let
 
   systemctl = "${pkgs.systemd}/bin/systemctl";
   sudo = "/run/wrappers/bin/sudo";
-  notifySend = "${pkgs.libnotify}/bin/notify-send";
+
+  notifyEnabled = config.modules.services.dunst.notify {
+    title = "Thinkfan";
+    msg = "Enabled";
+    icon = "typhoon-fill";
+  };
+
+  notifyDisabled = config.modules.services.dunst.notify {
+    title = "Thinkfan";
+    msg = "Disabled";
+    icon = "typhoon-line";
+  };
 
   toggleScript = pkgs.writeShellScript "thinkfan-toggle" ''
     if ${systemctl} is-active --quiet thinkfan; then
       ${sudo} ${systemctl} stop thinkfan
-      ${notifySend} "Thinkfan" "Disabled"
+      ${notifyDisabled}
     else
       ${sudo} ${systemctl} start thinkfan
-      ${notifySend} "Thinkfan" "Enabled"
+      ${notifyEnabled}
     fi
   '';
 in

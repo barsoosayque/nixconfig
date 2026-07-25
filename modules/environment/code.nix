@@ -14,8 +14,6 @@ let
     ;
   inherit (builtins) readFile toJSON;
 
-  notifySend = "${pkgs.libnotify}/bin/notify-send";
-
   cfg = config.modules.environment.code;
 in
 {
@@ -78,7 +76,13 @@ in
               hooks = [
                 {
                   type = "command";
-                  command = "${notifySend} -u normal -i utilities-terminal 'Claude Code' 'Task Completed'";
+                  command = "${
+                    config.modules.services.dunst.notify {
+                      title = "Claude Code";
+                      msg = "Task Completed";
+                      icon = "claude-line";
+                    }
+                  }";
                 }
               ];
             }
@@ -89,7 +93,13 @@ in
               hooks = [
                 {
                   type = "command";
-                  command = "${notifySend} -u critical -i dialog-question 'Claude Code' 'Input Required'";
+                  command = "${
+                    config.modules.services.dunst.notify {
+                      title = "Claude Code";
+                      msg = "Input Required";
+                      icon = "claude-line";
+                    }
+                  }";
                 }
               ];
             }

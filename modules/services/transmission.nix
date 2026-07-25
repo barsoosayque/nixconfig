@@ -11,6 +11,12 @@ let
   cfg = config.modules.services.transmission;
   torrentDir = config.system.user.dirs.torrents.absolutePath;
 
+  notifyTorrentDone = config.modules.services.dunst.notify {
+    title = "Transmission";
+    msg = "$TR_TORRENT_NAME";
+    icon = "folder-download-line";
+  };
+
   settings = {
     watch-dir-enabled = true;
     incomplete-dir-enabled = true;
@@ -20,7 +26,7 @@ let
     download-dir = "${torrentDir}/complete";
 
     script-torrent-done-enabled = true;
-    script-torrent-done-filename = config.system.events.onTorrentDoneScript;
+    script-torrent-done-filename = notifyTorrentDone;
 
     rpc-enabled = true;
     rpc-bind-address = "127.0.0.1";
