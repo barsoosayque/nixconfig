@@ -8,26 +8,19 @@
 let
   inherit (lib)
     mkIf
-    mkOption
     mkEnableOption
-    types
     getExe
     concatStringsSep
     ;
-  inherit (lib.lists) optionals;
-  inherit (builtins) readFile map;
+  inherit (builtins) readFile toJSON;
+
+  notifySend = "${pkgs.libnotify}/bin/notify-send";
 
   cfg = config.modules.environment.code;
 in
 {
   options.modules.environment.code = {
     enable = mkEnableOption "code environment";
-
-    enableRust = mkOption {
-      type = with types; bool;
-      default = true;
-      description = "Enable Rust environment";
-    };
   };
 
   config = mkIf cfg.enable {
@@ -67,13 +60,43 @@ in
       # https://github.com/helix-editor/helix/issues/9866
       # pkgsRepo.helix.default
       pkgs.helix
-    ]
-    ++ optionals cfg.enableRust [
-      pkgs.rust-analyzer
-      pkgs.rustfmt
+
+      pkgs.claude-code
     ];
 
+    environment.variables = {
+      CLAUDE_CONFIG_DIR = "${config.system.user.dirs.config.absolutePath}/claude";
+    };
+
     system.user.hm = {
+      xdg.configFile."claude/settings.json".text = toJSON {
+        theme = "dark-ansi";
+        hooks = {
+          Stop = [
+            {
+              matcher = "";
+              hooks = [
+                {
+                  type = "command";
+                  command = "${notifySend} -u normal -i utilities-terminal 'Claude Code' 'Task Completed'";
+                }
+              ];
+            }
+          ];
+          Notification = [
+            {
+              matcher = "";
+              hooks = [
+                {
+                  type = "command";
+                  command = "${notifySend} -u critical -i dialog-question 'Claude Code' 'Input Required'";
+                }
+              ];
+            }
+          ];
+        };
+      };
+
       xdg.configFile."helix/themes/nixos-generated.toml".text = ''
         inherits = "base16_transparent"
         "ui.background" = {}
@@ -86,8 +109,7 @@ in
       xdg.configFile."helix/config.toml".text =
         let
           runTUI =
-            pkg:
-            args:
+            pkg: args:
             "["
             + (concatStringsSep "," (
               map (cmd: ''"${cmd}"'') [
@@ -195,6 +217,7 @@ in
 
           ignores = [
             ".local"
+            ".claude"
           ];
 
           settings = {
