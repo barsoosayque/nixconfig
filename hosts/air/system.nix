@@ -7,6 +7,7 @@
     systemPackages = [
       # user
       pkgs.librewolf
+      pkgs.brave
       pkgs.discord
       pkgs.telegram-desktop
       pkgs.nicotine-plus
@@ -23,8 +24,6 @@
       pkgs.kdePackages.kdenlive
       pkgs.kdePackages.okular
       pkgs.picard
-
-      pkgs.opencode
     ];
   };
 
@@ -50,14 +49,19 @@
         software = {
           steam = true;
           lutris = true;
+          heroic = true;
           wine.enable = true;
         };
         games = {
           minecraft = true;
+          cdda = true;
         };
       };
       cli.enable = true;
-      android.enable = true;
+      android = {
+        enable = true;
+        androidStudio = false;
+      };
     };
 
     programs = {
