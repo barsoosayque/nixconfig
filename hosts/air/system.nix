@@ -81,6 +81,7 @@
       gitlabRunner.enable = true;
       waybar.enable = true;
       wpaperd.enable = true;
+      thinkfan.enable = true;
     };
 
     graphics = {
@@ -124,14 +125,6 @@
   services.mullvad-vpn.enable = true;
 
   services.fstrim.enable = true;
-  services.throttled = {
-    enable = true;
-  };
-  services.thermald = {
-    enable = true;
-    ignoreCpuidCheck = true;
-  };
-  # services.thinkfan.enable = true;
 
   services.syncthing = {
     enable = true;
