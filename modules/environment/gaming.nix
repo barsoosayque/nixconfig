@@ -44,6 +44,7 @@ in
     software = {
       steam = mkEnableOption "steam";
       lutris = mkEnableOption "lutris";
+      heroic = mkEnableOption "heroic";
       retroarch = mkEnableOption "retroarch";
       wine = {
         enable = mkEnableOption "wine";
@@ -134,6 +135,7 @@ in
     ))
     ++ (lists.optional cfg.software.steam pkgs.steam)
     ++ (lists.optional cfg.software.lutris pkgs.lutris)
+    ++ (lists.optional cfg.software.heroic pkgs.heroic)
     ++ (lists.optional cfg.games.veloren pkgs.airshipper)
     ++ (lists.optional cfg.games.minecraft pkgs.prismlauncher)
     ++ (lists.optional cfg.games.minecraft pkgsRepo.local.mcman)
