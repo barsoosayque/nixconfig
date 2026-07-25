@@ -65,6 +65,7 @@
       mpv.enable = true;
       bemenu.enable = true;
       obs.enable = true;
+      wayshot.enable = true;
     };
 
     services = {

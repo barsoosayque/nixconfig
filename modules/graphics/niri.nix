@@ -215,8 +215,6 @@ in
 
         binds {
           ${toNiriBinds config.system.keyboard.bindings}
-          Mod+Shift+S { spawn "${pkgs.wayshot}/bin/wayshot" "--clipboard" "--cursor"; }
-          Mod+S { spawn "${pkgs.wayshot}/bin/wayshot" "-g" "--clipboard" "--cursor"; }
 
           Mod+O repeat=false { toggle-overview; }
           Mod+Shift+Q repeat=false { close-window; }
