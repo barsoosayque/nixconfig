@@ -86,6 +86,7 @@
       waybar.enable = true;
       wpaperd.enable = true;
       thinkfan.enable = true;
+      battery.enable = true;
     };
 
     graphics = {
