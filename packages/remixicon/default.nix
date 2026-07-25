@@ -24,7 +24,7 @@ let
     }:
     pkgs.stdenv.mkDerivation rec {
       pname = "remixicon-icon-${id}";
-      version = "2.5.0";
+      version = "4.9.1";
 
       buildInputs = [
         pkgs.findutils
@@ -35,7 +35,7 @@ let
       src = fetchGit {
         url = "https://github.com/Remix-Design/RemixIcon.git";
         ref = "refs/tags/v${version}";
-        rev = "755818100db4687fd907ecaef9f57cc9ea77d0d8";
+        rev = "39eab8b69cadaa47e1bed6a41777b1cd22227c74";
       };
 
       buildPhase = ''
