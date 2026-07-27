@@ -100,7 +100,7 @@ in
           shellAliases = {
             mv = "mv -v";
             cp = "cp -v";
-            ls = "${pkgs.eza}/bin/exa --icons --group-directories-first --classify ";
+            ls = "${pkgs.eza}/bin/exa --icons --group-directories-first --classify auto";
           };
         };
 
