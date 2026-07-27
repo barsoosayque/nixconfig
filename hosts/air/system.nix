@@ -16,7 +16,7 @@
       pkgs.anki-bin
 
       # multimedia
-      pkgs.feh
+      pkgs.nsxiv
       pkgs.syncplay
       pkgs.krita
       pkgs.audacity
