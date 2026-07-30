@@ -144,6 +144,7 @@ in
       settings = settings;
       downloadDirPermissions = "777";
       home = torrentDir;
+      webHome = pkgs.flood-for-transmission;
     };
 
     systemd.tmpfiles.rules = categoryTmpfilesRules;
