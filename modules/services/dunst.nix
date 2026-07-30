@@ -21,6 +21,16 @@ let
 
   notifySend = "${pkgs.libnotify}/bin/notify-send";
 
+  # Scripts built via `notify` may run as an arbitrary other user (root doing a
+  # system-level event, or a sandboxed service like transmission-daemon that
+  # blocks setuid entirely via seccomp) and can't reach the interactive user's
+  # D-Bus session/X display directly, nor become that user via sudo. Instead
+  # they drop an event into this directory - world-writable and normally
+  # reachable even from inside a service sandbox, since /run is almost always
+  # bind-mounted in - and a relay service running natively as the interactive
+  # user (below) picks it up and fires the real notification.
+  notifyQueueDir = "/run/dunst-notify-queue";
+
   mkIcon =
     id:
     pkgsRepo.local.remixicon.mkIcon {
@@ -41,23 +51,39 @@ let
     writeScript "dunst-event-script" ''
       #!${pkgs.dash}/bin/dash
 
-      # see https://github.com/phuhl/notify-send.py#notify-sendpy-as-root-user
-      # and https://dunst-project.org/faq/
-
-      export XAUTHORITY=${config.system.user.home}/.Xauthority
-      export DISPLAY=:0
-      export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus
-
       TITLE="${title}"
       MSG="${msg}"
 
-      /run/wrappers/bin/sudo -u ${config.system.user.name} \
-          XAUTHORITY=${config.system.user.home}/.Xauthority \
-          DISPLAY=:0 \
-          DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus \
-          ${notifySend} "$TITLE" "$MSG" \
-          ${optionalString (iconPath != null) "--icon=${iconPath}"}
+      EVENT_ID="$$-$(date +%s%N)"
+      printf '%s' "$TITLE" > "${notifyQueueDir}/$EVENT_ID.title"
+      printf '%s' "$MSG" > "${notifyQueueDir}/$EVENT_ID.msg"
+      ${optionalString (iconPath != null) ''printf '%s' "${iconPath}" > "${notifyQueueDir}/$EVENT_ID.icon"''}
+      : > "${notifyQueueDir}/$EVENT_ID.ready"
     '';
+
+  notifyRelayScript = pkgs.writeShellScript "dunst-notify-relay" ''
+    export XAUTHORITY=${config.system.user.home}/.Xauthority
+    export DISPLAY=:0
+    export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus
+
+    ${pkgs.inotify-tools}/bin/inotifywait -m -e close_write -e moved_to --format '%f' "${notifyQueueDir}" |
+    while IFS= read -r name; do
+      case "$name" in
+        *.ready)
+          id="''${name%.ready}"
+          TITLE=$(cat "${notifyQueueDir}/$id.title" 2>/dev/null)
+          MSG=$(cat "${notifyQueueDir}/$id.msg" 2>/dev/null)
+          if [ -f "${notifyQueueDir}/$id.icon" ]; then
+            ICON=$(cat "${notifyQueueDir}/$id.icon")
+            ${notifySend} "$TITLE" "$MSG" --icon="$ICON"
+          else
+            ${notifySend} "$TITLE" "$MSG"
+          fi
+          rm -f "${notifyQueueDir}/$id.title" "${notifyQueueDir}/$id.msg" "${notifyQueueDir}/$id.icon" "${notifyQueueDir}/$id.ready"
+          ;;
+      esac
+    done
+  '';
 
   scripts = {
     default = mkSendScript {
@@ -115,28 +141,42 @@ in
     (mkIf cfg.enable {
       fonts.packages = [ cfg.font.package ];
 
-      system.user.hm.services.dunst = {
-        enable = true;
+      systemd.tmpfiles.rules = [ "d ${notifyQueueDir} 1777 root root -" ];
 
-        settings = {
-          global = {
-            follow = "keyboard";
+      system.user.hm = {
+        services.dunst = {
+          enable = true;
 
-            offset = "20x20";
-            padding = 20;
-            horizontal_padding = 20;
-            width = 400;
-            height = 200;
+          settings = {
+            global = {
+              follow = "keyboard";
 
-            frame_width = 1;
-            separator_width = 1;
-            corner_radius = 2;
+              offset = "20x20";
+              padding = 20;
+              horizontal_padding = 20;
+              width = 400;
+              height = 200;
 
-            frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
-            background = config.system.pretty.theme.colors.notification.background.hexRGBA;
-            foreground = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+              frame_width = 1;
+              separator_width = 1;
+              corner_radius = 2;
 
-            font = "${cfg.font.name} ${toString cfg.font.size}";
+              frame_color = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+              background = config.system.pretty.theme.colors.notification.background.hexRGBA;
+              foreground = config.system.pretty.theme.colors.notification.foreground.hexRGBA;
+
+              font = "${cfg.font.name} ${toString cfg.font.size}";
+            };
+          };
+        };
+
+        systemd.user.services.dunst-notify-relay = {
+          Unit.Description = "Relay queued dunst notifications from sandboxed/other-user producers";
+          Install.WantedBy = [ "default.target" ];
+          Service = {
+            Type = "simple";
+            ExecStart = "${notifyRelayScript}";
+            Restart = "always";
           };
         };
       };
@@ -145,23 +185,6 @@ in
         onReloadCallbacks.afterCommands = [ scripts.default ];
         onScreenshotCallbacks.afterCommands = [ scripts.screenshoot ];
       };
-
-      # whitelist notify-send so other users can run onEventScript and trigger notifications
-      security.sudo.extraRules = [
-        {
-          users = [ "ALL" ];
-          runAs = config.system.user.name;
-          commands = [
-            {
-              command = notifySend;
-              options = [
-                "NOPASSWD"
-                "SETENV"
-              ];
-            }
-          ];
-        }
-      ];
     })
   ];
 }
