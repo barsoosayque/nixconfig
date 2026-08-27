@@ -113,6 +113,7 @@ let
     pex-enabled = true;
     dht-enabled = true;
     lpd-enabled = true;
+    preallocation = 1;
   };
 in
 {
@@ -144,7 +145,7 @@ in
       settings = settings;
       downloadDirPermissions = "777";
       home = torrentDir;
-      webHome = pkgs.flood-for-transmission;
+      webHome = pkgs.trgui-ng-web;
     };
 
     systemd.tmpfiles.rules = categoryTmpfilesRules;
