@@ -41,13 +41,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    # "soundboard" is a plain FX sink that pw-play targets; its monitor is
-    # mirrored both to the default output (so you hear it, and its volume
-    # slider controls that) and into "soundboard-mic", which also has the
-    # real mic looped in, for a single mixed feed. That monitor is remapped
-    # into a plain (non-Monitor-class) source, since Chromium apps like
-    # Discord filter monitor sources out of their input-device list; select
-    # "Soundboard-Mic-Input" there instead.
     services.pipewire.extraConfig.pipewire-pulse."10-soundboard" = {
       "pulse.cmd" = [
         {

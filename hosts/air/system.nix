@@ -67,7 +67,7 @@
     programs = {
       foot.enable = true;
       mpv.enable = true;
-      bemenu.enable = true;
+      tofi.enable = true;
       obs.enable = true;
       wayshot.enable = true;
       soundboard.enable = true;

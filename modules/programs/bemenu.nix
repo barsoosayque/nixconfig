@@ -2,7 +2,7 @@
 
 let
   inherit (lib) mkIf mkOption mkEnableOption types attrsets cli ;
-  inherit (pkgs) writeScript;
+  inherit (pkgs) writeShellScript;
 
   cfg = config.modules.programs.bemenu;
   settings = cli.toCommandLineShellGNU { } rec {
@@ -42,20 +42,28 @@ in
       default = true;
       description = "Enable bemenu emoji picker";
     };
+
+    args = mkOption {
+      type = with types; str;
+      readOnly = true;
+      description = "Themed bemenu CLI arguments, for other modules to reuse for a consistent look";
+    };
   };
 
-  config = mkIf cfg.enable {
-    system.keyboard.bindings = {
-      "super + d" = writeScript "run-bemenu" ''
+  config = {
+    modules.programs.bemenu.args = settings;
+
+    system.keyboard.bindings = mkIf cfg.enable ({
+      "super + d" = writeShellScript "run-bemenu" ''
         eval "${pkgs.bemenu}/bin/bemenu-run ${settings} -p '  Run:'"
       '';
     }
     // attrsets.optionalAttrs cfg.enableEmoji {
-      "super + e" = writeScript "run-bemenu-emoji" ''
+      "super + e" = writeShellScript "run-bemenu-emoji" ''
         export BEMOJI_PICKER_CMD="${pkgs.bemenu}/bin/bemenu ${settings} -p '󰞅  Emoji:'"
         export BEMOJI_TYPE_CMD="${pkgs.xdotool}/bin/xdotool type"
         ${pkgs.bemoji}/bin/bemoji -t -c -n
       '';
-    };
+    });
   };
 }
