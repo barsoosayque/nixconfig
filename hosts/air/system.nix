@@ -70,6 +70,7 @@
       bemenu.enable = true;
       obs.enable = true;
       wayshot.enable = true;
+      soundboard.enable = true;
     };
 
     services = {
