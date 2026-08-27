@@ -8,7 +8,9 @@
 let
   inherit (lib)
     mkIf
+    mkOption
     mkEnableOption
+    types
     strings
     lists
     ;
@@ -74,6 +76,12 @@ in
 {
   options.modules.graphics.niri = {
     enable = mkEnableOption "niri";
+
+    screenshotsDir = mkOption {
+      type = with types; str;
+      default = "${config.system.user.dirs.pictures.absolutePath}/screenshots";
+      description = "Directory to put screenshots to, organized into <dir>/<year>/<month>";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -123,6 +131,8 @@ in
         spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "${config.system.events.onWMLoadedScript}"
 
         prefer-no-csd
+
+        screenshot-path "${cfg.screenshotsDir}/%Y/%m/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
         xwayland-satellite {
           path "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
@@ -188,6 +198,9 @@ in
               options "${elemAt config.system.keyboard.kb_options 0}";
             }
           }
+          trackpoint {
+            scroll-method "no-scroll";
+          }
         }
 
         workspace "scratch"
@@ -215,6 +228,10 @@ in
 
         binds {
           ${toNiriBinds config.system.keyboard.bindings}
+
+          Mod+S repeat=false { screenshot; }
+          Mod+Shift+S repeat=false { screenshot-screen; }
+          Mod+Ctrl+S repeat=false { screenshot-window; }
 
           Mod+O repeat=false { toggle-overview; }
           Mod+Shift+Q repeat=false { close-window; }

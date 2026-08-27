@@ -69,7 +69,6 @@
       mpv.enable = true;
       tofi.enable = true;
       obs.enable = true;
-      wayshot.enable = true;
       soundboard.enable = true;
     };
 
