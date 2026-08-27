@@ -12,7 +12,7 @@ let
     getExe
     concatStringsSep
     ;
-  inherit (builtins) readFile toJSON;
+  inherit (builtins) readFile;
 
   cfg = config.modules.environment.code;
 in
@@ -58,55 +58,11 @@ in
       # https://github.com/helix-editor/helix/issues/9866
       # pkgsRepo.helix.default
       pkgs.helix
-
-      pkgs.claude-code
     ];
 
-    environment.variables = {
-      CLAUDE_CONFIG_DIR = "${config.system.user.dirs.config.absolutePath}/claude";
-    };
+    modules.programs.claude-code.enable = true;
 
     system.user.hm = {
-      xdg.configFile."claude/settings.json".text = toJSON {
-        theme = "dark-ansi";
-        hooks = {
-          Stop = [
-            {
-              matcher = "";
-              hooks = [
-                {
-                  type = "command";
-                  command = "${
-                    config.modules.services.dunst.notify {
-                      title = "Claude Code";
-                      msg = "Task Completed";
-                      icon = "claude-line";
-                    }
-                  }";
-                }
-              ];
-            }
-          ];
-          Notification = [
-            {
-              matcher = "";
-              hooks = [
-                {
-                  type = "command";
-                  command = "${
-                    config.modules.services.dunst.notify {
-                      title = "Claude Code";
-                      msg = "Input Required";
-                      icon = "claude-line";
-                    }
-                  }";
-                }
-              ];
-            }
-          ];
-        };
-      };
-
       xdg.configFile."helix/themes/nixos-generated.toml".text = ''
         inherits = "base16_transparent"
         "ui.background" = {}
