@@ -21,6 +21,26 @@ let
   wpaperctl = "${pkgs.wpaperd}/bin/wpaperctl";
   brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
   playerctl = "${pkgs.playerctl}/bin/playerctl";
+  niri = "${config.programs.niri.package}/bin/niri";
+
+  # Resize the focused window to a picked 16:9 resolution (logical pixels).
+  resizeWindow = pkgs.writeShellScript "niri-resize-window" ''
+    choice="$(printf '360p\n480p\n720p\n1080p\n1440p\n' \
+      | ${pkgs.tofi}/bin/tofi ${config.modules.programs.tofi.args} --prompt-text '  Resize: ')"
+    [ -z "$choice" ] && exit 0
+
+    case "$choice" in
+      360p)  w=640  h=360  ;;
+      480p)  w=854  h=480  ;;
+      720p)  w=1280 h=720  ;;
+      1080p) w=1920 h=1080 ;;
+      1440p) w=2560 h=1440 ;;
+      *) exit 0 ;;
+    esac
+
+    ${niri} msg action set-window-width "$w"
+    ${niri} msg action set-window-height "$h"
+  '';
 
   # Convert sxhkd key combo to niri format
   # "super + d" -> "Mod+D"
@@ -232,6 +252,8 @@ in
           Mod+S repeat=false { screenshot; }
           Mod+Shift+S repeat=false { screenshot-screen; }
           Mod+Ctrl+S repeat=false { screenshot-window; }
+
+          Mod+R repeat=false { spawn "${resizeWindow}"; }
 
           Mod+O repeat=false { toggle-overview; }
           Mod+Shift+Q repeat=false { close-window; }
