@@ -43,7 +43,7 @@ in
     };
 
     hm = mkOption {
-      type = with types; attrs;
+      type = with types; anything;
       default = { };
       description = "Home-manager configs for current user";
     };
