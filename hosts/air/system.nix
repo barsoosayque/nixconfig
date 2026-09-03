@@ -6,7 +6,6 @@
   environment = {
     systemPackages = [
       # user
-      pkgs.librewolf
       pkgs.brave
       pkgs.discord
       pkgs.telegram-desktop
@@ -65,6 +64,7 @@
     };
 
     programs = {
+      librewolf.enable = true;
       foot.enable = true;
       mpv.enable = true;
       tofi.enable = true;
