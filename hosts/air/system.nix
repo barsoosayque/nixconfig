@@ -78,6 +78,7 @@
       wf-recorder.enable = true;
       soundboard.enable = true;
       yt-dlp.enable = true;
+      quickshell.enable = true;
     };
 
     services = {
