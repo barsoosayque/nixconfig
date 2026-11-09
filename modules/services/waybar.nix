@@ -57,13 +57,14 @@ in
           "niri/workspaces" = {
             disable-scroll = false;
             hide-empty = true;
-            all-outputs = true;
+            all-outputs = false;
             format = "{icon}";
             format-icons = {
               "scratch" = "";
               "work" = "󱃖";
               "web" = "";
               "chat" = "";
+              "external" = "󰍹";
               "default" = "";
             };
           };
@@ -82,7 +83,7 @@ in
 
           "battery" = {
             states = {
-              warning = 30;
+              warning = 20;
               critical = 15;
             };
             format = "{icon} {capacity}%";
@@ -105,7 +106,6 @@ in
             tooltip-format-connected = "{controller_alias}\n{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}";
             tooltip-format-enumerate-connected = "{device_alias}\t{device_address}";
             tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_address}\t{device_battery_percentage}%";
-            on-click-right = "${pkgs.blueman}/bin/blueman-manager";
           };
 
           "pulseaudio" = {
@@ -118,7 +118,6 @@ in
                 ""
               ];
             };
-            on-click-right = "${pkgs.pavucontrol}/bin/pavucontrol";
             on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           };
 
@@ -137,12 +136,18 @@ in
           };
 
           "memory" = {
+            states = {
+              warning = 80;
+            };
             format = "󰢑  {percentage}%";
             tooltip = true;
             tooltip-format = "{used:0.2f}G/{total:0.2f}G";
           };
 
           "cpu" = {
+            states = {
+              warning = 80;
+            };
             format = "  {usage}%";
             tooltip = true;
           };
@@ -227,6 +232,22 @@ in
         #clock:hover {
           background-color: ${config.system.pretty.theme.colors.bar.backgroundHover.cssRgba};
           color: ${config.system.pretty.theme.colors.bar.foregroundHover.cssRgba};
+        }
+
+        /* Orange warns: battery under 20%, memory and cpu over 80%. After the
+           :hover block so these keep their color while hovered. */
+        #battery.warning:not(.charging),
+        #battery.warning:not(.charging):hover,
+        #memory.warning,
+        #memory.warning:hover,
+        #cpu.warning,
+        #cpu.warning:hover {
+          color: ${config.system.pretty.theme.colors.normal.yellow.cssRgba};
+        }
+
+        #battery.charging,
+        #battery.charging:hover {
+          color: ${config.system.pretty.theme.colors.normal.green.cssRgba};
         }
 
         #language {
