@@ -63,7 +63,7 @@ let
 
   notifyRelayScript = pkgs.writeShellScript "dunst-notify-relay" ''
     export XAUTHORITY=${config.system.user.home}/.Xauthority
-    export DISPLAY=:0
+    export DISPLAY="''${DISPLAY:-:0}"
     export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString config.system.user.uid}/bus
 
     ${pkgs.inotify-tools}/bin/inotifywait -m -e close_write -e moved_to --format '%f' "${notifyQueueDir}" |
