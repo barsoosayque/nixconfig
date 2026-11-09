@@ -58,15 +58,20 @@ in
 
     levels = mkOption {
       type = with types; listOf (listOf int);
+      # [ level lower upper ]: step up when temp > upper, back down when < lower.
+      # Alder Lake H sits at 80-90°C under sustained load, so ramp gently and
+      # only go "disengaged" (127, beyond full speed) when actually near tjmax.
+      # Gaps of ~5°C between lower/upper keep short CPU spikes from flapping it.
       default = [
-        [ 0 0 45 ]
-        [ 1 43 50 ]
-        [ 2 48 55 ]
-        [ 3 53 60 ]
-        [ 4 58 65 ]
-        [ 5 63 70 ]
-        [ 7 68 80 ]
-        [ 127 75 32767 ]
+        [ 0 0 55 ]
+        [ 1 50 62 ]
+        [ 2 57 68 ]
+        [ 3 63 73 ]
+        [ 4 68 78 ]
+        [ 5 73 83 ]
+        [ 6 78 87 ]
+        [ 7 82 93 ]
+        [ 127 89 32767 ]
       ];
       description = "thinkfan levels, see services.thinkfan.levels";
     };
