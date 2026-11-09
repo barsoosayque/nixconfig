@@ -111,6 +111,7 @@ in
     environment.systemPackages = [
       pkgs.vulkan-tools
       pkgs.protonup-ng
+      pkgs.mangohud
     ]
     ++ (lists.optionals cfg.software.wine.enable [
       pkgs.wine
