@@ -274,6 +274,10 @@ in
           color: ${config.system.pretty.theme.colors.bar.foreground.cssRgba};
           padding: 2px 8px;
           margin: 0 2px;
+          /* don't inherit the GTK theme's button sizing (Gruvbox gives
+             text buttons min-width: 32px, which widens every workspace) */
+          min-width: 0;
+          min-height: 0;
         }
 
         #workspaces button:hover {
