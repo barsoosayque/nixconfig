@@ -77,6 +77,7 @@
       obs.enable = true;
       wf-recorder.enable = true;
       soundboard.enable = true;
+      yt-dlp.enable = true;
     };
 
     services = {
