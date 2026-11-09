@@ -76,7 +76,7 @@
       tofi.enable = true;
       obs.enable = true;
       wf-recorder.enable = true;
-      soundboard.enable = true;
+      # soundboard.enable = true;
       yt-dlp.enable = true;
       quickshell.enable = true;
     };
@@ -92,7 +92,7 @@
       bluetooth.enable = true;
       transmission.enable = true;
       sound.enable = true;
-      gitlabRunner.enable = true;
+      # gitlabRunner.enable = true;
       waybar.enable = true;
       wpaperd.enable = true;
       thinkfan.enable = true;
@@ -106,19 +106,19 @@
       gtk.enable = true;
       niri.enable = true;
 
-      monitor = {
-        layout = [
-          {
-            identifier = "eDP-1";
-            resolution = {
-              width = 1920;
-              height = 1200;
-            };
-            hz = 165;
-          }
-        ];
-        dpi = 96;
-      };
+      # monitor = {
+      #   layout = [
+      #     {
+      #       identifier = "eDP-1";
+      #       resolution = {
+      #         width = 2560;
+      #         height = 1600;
+      #       };
+      #       hz = 165;
+      #     }
+      #   ];
+      #   dpi = 96;
+      # };
     };
   };
 
