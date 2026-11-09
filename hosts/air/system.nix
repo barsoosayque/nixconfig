@@ -87,6 +87,7 @@
         notifySystemEvents = true;
       };
       jellyfin.enable = true;
+      tandoor.enable = true;
       redshift.enable = true;
       bluetooth.enable = true;
       transmission.enable = true;
