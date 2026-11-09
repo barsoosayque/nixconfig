@@ -42,6 +42,198 @@ let
     ${niri} msg action set-window-height "$h"
   '';
 
+  # Pick a resolution, then a refresh rate, then a scale for the focused
+  # output. Everything is applied over IPC, so nothing is written to the
+  # config: the output reverts to its `output` block on the next config
+  # reload. Each menu is built from what the output actually advertises, so
+  # the same binding behaves sensibly on the laptop panel and on an external.
+  resizeOutput = pkgs.writeShellScript "niri-resize-output" ''
+    export LC_ALL=C
+    jq="${pkgs.jq}/bin/jq"
+    menu() { ${pkgs.tofi}/bin/tofi ${config.modules.programs.tofi.args} --prompt-text "$1"; }
+
+    info="$(${niri} msg --json focused-output)" || exit 1
+    name="$(    printf '%s' "$info" | "$jq" -r '.name')"
+    maxw="$(    printf '%s' "$info" | "$jq" -r '[.modes[].width]  | max')"
+    maxh="$(    printf '%s' "$info" | "$jq" -r '[.modes[].height] | max')"
+    maxhz="$(   printf '%s' "$info" | "$jq" -r '[.modes[].refresh_rate] | max / 1000 | round')"
+    cur="$(     printf '%s' "$info" | "$jq" -r '.modes[.current_mode] | "\(.width)x\(.height)"')"
+    curhz="$(   printf '%s' "$info" | "$jq" -r '.modes[.current_mode].refresh_rate / 1000 | round')"
+    curscale="$(printf '%.2f' "$(printf '%s' "$info" | "$jq" -r '.logical.scale')")"
+
+    # Append a bullet when the entry is what the output is using right now.
+    mark() { [ "$1" = "$2" ] && printf '  ●'; printf '\n'; }
+
+    ## 1. resolution
+    emit() {
+      res="$1"
+      aspect="$2"
+      w="''${res%x*}"
+      h="''${res#*x}"
+      # Never offer more than the output can actually drive.
+      [ "$w" -gt "$maxw" ] && return 0
+      [ "$h" -gt "$maxh" ] && return 0
+      printf '%-9s  %-5s' "$res" "$aspect"
+      mark "$res" "$cur"
+    }
+
+    pick="$(
+      {
+        for r in 854x480 1280x720 1600x900 1920x1080 2560x1440; do emit "$r" "16:9"; done
+        for r in 768x480 1280x800 1440x900 1680x1050 1920x1200 2560x1600; do emit "$r" "16:10"; done
+        printf 'auto (preferred)\n'
+      } | menu "  $name  ·  resolution: "
+    )"
+    [ -z "$pick" ] && exit 0
+    case "$pick" in
+      auto*) res="auto" ;;
+      *)     read -r res _rest <<< "$pick" ;;
+    esac
+
+    ## 2. refresh rate — advertised rates for that resolution, plus 60 and the max
+    if [ "$res" = "auto" ]; then
+      hz=""
+    else
+      w="''${res%x*}"
+      h="''${res#*x}"
+      pick="$(
+        {
+          printf '%s' "$info" | "$jq" -r --argjson w "$w" --argjson h "$h" \
+            '.modes[] | select(.width == $w and .height == $h) | .refresh_rate / 1000 | round'
+          printf '60\n%s\n' "$maxhz"
+        } | sort -rn | uniq | while read -r r; do
+              printf '%sHz' "$r"
+              mark "$r" "$curhz"
+            done | menu "  $res  ·  refresh: "
+      )"
+      [ -z "$pick" ] && exit 0
+      read -r hz _rest <<< "$pick"
+      hz="''${hz%Hz}"
+    fi
+
+    ## 3. scale
+    pick="$(
+      for s in 0.5 0.75 1.0 1.25 1.5; do
+        printf '%-5s' "$s"
+        mark "$(printf '%.2f' "$s")" "$curscale"
+      done | menu "  $res  ·  scale: "
+    )"
+    [ -z "$pick" ] && exit 0
+    read -r scale _rest <<< "$pick"
+
+    ## apply
+    if [ "$res" = "auto" ]; then
+      ${niri} msg output "$name" mode auto
+    else
+      # Prefer a real advertised mode (exact refresh, driver timings) and only
+      # fall back to a synthesized CVT mode when the panel doesn't list one.
+      exact="$(printf '%s' "$info" | "$jq" -r \
+        --argjson w "$w" --argjson h "$h" --argjson hz "$hz" '
+          [ .modes[] | select(.width == $w and .height == $h) | .refresh_rate / 1000 ]
+          | map(select(((. - $hz) | fabs) < 1.5))
+          | if length > 0 then (.[0] | tostring) else empty end
+        ')"
+      if [ -n "$exact" ]; then
+        ${niri} msg output "$name" mode "''${res}@''${exact}"
+      else
+        ${niri} msg output "$name" custom-mode "''${res}@''${hz}"
+      fi
+    fi
+    ${niri} msg output "$name" scale "$scale"
+  '';
+
+  # Connectors that start off until picked with Mod+Shift+C. niri remembers IPC
+  # changes across hotplug, so one left on comes back on when replugged.
+  externalOutputs = [
+    "HDMI-A-1"
+    "HDMI-A-2"
+    "DP-1"
+    "DP-2"
+    "DP-3"
+    "DP-4"
+    "DP-5"
+    "DP-6"
+  ];
+
+  # Run a niri action ($1) on the "external" workspace, making sure the output
+  # ($2, default the first external one that's on) holds it first. It can't be
+  # left to the picker: an output that comes back on by itself skips it.
+  externalWorkspace = pkgs.writeShellScript "niri-external-workspace" ''
+    jq="${pkgs.jq}/bin/jq"
+
+    name="''${2:-$(${niri} msg --json outputs | "$jq" -r '
+      [ .[] | select(.name != "eDP-1" and .logical != null) ][0].name // empty
+    ')}"
+    if [ -n "$name" ]; then
+      cur="$(${niri} msg --json workspaces | "$jq" -r '.[] | select(.name == "external") | .output')"
+      if [ -z "$cur" ]; then
+        prev="$(${niri} msg --json focused-output | "$jq" -r '.name')"
+        ${niri} msg action focus-monitor "$name"
+        ${niri} msg action set-workspace-name external
+        ${niri} msg action focus-monitor "$prev"
+      elif [ "$cur" != "$name" ]; then
+        # A leftover "external" (e.g. after a plain unplug): reuse it instead
+        # of naming a second one.
+        ${niri} msg action move-workspace-to-monitor --reference external "$name"
+      fi
+    fi
+
+    ${niri} msg action "$1" external
+  '';
+
+  # Pick a connected external output, then where to put it (or turn it off).
+  # The "external" workspace (Mod+0) only exists while an external output is
+  # on: connecting names that output's workspace, turning it off unnames it
+  # first, so it doesn't linger on the laptop panel (its windows still move
+  # over as a plain workspace). Like resizeOutput this is IPC only, so a config
+  # reload turns the external off again.
+  connectOutput = pkgs.writeShellScript "niri-connect-output" ''
+    export LC_ALL=C
+    jq="${pkgs.jq}/bin/jq"
+    menu() { ${pkgs.tofi}/bin/tofi ${config.modules.programs.tofi.args} --prompt-text "$1"; }
+
+    outputs="$(${niri} msg --json outputs)" || exit 1
+
+    ## 1. output
+    pick="$(
+      printf '%s' "$outputs" | "$jq" -r '
+        .[] | select(.name != "eDP-1")
+        | "\(.name)  \(.model)\(if .logical then "  ●" else "" end)"
+      ' | menu "  connect: "
+    )"
+    [ -z "$pick" ] && exit 0
+    read -r name _rest <<< "$pick"
+
+    ## 2. placement
+    pick="$(printf 'right\nleft\nabove\nbelow\noff\n' | menu "  $name: ")"
+    [ -z "$pick" ] && exit 0
+
+    if [ "$pick" = "off" ]; then
+      ${niri} msg action unset-workspace-name external
+      ${niri} msg output "$name" off
+      exit 0
+    fi
+
+    ${niri} msg output "$name" on
+    # Sizes are logical, so read them after the output is up.
+    outputs="$(${niri} msg --json outputs)"
+    geometry() { printf '%s' "$outputs" | "$jq" -r --arg n "$1" ".[\$n].logical | \"\(.x) \(.y) \(.width) \(.height)\""; }
+    read -r lx ly lw lh <<< "$(geometry eDP-1)"
+    read -r _ _ ew eh <<< "$(geometry "$name")"
+
+    # Relative to where the panel is now: it isn't always at the origin.
+    case "$pick" in
+      right) x=$((lx + lw)) y="$ly" ;;
+      left)  x=$((lx - ew)) y="$ly" ;;
+      above) x="$lx"        y=$((ly - eh)) ;;
+      below) x="$lx"        y=$((ly + lh)) ;;
+      *) exit 0 ;;
+    esac
+    ${niri} msg output "$name" position set -- "$x" "$y"
+
+    ${externalWorkspace} focus-workspace "$name"
+  '';
+
   # Convert sxhkd key combo to niri format
   # "super + d" -> "Mod+D"
   # "super + shift + q" -> "Mod+Shift+Q"
@@ -96,6 +288,12 @@ in
 {
   options.modules.graphics.niri = {
     enable = mkEnableOption "niri";
+
+    windowRules = mkOption {
+      type = with types; listOf lines;
+      default = [ ];
+      description = "Extra niri window-rule blocks, so each program module can ship its own.";
+    };
 
     screenshotsDir = mkOption {
       type = with types; str;
@@ -161,7 +359,6 @@ in
         environment {
           _JAVA_AWT_WM_NONREPARENTING "1"
           ELECTRON_OZONE_PLATFORM_HINT "auto"
-          DISPLAY ":0"
         }
 
         hotkey-overlay {
@@ -211,6 +408,9 @@ in
           geometry-corner-radius 2
           clip-to-geometry true
         }
+
+        ${strings.concatStringsSep "\n" cfg.windowRules}
+
         input {
           keyboard {
             xkb {
@@ -220,6 +420,12 @@ in
           }
           trackpoint {
             scroll-method "no-scroll";
+          }
+          touchpad {
+            accel-profile "flat";
+            accel-speed 0.3;
+            dwt;
+            dwtp;
           }
         }
 
@@ -235,10 +441,17 @@ in
 
         output "eDP-1" {
             // off
+            // Native default; switch resolution at runtime with Mod+Shift+R.
             mode "2560x1600@165.02"
             scale 1.25
+            // Pinned: niri auto-places outputs without an explicit position to
+            // the right of the placed ones, so an unpinned panel always ends up
+            // right of whatever Mod+Shift+C positions (left == right).
+            position x=0 y=0
             focus-at-startup
         }
+
+        ${strings.concatMapStringsSep "\n" (o: ''output "${o}" { off; }'') externalOutputs}
 
         gestures {
             hot-corners {
@@ -253,7 +466,9 @@ in
           Mod+Shift+S repeat=false { screenshot-screen; }
           Mod+Ctrl+S repeat=false { screenshot-window; }
 
-          Mod+R repeat=false { spawn "${resizeWindow}"; }
+          Mod+Ctrl+R repeat=false { spawn "${resizeWindow}"; }
+          Mod+Shift+R repeat=false { spawn "${resizeOutput}"; }
+          Mod+Shift+C repeat=false { spawn "${connectOutput}"; }
 
           Mod+O repeat=false { toggle-overview; }
           Mod+Shift+Q repeat=false { close-window; }
@@ -271,6 +486,7 @@ in
           Mod+6 { focus-workspace 6; }
           Mod+7 { focus-workspace 7; }
           Mod+8 { focus-workspace 8; }
+          Mod+0 { spawn "${externalWorkspace}" "focus-workspace"; }
           Mod+Shift+1 { move-column-to-workspace "scratch"; }
           Mod+Shift+2 { move-column-to-workspace "work"; }
           Mod+Shift+3 { move-column-to-workspace "web"; }
@@ -279,6 +495,7 @@ in
           Mod+Shift+6 { move-column-to-workspace 6; }
           Mod+Shift+7 { move-column-to-workspace 7; }
           Mod+Shift+8 { move-column-to-workspace 8; }
+          Mod+Shift+0 { spawn "${externalWorkspace}" "move-column-to-workspace"; }
 
           Mod+Left  { focus-column-left; }
           Mod+Down  { focus-window-down; }
