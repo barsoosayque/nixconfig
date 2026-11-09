@@ -62,6 +62,8 @@
   services.throttled = {
     enable = true;
   };
+  # throttled >= 0.12 queries UPower over D-Bus at startup and crashes without it
+  services.upower.enable = true;
   # services.thermald = {
   #   enable = true;
   #   ignoreCpuidCheck = true;

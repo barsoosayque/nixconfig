@@ -66,6 +66,10 @@
       # see: https://discourse.nixos.org/t/connected-to-mullvadvpn-but-no-internet-connection/35803/10
       resolvconf.enable = false;
     };
+    # mullvad-vpn now mkDefault-enables systemd-resolved, which forces
+    # networkmanager.dns = "systemd-resolved" and clashes with our dnsmasq.
+    # Keep dnsmasq (our prior working setup) by opting back out of resolved.
+    services.resolved.enable = false;
 
     xdg.portal = {
       enable = true;

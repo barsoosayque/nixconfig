@@ -21,6 +21,8 @@ in
     environment.systemPackages = [
       pkgs.pavucontrol
       pkgs.easyeffects
+      # JACK apps: run them through `pw-jack <app>` (replaces pipewire.jack.enable)
+      config.services.pipewire.package.jack
     ];
 
     musnix = {
@@ -37,7 +39,6 @@ in
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      jack.enable = true;
       wireplumber.enable = true;
     };
   };
