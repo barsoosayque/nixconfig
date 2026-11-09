@@ -28,14 +28,14 @@ in
       settings = {
         main = {
           shell = "zellij";
-          font = "${config.system.pretty.theme.fonts.mono.name}:weight=400:size=13";
-          font-bold = "${config.system.pretty.theme.fonts.mono.name}:weight=bold:size=13";
-          font-italic = "${config.system.pretty.theme.fonts.mono.name}:weight=400:slant=italic:size=13";
-          font-bold-italic = "${config.system.pretty.theme.fonts.mono.name}:weight=bold:slant=italic:size=13";
-          dpi-aware = "no";
+          font = "${config.system.pretty.theme.fonts.mono.name}:weight=400:size=8";
+          font-bold = "${config.system.pretty.theme.fonts.mono.name}:weight=800:size=8";
+          font-italic = "${config.system.pretty.theme.fonts.mono.name}:weight=400:slant=italic:size=8";
+          font-bold-italic = "${config.system.pretty.theme.fonts.mono.name}:weight=800:slant=italic:size=8";
+          dpi-aware = "yes";
           pad = "20x20";
         };
-        colors = {
+        colors-dark = {
           regular0 = "${config.system.pretty.theme.colors.normal.black.hexRGBbase}";
           regular1 = "${config.system.pretty.theme.colors.normal.red.hexRGBbase}";
           regular2 = "${config.system.pretty.theme.colors.normal.green.hexRGBbase}";
