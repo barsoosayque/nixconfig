@@ -16,6 +16,7 @@
       pkgs.nicotine-plus
       # pkgs.yt-dlp
       pkgs.blender
+      pkgsRepo.local.blender-mcp
       pkgs.obsidian
 
       # multimedia

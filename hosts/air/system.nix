@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  pkgsRepo,
+  ...
+}:
 
 {
   imports = [ ];
@@ -11,6 +16,7 @@
       pkgs.telegram-desktop
       pkgs.nicotine-plus
       pkgs.blender
+      pkgsRepo.local.blender-mcp
       pkgs.obsidian
       pkgs.anki-bin
 
