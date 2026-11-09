@@ -11,7 +11,6 @@
   environment = {
     systemPackages = [
       # user
-      pkgs.brave
       pkgs.discord
       pkgs.telegram-desktop
       pkgs.nicotine-plus
@@ -71,6 +70,7 @@
 
     programs = {
       librewolf.enable = true;
+      chromium.enable = true;
       foot.enable = true;
       mpv.enable = true;
       tofi.enable = true;
