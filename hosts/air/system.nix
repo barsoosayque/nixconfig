@@ -75,6 +75,7 @@
       mpv.enable = true;
       tofi.enable = true;
       obs.enable = true;
+      wf-recorder.enable = true;
       soundboard.enable = true;
     };
 
