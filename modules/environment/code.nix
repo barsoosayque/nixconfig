@@ -15,6 +15,7 @@ let
   inherit (builtins) readFile;
 
   cfg = config.modules.environment.code;
+  hmCfg = config.home-manager.users.${config.system.user.name};
 in
 {
   options.modules.environment.code = {
@@ -81,7 +82,7 @@ in
               map (cmd: ''"${cmd}"'') [
                 ":wa"
                 ":new"
-                ":insert-output ${getExe pkg} ${args} >/dev/tty"
+                ":insert-output ${getExe pkg} ${args} </dev/tty >/dev/tty"
                 ":set mouse false"
                 ":set mouse true"
                 ":buffer-close!"
@@ -117,6 +118,7 @@ in
           [keys.normal.C-x]
           f = ${runTUI pkgs.scooter "--no-stdin"} # Gloabl find and replace (scooter)
           g = ${runTUI pkgs.gitui ""} # Interactive Git (gitui)
+          j = ${runTUI pkgs.jjui ""} # Interactive JJ (jjui)
         '';
 
       xdg.configFile."zellij/config.kdl".text = ''
@@ -172,8 +174,15 @@ in
         ssh = {
           enable = true;
           enableDefaultConfig = false;
-          matchBlocks."*" = {
-            addKeysToAgent = "yes";
+          settings."*" = {
+            AddKeysToAgent = "yes";
+          };
+        };
+
+        jujutsu = {
+          enable = true;
+          settings.user = {
+            inherit (hmCfg.programs.git.settings.user) name email;
           };
         };
 
@@ -183,12 +192,12 @@ in
 
           ignores = [
             ".local"
-            ".claude"
+            ".claude/settings.local.json"
           ];
 
           settings = {
             user.name = "barsoosayque";
-            user.email = "shtoshich@gmail.com";
+            user.email = "mail@barsoo.xyz";
 
             pull.rebase = true;
             rebase.autostash = true;
